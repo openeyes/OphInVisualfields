@@ -18,13 +18,60 @@
  */
 ?>
 
-<div class="element <?php echo $element->elementType->class_name?>"
-	data-element-type-id="<?php echo $element->elementType->id?>"
-	data-element-type-class="<?php echo $element->elementType->class_name?>"
-	data-element-type-name="<?php echo $element->elementType->name?>"
-	data-element-display-order="<?php echo $element->elementType->display_order?>">
-	<h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+<?php
+// TODO - how to deal with cross-module dependencies?
+Yii::import('application.modules.module_esb_mirth.models.*');
+$divName = $element->elementType->class_name . $element->elementType->id;
+?>
 
-	<?php echo $form->textField($element, 'left_image', array('size' => '10'))?>
-	<?php echo $form->textField($element, 'right_image', array('size' => '10'))?>
+<script>
+  function updateLeftImage() {
+    var leftImages = new Array();
+<?php
+$leftImages = VfaUtils::getVfaFileList($this->patient, 'L');
+foreach ($leftImages as $index => $leftImage) {
+  $asset_id = $leftImage->vfa_file->file->asset->id;
+  echo 'leftImages[' . $index . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+}
+?>
+    var index = <?php echo $element->elementType->class_name . '_left_image' ?>.selectedIndex;
+    //alert('index=' + index);
+    document.getElementById('<?php echo $divName?>_left').src = leftImages[index];
+  }
+  function updateRightImage() {
+    var rightImages = new Array();
+<?php
+$rightImages = VfaUtils::getVfaFileList($this->patient, 'R');
+foreach ($rightImages as $index => $rightImage) {
+  $asset_id = $rightImage->vfa_file->file->asset->id;
+  echo 'rightImages[' . $index . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+}
+?>
+    var index = <?php echo $element->elementType->class_name . '_right_image' ?>.selectedIndex;
+    //alert('index=' + index);
+    document.getElementById('<?php echo $divName?>_right').src = rightImages[index];
+  }
+</script>
+
+<div class="element <?php echo $element->elementType->class_name ?>"
+     data-element-type-id="<?php echo $element->elementType->id ?>"
+     data-element-type-class="<?php echo $element->elementType->class_name ?>"
+     data-element-type-name="<?php echo $element->elementType->name ?>"
+     data-element-display-order="<?php echo $element->elementType->display_order ?>">
+  <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+
+
+  <div class="cols2 clearfix">
+    <div class="side left eventDetail"
+         data-side="right">
+           <?php echo $form->dropDownList($element, 'right_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'R'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateRightImage()')) ?>
+      <img id="<?php echo $divName?>_right" src="" />
+    </div>
+
+    <div class="side right eventDetail"
+         data-side="left">
+           <?php echo $form->dropDownList($element, 'left_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'L'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateLeftImage()')) ?>
+      <img id="<?php echo $divName?>_left" src="" />
+    </div>
+  </div>
 </div>
