@@ -27,29 +27,33 @@ $divName = $element->elementType->class_name . $element->elementType->id;
 <script>
   function updateLeftImage() {
     var leftImages = new Array();
+    var leftImageDates = new Array();
 <?php
 $leftImages = VfaUtils::getVfaFileList($this->patient, 'L');
 foreach ($leftImages as $index => $leftImage) {
   $asset_id = $leftImage->vfa_file->file->asset->id;
-  echo 'leftImages[' . $index . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+  echo 'leftImages[' . $asset_id . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+  echo 'leftImageDates[' . $asset_id . ']="' . $leftImage->vfa_file->file->asset->created_date . '"; ';
 }
 ?>
-    var index = <?php echo $element->elementType->class_name . '_left_image' ?>.selectedIndex;
-    //alert('index=' + index);
-    document.getElementById('<?php echo $divName?>_left').src = leftImages[index];
+    var index = <?php echo $element->elementType->class_name . '_left_image' ?>.value;
+    document.getElementById('<?php echo $divName ?>_left_image').src = leftImages[index];
+    document.getElementById('<?php echo $divName ?>_left_image_date').innerText = leftImageDates[index];
   }
   function updateRightImage() {
     var rightImages = new Array();
+    var rightImageDates = new Array();
 <?php
 $rightImages = VfaUtils::getVfaFileList($this->patient, 'R');
 foreach ($rightImages as $index => $rightImage) {
   $asset_id = $rightImage->vfa_file->file->asset->id;
-  echo 'rightImages[' . $index . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+  echo 'rightImages[' . $asset_id . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
+  echo 'rightImageDates[' . $asset_id . ']="' . $rightImage->vfa_file->file->asset->created_date . '"; ';
 }
 ?>
-    var index = <?php echo $element->elementType->class_name . '_right_image' ?>.selectedIndex;
-    //alert('index=' + index);
-    document.getElementById('<?php echo $divName?>_right').src = rightImages[index];
+    var index = <?php echo $element->elementType->class_name . '_right_image' ?>.value;
+    document.getElementById('<?php echo $divName ?>_right_image').src = rightImages[index];
+    document.getElementById('<?php echo $divName ?>_right_image_date').innerText = rightImageDates[index];
   }
 </script>
 
@@ -65,13 +69,15 @@ foreach ($rightImages as $index => $rightImage) {
     <div class="side left eventDetail"
          data-side="right">
            <?php echo $form->dropDownList($element, 'right_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'R'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateRightImage()')) ?>
-      <img id="<?php echo $divName?>_right" src="" />
+      <img id="<?php echo $divName ?>_right_image" src="" />
+      <div id="<?php echo $divName ?>_right_image_date"></div>
     </div>
 
     <div class="side right eventDetail"
          data-side="left">
            <?php echo $form->dropDownList($element, 'left_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'L'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateLeftImage()')) ?>
-      <img id="<?php echo $divName?>_left" src="" />
+      <img id="<?php echo $divName ?>_left_image" src="" />
+      <div id="<?php echo $divName ?>_left_image_date"></div>
     </div>
   </div>
 </div>

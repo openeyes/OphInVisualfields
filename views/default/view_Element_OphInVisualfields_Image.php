@@ -29,7 +29,11 @@ Yii::import('application.modules.module_esb_mirth.models.*');
   <tbody>
     <tr>
       <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
-      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></td>
+      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
+    </tr>
+    <tr>
+      <td>Date: <?php echo Asset::model()->find('id=' . $element->right_image)->created_date ?></td>
+      <td>Date: <?php echo Asset::model()->find('id=' . $element->left_image)->created_date ?></td>
     </tr>
   </tbody>
 </table>
