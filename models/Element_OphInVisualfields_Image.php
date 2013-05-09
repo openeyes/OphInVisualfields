@@ -65,13 +65,22 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement
 		// will receive user inputs.
 		return array(
 			array('event_id, left_image, right_image, ', 'safe'),
-			array('left_image, right_image, ', 'required'),
+			array('left_image, right_image, ', 'validateImages'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, event_id, left_image, right_image, ', 'safe', 'on' => 'search'),
 			array('left_image', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be higher or equal to 1'),
 		);
 	}
+    
+    /**
+     * At least one image must be set.
+     * 
+     * @return boolean true if either image is set.
+     */
+    public function validateImages() {
+      return $this->right_image || $this->left_image;
+    }
 	
 	/**
 	 * @return array relational rules.

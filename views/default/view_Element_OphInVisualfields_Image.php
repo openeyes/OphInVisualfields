@@ -28,12 +28,50 @@ Yii::import('application.modules.module_esb_mirth.models.*');
 <table class="subtleWhite normalText">
   <tbody>
     <tr>
-      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
-      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
+      <?php
+      if ($element->right_image) {
+        ?>
+        <td width="50%"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
+        <?php
+      } else {
+        ?>
+        <td>&nbsp;</td>
+        <?php
+      }
+      if ($element->left_image) {
+        ?>
+        <td width="50%"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></td>
+        <?php
+      } else {
+        ?>
+        <td>&nbsp;</td>
+        <?php
+      }
+      ?>
     </tr>
     <tr>
-      <td>Date: <?php echo Asset::model()->find('id=' . $element->right_image)->created_date ?></td>
-      <td>Date: <?php echo Asset::model()->find('id=' . $element->left_image)->created_date ?></td>
+      <?php
+      if ($element->right_image) {
+        ?>
+        <td width="50%">Date: <?php echo Asset::model()->find('id=' . $element->right_image)->created_date ?></td>
+        <?php
+      } else {
+        ?>
+        <td>&nbsp;</td>
+        <?php
+      }
+      ?>
+      <?php
+      if ($element->left_image) {
+        ?>
+        <td width="50%">Date: <?php echo Asset::model()->find('id=' . $element->left_image)->created_date ?></td>
+        <?php
+      } else {
+        ?>
+        <td>&nbsp;</td>
+        <?php
+      }
+      ?>
     </tr>
   </tbody>
 </table>
