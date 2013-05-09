@@ -18,17 +18,18 @@
  */
 ?>
 
-<h4 class="elementTypeName"><?php echo $element->elementType->name?></h4>
+<?php
+// TODO - how to deal with cross-module dependencies?
+Yii::import('application.modules.module_esb_mirth.models.*');
+?>
+
+<h4 class="elementTypeName"><?php echo $element->elementType->name ?></h4>
 
 <table class="subtleWhite normalText">
-	<tbody>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('left_image'))?></td>
-			<td><span class="big"><?php echo $element->left_image?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('right_image'))?></td>
-			<td><span class="big"><?php echo $element->right_image?></span></td>
-		</tr>
-	</tbody>
+  <tbody>
+    <tr>
+      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
+      <td><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></td>
+    </tr>
+  </tbody>
 </table>
