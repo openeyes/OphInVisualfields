@@ -25,9 +25,12 @@ $divName = $element->elementType->class_name . $element->elementType->id;
 ?>
 
 <script>
+  var rightImages = new Array();
+  var rightImageDates = new Array();
+  var leftImages = new Array();
+  var leftImageDates = new Array();
+    
   function updateLeftImage() {
-    var leftImages = new Array();
-    var leftImageDates = new Array();
 <?php
 $leftImages = VfaUtils::getVfaFileList($this->patient, 'L');
 foreach ($leftImages as $index => $leftImage) {
@@ -41,8 +44,6 @@ foreach ($leftImages as $index => $leftImage) {
     document.getElementById('<?php echo $divName ?>_left_image_date').innerText = leftImageDates[index];
   }
   function updateRightImage() {
-    var rightImages = new Array();
-    var rightImageDates = new Array();
 <?php
 $rightImages = VfaUtils::getVfaFileList($this->patient, 'R');
 foreach ($rightImages as $index => $rightImage) {
@@ -55,6 +56,18 @@ foreach ($rightImages as $index => $rightImage) {
     document.getElementById('<?php echo $divName ?>_right_image').src = rightImages[index];
     document.getElementById('<?php echo $divName ?>_right_image_date').innerText = rightImageDates[index];
   }
+  
+<?php
+$leftSrc = "";
+$rightSrc = "";
+if ($element->left_image) {
+  $leftSrc = VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif"; ';
+}
+if ($element->right_image) {
+  $rightSrc = VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif"; ';
+}
+?>
+   
 </script>
 
 <div class="element <?php echo $element->elementType->class_name ?>"
@@ -69,14 +82,14 @@ foreach ($rightImages as $index => $rightImage) {
     <div class="side left eventDetail"
          data-side="right">
            <?php echo $form->dropDownList($element, 'right_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'R'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateRightImage()')) ?>
-      <img id="<?php echo $divName ?>_right_image" src="" />
+      <img id="<?php echo $divName ?>_right_image" src="<?php echo $rightSrc ?>" />
       <div id="<?php echo $divName ?>_right_image_date"></div>
     </div>
 
     <div class="side right eventDetail"
          data-side="left">
            <?php echo $form->dropDownList($element, 'left_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'L'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateLeftImage()')) ?>
-      <img id="<?php echo $divName ?>_left_image" src="" />
+      <img id="<?php echo $divName ?>_left_image" src="<?php echo $leftSrc ?>" />
       <div id="<?php echo $divName ?>_left_image_date"></div>
     </div>
   </div>
