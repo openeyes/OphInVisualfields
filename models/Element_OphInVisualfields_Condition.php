@@ -18,7 +18,7 @@
  */
 
 /**
- * This is the model class for table "et_ophinvisualfields_condtition".
+ * This is the model class for table "et_ophinvisualfields_condition".
  *
  * The followings are the available columns in table:
  * @property string $id
@@ -37,7 +37,7 @@
  * @property  $ability
  */
 
-class Element_OphInVisualfields_Condtition extends BaseEventTypeElement
+class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 {
 	public $service;
 
@@ -55,7 +55,7 @@ class Element_OphInVisualfields_Condtition extends BaseEventTypeElement
 	 */
 	public function tableName()
 	{
-		return 'et_ophinvisualfields_condtition';
+		return 'et_ophinvisualfields_condition';
 	}
 
 	/**
