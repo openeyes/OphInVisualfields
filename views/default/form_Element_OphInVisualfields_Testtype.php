@@ -34,14 +34,15 @@
   var patient_id = <?php echo $this->patient->hos_num ?>
     
   $('body').delegate('#Element_OphInVisualfields_Testtype_test_type_id', 'change', function() {
-    var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected').text();
+    var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected');
       
     var selected = $(this).children('option:selected');
     
     if(selected.val().length) {
-      var test_type = selected.text();
-      if (test_type.val() > 0 && strategy.val() > 0) {
-        updateImages(test_type.text(), strategy.text());
+      var test_type = $(this).val();
+      if (test_type > 0 && strategy.val() > 0) {
+        alert(selected.text());
+        updateImages(selected.text(), strategy.text());
       }
     }
     return false;
