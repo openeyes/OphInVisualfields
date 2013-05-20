@@ -21,76 +21,109 @@
 <?php
 // TODO - how to deal with cross-module dependencies?
 Yii::import('application.modules.module_esb_mirth.models.*');
-$divName = $element->elementType->class_name . $element->elementType->id;
+
+if (isset($element)) {
+  Yii::app()->session['_image_element'] = $element;
+}
+if (!isset($element)) {
+  $element = Yii::app()->session['_image_element'];
+}
+if (isset($form)) {
+  Yii::app()->session['_image_form'] = $form;
+}
+if (!isset($form)) {
+  $form = Yii::app()->session['_image_form'];
+}
+
+$divName = $element->elementType->class_name;
+if (!isset($leftImages)) {
+  $leftImages = array();
+}
+if (!isset($rightImages)) {
+  $rightImages = array();
+}
+if (!isset($patient)) {
+  $patient = $this->patient;
+}
 ?>
 
-<script>
-  var rightImages = new Array();
-  var rightImageDates = new Array();
-  var leftImages = new Array();
-  var leftImageDates = new Array();
+<script TYPE="TEXT/JAVASCRIPT">
+  var patient_id = <?php echo $patient->hos_num ?>
     
-  function updateLeftImage() {
-<?php
-$leftImages = VfaUtils::getVfaFileList($this->patient, 'L');
-foreach ($leftImages as $index => $leftImage) {
-  $asset_id = $leftImage->vfa_file->file->asset->id;
-  echo 'leftImages[' . $asset_id . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
-  echo 'leftImageDates[' . $asset_id . ']="' . $leftImage->vfa_file->file->asset->created_date . '"; ';
-}
-?>
-    var index = <?php echo $element->elementType->class_name . '_left_image' ?>.value;
-    document.getElementById('<?php echo $divName ?>_left_image').src = leftImages[index];
-    document.getElementById('<?php echo $divName ?>_left_image_date').innerText = leftImageDates[index];
+  $('#<?php echo $element->elementType->class_name ?>_right_image').change(function() {
+    updateImage('#<?php echo $divName ?>_right_image_thumb', '#<?php echo $divName ?>_right_image_url', $(this).children('option:selected').val());
+    return false;
+  });
+  $('#<?php echo $element->elementType->class_name ?>_left_image').change(function() {
+    updateImage('#<?php echo $divName ?>_left_image_thumb', '#<?php echo $divName ?>_left_image_url', $(this).children('option:selected').val());
+    return false;
+  });
+    
+  function updateImage(divName, divNameUrl, assetId) {
+    var dir = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/' ?>';
+    $(divName).attr('src', dir + assetId + '.tif');
+    var dir2 = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/' ?>';
+    $(divNameUrl).attr('href', dir2 + assetId + '.tif');
   }
-  function updateRightImage() {
+</SCRIPT>
+
+<div>
+  <div id="form_Element_OphInVisualfields" class="element <?php echo $element->elementType->class_name ?>"
+       data-element-type-id="<?php echo $element->elementType->id ?>"
+       data-element-type-class="<?php echo $element->elementType->class_name ?>"
+       data-element-type-name="<?php echo $element->elementType->name ?>"
+       data-element-display-order="<?php echo $element->elementType->display_order ?>">
+    <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+
+
+    <div class="cols2 clearfix">
+      <div class="side left eventDetail"
+           data-side="right">
 <?php
-$rightImages = VfaUtils::getVfaFileList($this->patient, 'R');
-foreach ($rightImages as $index => $rightImage) {
-  $asset_id = $rightImage->vfa_file->file->asset->id;
-  echo 'rightImages[' . $asset_id . ']="' . VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset_id . '.tif"; ';
-  echo 'rightImageDates[' . $asset_id . ']="' . $rightImage->vfa_file->file->asset->created_date . '"; ';
-}
-?>
-    var index = <?php echo $element->elementType->class_name . '_right_image' ?>.value;
-    document.getElementById('<?php echo $divName ?>_right_image').src = rightImages[index];
-    document.getElementById('<?php echo $divName ?>_right_image_date').innerText = rightImageDates[index];
+  $leftSrc = "";
+  $leftHref = "";
+  if ($element->left_image && count($leftImages) > 0) {
+    foreach($leftImages as $image) {
+      if ($image->fsScanHumphreyImage->file->asset->id == $element->left_image) {
+        $leftSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
+              . $element->left_image;
+        $leftHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
+              . $element->left_image;
+      }
+    }
   }
-  
-<?php
-$leftSrc = "";
-$rightSrc = "";
-if ($element->left_image) {
-  $leftSrc = VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif"; ';
-}
-if ($element->right_image) {
-  $rightSrc = VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif"; ';
-}
+  $rightSrc = null;
+  $rightHref = null;
+  if ($element->right_image && count($rightImages) > 0) {
+    foreach($rightImages as $image) {
+      if ($image->fsScanHumphreyImage->file->asset->id == $element->right_image) {
+        $rightSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
+              . $element->right_image;
+        $rightHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
+              . $element->right_image;
+      }
+    }
+  }
 ?>
-   
-</script>
+        
+        <?php echo $form->dropDownList($element, 'right_image', CHtml::listData($rightImages, 'id', 'file_name'), array('empty' => '- Please select -')) ?>
 
-<div class="element <?php echo $element->elementType->class_name ?>"
-     data-element-type-id="<?php echo $element->elementType->id ?>"
-     data-element-type-class="<?php echo $element->elementType->class_name ?>"
-     data-element-type-name="<?php echo $element->elementType->name ?>"
-     data-element-display-order="<?php echo $element->elementType->display_order ?>">
-  <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+        <div id='<?php echo $divName ?>' class="side left eventDetail"
+             data-side="left">
+          <a id="<?php echo $divName ?>_right_image_url" href="<?php echo $rightHref ?>"><img id="<?php echo $divName ?>_right_image_thumb" src="<?php echo $rightSrc ?>" /></a>
+          <div id="<?php echo $divName ?>_date"></div>
+        </div>
+      </div>
 
+      <div class="side right eventDetail"
+           data-side="left">
+             <?php echo $form->dropDownList($element, 'left_image', CHtml::listData($leftImages, 'id', 'file_name'), array('empty' => '- Please select -')) ?>
 
-  <div class="cols2 clearfix">
-    <div class="side left eventDetail"
-         data-side="right">
-           <?php echo $form->dropDownList($element, 'right_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'R'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateRightImage()')) ?>
-      <img id="<?php echo $divName ?>_right_image" src="<?php echo $rightSrc ?>" />
-      <div id="<?php echo $divName ?>_right_image_date"></div>
-    </div>
-
-    <div class="side right eventDetail"
-         data-side="left">
-           <?php echo $form->dropDownList($element, 'left_image', CHtml::listData(VfaUtils::getVfaFileList($this->patient, 'L'), 'id', 'file_name'), array('empty' => '- Please select -', 'onchange' => 'updateLeftImage()')) ?>
-      <img id="<?php echo $divName ?>_left_image" src="<?php echo $leftSrc ?>" />
-      <div id="<?php echo $divName ?>_left_image_date"></div>
+        <div id='<?php echo $divName ?>' class="side right eventDetail"
+             data-side="left">
+          <a id="<?php echo $divName ?>_left_image_url" href="<?php echo $leftHref ?>"><img id="<?php echo $divName ?>_left_image_thumb" src="<?php echo $leftSrc ?>" /></a>
+          <div id="<?php echo $divName ?>_date"></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>

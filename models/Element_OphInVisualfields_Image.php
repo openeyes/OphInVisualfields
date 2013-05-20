@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OpenEyes
  *
@@ -34,120 +35,168 @@
  * @property User $user
  * @property User $usermodified
  */
+class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
-class Element_OphInVisualfields_Image extends BaseEventTypeElement
-{
-	public $service;
+  public $service;
+  private $leftImage = null;
+  private $rightImage = null;
 
-	/**
-	 * Returns the static model of the specified AR class.
-	 * @return the static model class
-	 */
-	public static function model($className = __CLASS__)
-	{
-		return parent::model($className);
-	}
+  /**
+   * Returns the static model of the specified AR class.
+   * @return the static model class
+   */
+  public static function model($className = __CLASS__) {
+    return parent::model($className);
+  }
 
-	/**
-	 * @return string the associated database table name
-	 */
-	public function tableName()
-	{
-		return 'et_ophinvisualfields_image';
-	}
-
-	/**
-	 * @return array validation rules for model attributes.
-	 */
-	public function rules()
-	{
-		// NOTE: you should only define rules for those attributes that
-		// will receive user inputs.
-		return array(
-			array('event_id, left_image, right_image, ', 'safe'),
-			array('left_image, right_image, ', 'validateImages'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-			array('id, event_id, left_image, right_image, ', 'safe', 'on' => 'search'),
-			array('left_image', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be higher or equal to 1'),
-		);
-	}
-    
-    /**
-     * At least one image must be set.
-     * 
-     * @return boolean true if either image is set.
-     */
-    public function validateImages() {
-      return $this->right_image || $this->left_image;
+  /**
+   * Update with new values and store the old values as previously selected.
+   * Important for unsetting any old IDs on the previous images.
+   * 
+   * @param type $name
+   * @param type $value
+   * @return type
+   */
+  public function setAttribute($name, $value) {
+    if ($name == 'left_image' && $value && $this->left_image != $value) {
+      $this->leftImage = $this->left_image;
     }
-	
-	/**
-	 * @return array relational rules.
-	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-			'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
-			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
-			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-		);
-	}
+    if ($name == 'right_image' && $value && $this->right_image != $value) {
+      $this->rightImage = $this->right_image;
+    }
+    return parent::setAttribute($name, $value);
+  }
 
-	/**
-	 * @return array customized attribute labels (name=>label)
-	 */
-	public function attributeLabels()
-	{
-		return array(
-			'id' => 'ID',
-			'event_id' => 'Event',
-			'left_image' => 'Left image',
-			'right_image' => 'Right image',
-		);
-	}
+  /**
+   * @return string the associated database table name
+   */
+  public function tableName() {
+    return 'et_ophinvisualfields_image';
+  }
 
-	/**
-	 * Retrieves a list of models based on the current search/filter conditions.
-	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-	 */
-	public function search()
-	{
-		// Warning: Please modify the following code to remove attributes that
-		// should not be searched.
+  /**
+   * @return array validation rules for model attributes.
+   */
+  public function rules() {
+    // NOTE: you should only define rules for those attributes that
+    // will receive user inputs.
+    return array(
+        array('event_id, left_image, right_image, ', 'safe'),
+        array('left_image, right_image, ', 'validateImages'),
+        // The following rule is used by search().
+        // Please remove those attributes that should not be searched.
+        array('id, event_id, left_image, right_image, ', 'safe', 'on' => 'search'),
+        array('left_image', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be higher or equal to 1'),
+    );
+  }
 
-		$criteria = new CDbCriteria;
+  /**
+   * At least one image must be set.
+   * 
+   * @return boolean true if either image is set.
+   */
+  public function validateImages() {
+    return $this->right_image || $this->left_image;
+  }
 
-		$criteria->compare('id', $this->id, true);
-		$criteria->compare('event_id', $this->event_id, true);
-		$criteria->compare('left_image', $this->left_image);
-		$criteria->compare('right_image', $this->right_image);
-		
-		return new CActiveDataProvider(get_class($this), array(
-			'criteria' => $criteria,
-		));
-	}
+  /**
+   * @return array relational rules.
+   */
+  public function relations() {
+    // NOTE: you may need to adjust the relation name and the related
+    // class name for the relations automatically generated below.
+    return array(
+        'element_type' => array(self::HAS_ONE, 'ElementType', 'id', 'on' => "element_type.class_name='" . get_class($this) . "'"),
+        'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
+        'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+        'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
+        'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
+    );
+  }
 
+  /**
+   * @return array customized attribute labels (name=>label)
+   */
+  public function attributeLabels() {
+    return array(
+        'id' => 'ID',
+        'event_id' => 'Event',
+        'left_image' => 'Left image',
+        'right_image' => 'Right image',
+    );
+  }
 
+  /**
+   * Retrieves a list of models based on the current search/filter conditions.
+   * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+   */
+  public function search() {
+    // Warning: Please modify the following code to remove attributes that
+    // should not be searched.
 
-	protected function beforeSave()
-	{
-		return parent::beforeSave();
-	}
+    $criteria = new CDbCriteria;
 
-	protected function afterSave()
-	{
+    $criteria->compare('id', $this->id, true);
+    $criteria->compare('event_id', $this->event_id, true);
+    $criteria->compare('left_image', $this->left_image);
+    $criteria->compare('right_image', $this->right_image);
 
-		return parent::afterSave();
-	}
+    return new CActiveDataProvider(get_class($this), array(
+                'criteria' => $criteria,
+            ));
+  }
 
-	protected function beforeValidate()
-	{
-		return parent::beforeValidate();
-	}
+  protected function beforeSave() {
+    return parent::beforeSave();
+  }
+
+  protected function afterSave() {
+    $this->updateImagePairs($this->left_image, $this->right_image, $this->leftImage, $this->rightImage);
+    return parent::afterSave();
+  }
+
+  protected function beforeValidate() {
+    return parent::beforeValidate();
+  }
+  
+  /**
+   * Update the new left and right images as associated with a test; if
+   * old image IDs are not null, unset them as being associated.
+   * 
+   * @param int $leftImageNew the left image to mark as associated with this
+   * test.
+   * @param int $rightImageNew the right image to mark as associated with this
+   * test.
+   * @param int $leftImageOld if set, will unmark this image as associated
+   * with a test.
+   * @param int $rightImageOld if set, will unmark this image as associated
+   * with a test.
+   */
+  private function updateImagePairs($leftImageNew, $rightImageNew, $leftImageOld, $rightImageOld) {
+    $doc = new ScannedDocument;
+    $patient = $this->event->episode->patient;
+    if ($leftImageNew) {
+      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageNew, array('assetId' => $leftImageNew, 'eye' => 'L'));   
+      $image->associated = 1;
+      $image->save();
+    }
+    if ($rightImageNew) {
+      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageNew, array('assetId' => $rightImageNew, 'eye' => 'R'));
+      $image->associated = 1;
+      $image->save();
+    }
+    if ($leftImageOld) {
+      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageOld, array('assetId' => $leftImageOld, 'eye' => 'L'));    
+      $image->associated = 0;
+      $image->save();
+    }
+    if ($rightImageOld) {
+      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageOld, array('assetId' => $rightImageOld, 'eye' => 'R'));
+      $image->associated = 0;
+      $image->save();
+    }
+  }
+
 }
+
 ?>

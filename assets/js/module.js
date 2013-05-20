@@ -4,6 +4,15 @@
 $(document).ready(function() {
   
   $('#div_Element_OphInVisualfields_Condition_other').hide();
+  $('#div_Element_OphInVisualfields_Result_other').hide();
+  
+  if ($('#Element_OphInVisualfields_Condition_ability_id option:selected').text() == 'Other') {
+    $('#div_Element_OphInVisualfields_Condition_other').show();      
+  }
+  
+  if ($('#Element_OphInVisualfields_Result_assessment_id option:selected').text() == 'Other') {
+    $('#div_Element_OphInVisualfields_Result_other').show();      
+  }
   
   $('#Element_OphInVisualfields_Condition_ability_id').change(function() {
     if ($('#Element_OphInVisualfields_Condition_ability_id option:selected').text() == 'Other') {
@@ -12,7 +21,6 @@ $(document).ready(function() {
       $('#div_Element_OphInVisualfields_Condition_other').hide();      
     }
   });
-  $('#div_Element_OphInVisualfields_Result_other').hide();
   
   $('#Element_OphInVisualfields_Result_assessment_id').change(function() {
     if ($('#Element_OphInVisualfields_Result_assessment_id option:selected').text() == 'Other') {

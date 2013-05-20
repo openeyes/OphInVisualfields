@@ -31,7 +31,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->right_image) {
         ?>
-        <td width="50%"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $element->right_image . '.tif' ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></a></td>
         <?php
       } else {
         ?>
@@ -40,7 +40,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       }
       if ($element->left_image) {
         ?>
-        <td width="50%"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $element->left_image . '.tif' ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></a></td>
         <?php
       } else {
         ?>

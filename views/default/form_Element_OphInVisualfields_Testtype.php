@@ -18,13 +18,38 @@
  */
 ?>
 
-<div class="element <?php echo $element->elementType->class_name?>"
-	data-element-type-id="<?php echo $element->elementType->id?>"
-	data-element-type-class="<?php echo $element->elementType->class_name?>"
-	data-element-type-name="<?php echo $element->elementType->name?>"
-	data-element-display-order="<?php echo $element->elementType->display_order?>">
-	<h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+<div class="element <?php echo $element->elementType->class_name ?>"
+     data-element-type-id="<?php echo $element->elementType->id ?>"
+     data-element-type-class="<?php echo $element->elementType->class_name ?>"
+     data-element-type-name="<?php echo $element->elementType->name ?>"
+     data-element-display-order="<?php echo $element->elementType->display_order ?>">
+  <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
 
-	<?php echo $form->dropDownList($element, 'test_type_id', CHtml::listData(OphInVisualfields_Testtype::model()->findAll(array('order'=> 'name asc')),'id','name'),array('empty'=>'- Please select -'))?>
-	<?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80))?>
+  <?php echo $form->dropDownList($element, 'test_type_id', CHtml::listData(OphInVisualfields_Testtype::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
+  <?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80)) ?>
 </div>
+
+<SCRIPT TYPE="TEXT/JAVASCRIPT">
+  
+  var patient_id = <?php echo $this->patient->hos_num ?>
+    
+  $('body').delegate('#Element_OphInVisualfields_Testtype_test_type_id', 'change', function() {
+    var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected').text();
+      
+    var selected = $(this).children('option:selected');
+    
+    if(selected.val().length) {
+      var test_type = selected.text();
+      if (test_type.val() > 0 && strategy.val() > 0) {
+        updateImages(test_type.text(), strategy.text());
+      }
+    }
+    return false;
+  });
+    
+  function updateImages(test_type, strategy) {
+    $.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy }, function(data){
+      $('#form_Element_OphInVisualfields').html(data);
+    });
+  }
+</SCRIPT>

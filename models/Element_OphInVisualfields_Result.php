@@ -88,7 +88,7 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
 			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-			'assessment' => array(self::BELONGS_TO, 'OphInVisualfields_Assessment', 'assessment_id'),
+			'assessmentResult' => array(self::BELONGS_TO, 'OphInVisualfields_Assessment', 'assessment_id'),
 		);
 	}
 
@@ -102,7 +102,7 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 			'event_id' => 'Event',
 			'reliability' => 'Reliability',
 			'assessment' => 'Assessment',
-			'assessment_id' => 'Assessment',
+			'assessment_id' => 'Assessment Result',
 			'other' => 'Other',
 		);
 	}

@@ -32,7 +32,7 @@
 		</tr>
 		<tr>
 			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('assessment_id'))?></td>
-			<td><span class="big"><?php echo $element->assessment ? $element->assessment->name : 'None'?></span></td>
+			<td><span class="big"><?php echo $element->assessmentResult ? $element->assessmentResult->name : 'None'?></span></td>
 		</tr>
 		<tr>
 			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('other'))?></td>
