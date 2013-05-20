@@ -41,7 +41,6 @@
     if(selected.val().length) {
       var test_type = $(this).val();
       if (test_type > 0 && strategy.val() > 0) {
-        alert(selected.text());
         updateImages(selected.text(), strategy.text());
       }
     }
