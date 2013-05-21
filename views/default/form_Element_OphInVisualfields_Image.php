@@ -78,11 +78,13 @@ if (!isset($patient)) {
   $leftHref = "";
   if ($element->left_image && count($leftImages) > 0) {
     foreach($leftImages as $image) {
-      if ($image->fsScanHumphreyImage->file->asset->id == $element->left_image) {
-        $leftSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
-              . $element->left_image;
-        $leftHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
-              . $element->left_image;
+      if ($image->tif_file_id) {
+        if ($image->fsScanHumphreyImage->file->asset->id == $element->left_image) {
+          $leftSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
+                . $element->left_image;
+          $leftHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
+                . $element->left_image;
+        }
       }
     }
   }
@@ -90,11 +92,13 @@ if (!isset($patient)) {
   $rightHref = null;
   if ($element->right_image && count($rightImages) > 0) {
     foreach($rightImages as $image) {
-      if ($image->fsScanHumphreyImage->file->asset->id == $element->right_image) {
-        $rightSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
-              . $element->right_image;
-        $rightHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
-              . $element->right_image;
+      if ($image->tif_file_id) {
+        if ($image->fsScanHumphreyImage->file->asset->id == $element->right_image) {
+          $rightSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
+                . $element->right_image;
+          $rightHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
+                . $element->right_image;
+        }
       }
     }
   }
