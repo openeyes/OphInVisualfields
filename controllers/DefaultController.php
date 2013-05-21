@@ -40,8 +40,10 @@ class DefaultController extends BaseEventTypeController {
 //          unset($rightImages[$index]);
 //        }
 //      }
+
+      $element = Yii::app()->session['_image_element'];
       $patient = Patient::model()->find('hos_num=\'' . $patient_id . '\'');
-      $this->renderPartial('form_Element_OphInVisualfields_Image', array('rightImages' => $rightImages, 'leftImages' => $leftImages, 'patient' => $patient));
+      $this->renderPartial('form_Element_OphInVisualfields_Image', array('element' => $element, 'rightImages' => $rightImages, 'leftImages' => $leftImages, 'patient' => $patient));
     }
   }
 

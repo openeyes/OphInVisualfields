@@ -28,12 +28,6 @@ if (isset($element)) {
 if (!isset($element)) {
   $element = Yii::app()->session['_image_element'];
 }
-if (isset($form)) {
-  Yii::app()->session['_image_form'] = $form;
-}
-if (!isset($form)) {
-  $form = Yii::app()->session['_image_form'];
-}
 
 $divName = $element->elementType->class_name;
 if (!isset($leftImages)) {
@@ -106,7 +100,8 @@ if (!isset($patient)) {
   }
 ?>
         
-        <?php echo $form->dropDownList($element, 'right_image', CHtml::listData($rightImages, 
+        <?php 
+        echo CHtml::activeDropDownList($element, 'right_image', CHtml::listData($rightImages, 
                 'fsScanHumphreyImage.file.asset.id',
                 'file_name'), array('empty' => '- Please select -')) ?>
 
@@ -119,7 +114,9 @@ if (!isset($patient)) {
 
       <div class="side right eventDetail"
            data-side="left">
-             <?php echo $form->dropDownList($element, 'left_image', CHtml::listData($leftImages, 'fsScanHumphreyImage.file.asset.id', 'file_name'), array('empty' => '- Please select -')) ?>
+             <?php echo CHtml::activeDropDownList($element, 'left_image', CHtml::listData($leftImages,
+                     'fsScanHumphreyImage.file.asset.id',
+                     'file_name'), array('empty' => '- Please select -')) ?>
 
         <div id='<?php echo $divName ?>' class="side right eventDetail"
              data-side="left">
