@@ -106,7 +106,9 @@ if (!isset($patient)) {
   }
 ?>
         
-        <?php echo $form->dropDownList($element, 'right_image', CHtml::listData($rightImages, 'id', 'file_name'), array('empty' => '- Please select -')) ?>
+        <?php echo $form->dropDownList($element, 'right_image', CHtml::listData($rightImages, 
+                'fsScanHumphreyImage.file.asset.id',
+                'file_name'), array('empty' => '- Please select -')) ?>
 
         <div id='<?php echo $divName ?>' class="side left eventDetail"
              data-side="left">
@@ -117,7 +119,7 @@ if (!isset($patient)) {
 
       <div class="side right eventDetail"
            data-side="left">
-             <?php echo $form->dropDownList($element, 'left_image', CHtml::listData($leftImages, 'id', 'file_name'), array('empty' => '- Please select -')) ?>
+             <?php echo $form->dropDownList($element, 'left_image', CHtml::listData($leftImages, 'fsScanHumphreyImage.file.asset.id', 'file_name'), array('empty' => '- Please select -')) ?>
 
         <div id='<?php echo $divName ?>' class="side right eventDetail"
              data-side="left">
