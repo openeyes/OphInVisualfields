@@ -38,8 +38,8 @@
 class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
   public $service;
-  private $leftImage = null;
-  private $rightImage = null;
+  private $oldLeftImage = null;
+  private $oldRightImage = null;
 
   /**
    * Returns the static model of the specified AR class.
@@ -58,11 +58,13 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
    * @return type
    */
   public function setAttribute($name, $value) {
-    if ($name == 'left_image' && $value && $this->left_image != $value) {
-      $this->leftImage = $this->left_image;
+    if ($name == 'left_image' && $this->left_image != $value) {
+      $this->oldLeftImage = $this->left_image;
+      $this->left_image = $value;
     }
-    if ($name == 'right_image' && $value && $this->right_image != $value) {
-      $this->rightImage = $this->right_image;
+    if ($name == 'right_image' && $this->right_image != $value) {
+      $this->oldRightImage = $this->right_image;
+      $this->right_image = $value;
     }
     return parent::setAttribute($name, $value);
   }
@@ -111,6 +113,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
         'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
         'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
         'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
+        'left_tif' => array(self::BELONGS_TO, 'Asset', 'left_image'),
+        'right_tif' => array(self::BELONGS_TO, 'Asset', 'right_image'),
     );
   }
 
@@ -151,14 +155,14 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
   }
 
   protected function afterSave() {
-    $this->updateImagePairs($this->left_image, $this->right_image, $this->leftImage, $this->rightImage);
+    $this->updateImagePairs($this->left_image, $this->right_image, $this->oldLeftImage, $this->oldRightImage);
     return parent::afterSave();
   }
 
   protected function beforeValidate() {
     return parent::beforeValidate();
   }
-  
+
   /**
    * Update the new left and right images as associated with a test; if
    * old image IDs are not null, unset them as being associated.
@@ -176,22 +180,26 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
     $doc = new ScannedDocument;
     $patient = $this->event->episode->patient;
     if ($leftImageNew) {
-      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageNew, array('assetId' => $leftImageNew, 'eye' => 'L'));   
+      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageNew);
+      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
       $image->associated = 1;
       $image->save();
     }
     if ($rightImageNew) {
-      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageNew, array('assetId' => $rightImageNew, 'eye' => 'R'));
+      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageNew);
+      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
       $image->associated = 1;
       $image->save();
     }
     if ($leftImageOld) {
-      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageOld, array('assetId' => $leftImageOld, 'eye' => 'L'));    
+      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageOld);
+      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
       $image->associated = 0;
       $image->save();
     }
     if ($rightImageOld) {
-      $image = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageOld, array('assetId' => $rightImageOld, 'eye' => 'R'));
+      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageOld);
+      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
       $image->associated = 0;
       $image->save();
     }

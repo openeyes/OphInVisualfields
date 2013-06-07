@@ -28,8 +28,8 @@ class DefaultController extends BaseEventTypeController {
   public function actionUpdateImages($patient_id, $test_type, $strategy) {
     $doc = new ScannedDocument;
     if ($doc->isSupported($test_type)) {
-      $leftImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'L'));
-      $rightImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'R'));
+      $leftImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'L', 'associated' => 0));
+      $rightImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'R', 'associated' => 0));
 //      foreach($leftImages as $index => $leftImage) {
 //        if ($leftImage->fsScanHumphreyImage->associated && $leftImage->fsScanHumphreyImage->file->asset->id != $left_asset_id) {
 //          unset($leftImages[$index]);

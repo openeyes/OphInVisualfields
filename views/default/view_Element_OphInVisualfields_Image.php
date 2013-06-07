@@ -29,20 +29,24 @@ Yii::import('application.modules.module_esb_mirth.models.*');
   <tbody>
     <tr>
       <?php
-      if ($element->right_image) {
+      if ($element->right_tif) {
+        $asset = Asset::model()->find('id=' . $element->right_image);
+        if ($asset) {
         ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $element->right_image . '.tif' ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->right_image . '.tif' ?>"</img></a></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $asset->file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset->file->name ?>"</img></a></td>
         <?php
-      } else {
+      }} else {
         ?>
         <td>&nbsp;</td>
         <?php
       }
-      if ($element->left_image) {
+      if ($element->left_tif) {
+        $asset = Asset::model()->find('id=' . $element->left_image);
+        if ($asset) {
         ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $element->left_image . '.tif' ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $element->left_image . '.tif' ?>"</img></a></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $asset->file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset->file->name ?>"</img></a></td>
         <?php
-      } else {
+      }} else {
         ?>
         <td>&nbsp;</td>
         <?php
