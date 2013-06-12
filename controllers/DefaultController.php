@@ -30,17 +30,6 @@ class DefaultController extends BaseEventTypeController {
     if ($doc->isSupported($test_type)) {
       $leftImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'L', 'associated' => 0));
       $rightImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'R', 'associated' => 0));
-//      foreach($leftImages as $index => $leftImage) {
-//        if ($leftImage->fsScanHumphreyImage->associated && $leftImage->fsScanHumphreyImage->file->asset->id != $left_asset_id) {
-//          unset($leftImages[$index]);
-//        }
-//      }
-//      foreach($rightImages as $index => $rightImage) {
-//        if ($rightImage->fsScanHumphreyImage->associated && $rightImage->fsScanHumphreyImage->file->asset->id != $right_asset_id) {
-//          unset($rightImages[$index]);
-//        }
-//      }
-
       $element = Yii::app()->session['_image_element'];
       $patient = Patient::model()->find('hos_num=\'' . $patient_id . '\'');
       $this->renderPartial('form_Element_OphInVisualfields_Image', array('element' => $element, 'rightImages' => $rightImages, 'leftImages' => $leftImages, 'patient' => $patient));
@@ -58,11 +47,8 @@ class DefaultController extends BaseEventTypeController {
   public function actionUpdateImage($assetId, $side) {
     $doc = new ScannedDocument;
     if ($doc->isSupported('humphreys') && $assetId) {
-      $image = $doc->getScannedDocument('humphreys', $patient_id, $assetId, array('assetId' => $assetId, 'eye' => $side));
-      $patient = Patient::model()->find('hos_num=\'' . $patient_id . '\'');
       $this->renderPartial('form_Element_OphInVisualfields_Image', array('assetId' => $assetId));
     }
-    $f = 'u';
   }
 
 }

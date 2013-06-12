@@ -41,6 +41,7 @@ if (!isset($patient)) {
 }
 
 $scannedDocument = new ScannedDocument;
+// l/r image are asset ids
 if ($element->left_image) {
   $tif = $scannedDocument->getScannedDocument('humphreys', $patient->hos_num, $element->left_image);
   $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
