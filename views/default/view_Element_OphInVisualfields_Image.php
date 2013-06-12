@@ -30,10 +30,10 @@ Yii::import('application.modules.module_esb_mirth.models.*');
     <tr>
       <?php
       if ($element->right_tif) {
-        $asset = Asset::model()->find('id=' . $element->right_image);
-        if ($asset) {
+        $file = FsFile::model()->find('id=' . $element->right_image);
+        if ($file) {
         ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $asset->file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset->file->name ?>"</img></a></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $file->name ?>"</img></a></td>
         <?php
       }} else {
         ?>
@@ -41,10 +41,10 @@ Yii::import('application.modules.module_esb_mirth.models.*');
         <?php
       }
       if ($element->left_tif) {
-        $asset = Asset::model()->find('id=' . $element->left_image);
-        if ($asset) {
+        $file = FsFile::model()->find('id=' . $element->left_image);
+        if ($file) {
         ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $asset->file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $asset->file->name ?>"</img></a></td>
+      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $file->name ?>"</img></a></td>
         <?php
       }} else {
         ?>
@@ -57,7 +57,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->right_image) {
         ?>
-        <td width="50%">Date: <?php echo Asset::model()->find('id=' . $element->right_image)->created_date ?></td>
+        <td width="50%">Date: <?php echo FsFile::model()->find('id=' . $element->right_image)->created_date ?></td>
         <?php
       } else {
         ?>
@@ -68,7 +68,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->left_image) {
         ?>
-        <td width="50%">Date: <?php echo Asset::model()->find('id=' . $element->left_image)->created_date ?></td>
+        <td width="50%">Date: <?php echo FsFile::model()->find('id=' . $element->left_image)->created_date ?></td>
         <?php
       } else {
         ?>

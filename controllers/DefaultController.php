@@ -44,10 +44,10 @@ class DefaultController extends BaseEventTypeController {
    * @param type $strategy_id
    */
   //'assetId' => $element->right_image,'rightSrc' => $rightSrc, 'divName' => $divName . '_right_image', 'side' => 'R', 'patient' => $patient
-  public function actionUpdateImage($assetId, $side) {
+  public function actionUpdateImage($fileId, $side) {
     $doc = new ScannedDocument;
-    if ($doc->isSupported('humphreys') && $assetId) {
-      $this->renderPartial('form_Element_OphInVisualfields_Image', array('assetId' => $assetId));
+    if ($doc->isSupported('humphreys') && $fileId) {
+      $this->renderPartial('form_Element_OphInVisualfields_Image', array('fileId' => $fileId));
     }
   }
 

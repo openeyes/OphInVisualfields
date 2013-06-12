@@ -113,8 +113,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
         'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
         'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
         'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-        'left_tif' => array(self::BELONGS_TO, 'Asset', 'left_image'),
-        'right_tif' => array(self::BELONGS_TO, 'Asset', 'right_image'),
+        'left_tif' => array(self::BELONGS_TO, 'FsFile', 'left_image'),
+        'right_tif' => array(self::BELONGS_TO, 'FsFile', 'right_image'),
     );
   }
 

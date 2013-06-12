@@ -41,7 +41,7 @@ if (!isset($patient)) {
 }
 
 $scannedDocument = new ScannedDocument;
-// l/r image are asset ids
+// l/r image are file ids
 if ($element->left_image) {
   $tif = $scannedDocument->getScannedDocument('humphreys', $element->left_image);
   $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
@@ -66,15 +66,15 @@ if ($element->right_image) {
     return false;
   });
     
-  function updateImage(divName, divNameUrl, assetId, index) {
+  function updateImage(divName, divNameUrl, fileId, index) {
 <?php
 if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
   ?>
         if (index > 0) {
           var dir = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/' ?>';
-          $(divName).attr('src', dir + assetId);
+          $(divName).attr('src', dir + fileId);
           var dir2 = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/' ?>';
-          $(divNameUrl).attr('href', dir2 + assetId);
+          $(divNameUrl).attr('href', dir2 + fileId);
           $(divName).show('fast');
         } else {
           $(divName).hide();
@@ -106,19 +106,19 @@ if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
              if ($element->left_image && count($leftImages) > 0) {
                foreach ($leftImages as $image) {
                  if ($image->tif_file_id) {
-                   if ($image->fsScanHumphreyImage->asset->id == $element->left_image) {
+                   if ($image->fsScanHumphreyImage->file->id == $element->left_image) {
                      $leftSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
-                             . $element->left_tif->file->name;
+                             . $element->left_tif->name;
                      $leftHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
-                             . $element->left_tif->file->name;
+                             . $element->left_tif->name;
                    }
                  }
                }
              } else if (count($leftImages) > 0 && $leftImages[0]->fsScanHumphreyImage) {
                $leftSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
-                       . $leftImages[0]->fsScanHumphreyImage->asset->name;
+                       . $leftImages[0]->fsScanHumphreyImage->file->name;
                $leftHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
-                       . $leftImages[0]->fsScanHumphreyImage->asset->name;
+                       . $leftImages[0]->fsScanHumphreyImage->file->name;
              }
              $rightSrc = null;
              $rightHref = null;
@@ -126,11 +126,11 @@ if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
              if ($element->right_image && count($rightImages) > 0) {
                foreach ($rightImages as $image) {
                  if ($image->tif_file_id) {
-                   if ($image->fsScanHumphreyImage->asset->id == $element->right_image) {
+                   if ($image->fsScanHumphreyImage->file->id == $element->right_image) {
                      $rightSrc = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/thumbs/'
-                             . $element->right_tif->file->name;
+                             . $element->right_tif->name;
                      $rightHref = VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/'
-                             . $element->right_tif->file->name;
+                             . $element->right_tif->name;
                    }
                  }
                }
@@ -144,7 +144,7 @@ if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
              ?>
 
         <?php
-        echo CHtml::activeDropDownList($element, 'right_image', CHtml::listData($rightImages, 'fsScanHumphreyImage.asset.id', 'file_name'), array('empty' => '- Please select -'))
+        echo CHtml::activeDropDownList($element, 'right_image', CHtml::listData($rightImages, 'fsScanHumphreyImage.id', 'file_name'), array('empty' => '- Please select -'))
         ?>
 
         <div id='<?php echo $divName ?>' class="side left eventDetail"
@@ -157,7 +157,7 @@ if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
       <div class="side right eventDetail"
            data-side="left">
              <?php
-             echo CHtml::activeDropDownList($element, 'left_image', CHtml::listData($leftImages, 'fsScanHumphreyImage.asset.id', 'file_name'), array('empty' => '- Please select -'))
+             echo CHtml::activeDropDownList($element, 'left_image', CHtml::listData($leftImages, 'fsScanHumphreyImage.id', 'file_name'), array('empty' => '- Please select -'))
              ?>
 
         <div id='<?php echo $divName ?>' class="side right eventDetail"
