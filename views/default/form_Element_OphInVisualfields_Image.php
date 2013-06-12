@@ -43,12 +43,12 @@ if (!isset($patient)) {
 $scannedDocument = new ScannedDocument;
 // l/r image are asset ids
 if ($element->left_image) {
-  $tif = $scannedDocument->getScannedDocument('humphreys', $patient->hos_num, $element->left_image);
+  $tif = $scannedDocument->getScannedDocument('humphreys', $element->left_image);
   $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
   array_unshift($leftImages, $image);
 }
 if ($element->right_image) {
-  $tif = $scannedDocument->getScannedDocument('humphreys', $patient->hos_num, $element->right_image);
+  $tif = $scannedDocument->getScannedDocument('humphreys', $element->right_image);
   $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
   array_unshift($rightImages, $image);
 }
