@@ -57,7 +57,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->right_image) {
         ?>
-        <td width="50%">Date: <?php echo FsFile::model()->find('id=' . $element->right_image)->created_date ?></td>
+        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->right_image)->created_date ?></td>
         <?php
       } else {
         ?>
@@ -68,7 +68,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->left_image) {
         ?>
-        <td width="50%">Date: <?php echo FsFile::model()->find('id=' . $element->left_image)->created_date ?></td>
+        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->left_image)->created_date ?></td>
         <?php
       } else {
         ?>

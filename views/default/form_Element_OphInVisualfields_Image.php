@@ -43,13 +43,13 @@ if (!isset($patient)) {
 $scannedDocument = new ScannedDocument;
 // l/r image are file ids
 if ($element->left_image) {
-  $tif = $scannedDocument->getScannedDocument('humphreys', $element->left_image);
-  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
+//  $tif = $scannedDocument->getScannedDocument('humphreys', $element->left_image);
+  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->left_image);
   array_unshift($leftImages, $image);
 }
 if ($element->right_image) {
-  $tif = $scannedDocument->getScannedDocument('humphreys', $element->right_image);
-  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->file->id);
+//  $tif = $scannedDocument->getScannedDocument('humphreys', $element->right_image);
+  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->right_image);
   array_unshift($rightImages, $image);
 }
 ?>
