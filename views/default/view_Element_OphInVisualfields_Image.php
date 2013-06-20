@@ -29,24 +29,28 @@ Yii::import('application.modules.module_esb_mirth.models.*');
   <tbody>
     <tr>
       <?php
-      if ($element->right_tif) {
-        $file = FsFile::model()->find('id=' . $element->right_image);
+      if ($element->right_image) {
+        // l/r image are file ids
+
+        $file = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->right_image);
         if ($file) {
-        ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $file->name ?>"</img></a></td>
-        <?php
-      }} else {
+          ?>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>
+          <?php
+        }
+      } else {
         ?>
         <td>&nbsp;</td>
         <?php
       }
-      if ($element->left_tif) {
-        $file = FsFile::model()->find('id=' . $element->left_image);
+      if ($element->left_image) {
+        $file = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->left_image);
         if ($file) {
-        ?>
-      <td width="50%"><a href="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/' . $file->name ?>"><img src="<?php echo VfaUtils::getEncodedDiscFileName($this->patient->hos_num) . '/thumbs/' . $file->name ?>"</img></a></td>
-        <?php
-      }} else {
+          ?>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>
+          <?php
+        }
+      } else {
         ?>
         <td>&nbsp;</td>
         <?php
@@ -79,3 +83,22 @@ Yii::import('application.modules.module_esb_mirth.models.*');
     </tr>
   </tbody>
 </table>
+
+<!--<script type="text/javascript">
+  
+  function foo() {
+    var oRequest = new XMLHttpRequest();
+    var sURL = "http://localhost/EsbRestApi/createHumphreyImagePairEvent" 
+      + "?patient_id=22211233&tif_file_id=10184&xml_id=1784&test_strategy=SITA-Standard";
+
+    oRequest.open("GET",sURL,false);
+    oRequest.setRequestHeader("X_ASCCPE_USERNAME", 'mirth');
+    oRequest.setRequestHeader("X_ASCCPE_PASSWORD", '3ntropY');
+    oRequest.send(null)
+
+    if (oRequest.status==200) alert("Response: " + Request.responseText);
+    else alert("Error: " + oRequest.responseText);
+  }
+</script>-->
+
+<!--<button value="test" onclick="foo()"/>-->
