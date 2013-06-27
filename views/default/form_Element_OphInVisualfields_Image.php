@@ -70,15 +70,16 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
 //if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
   ?>
         if (index > 0) {
-          var dir = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) 
-                  . '/thumbs/' ?>';
-          $(divName).attr('src', dir + fileId);
-          var dir2 = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/' ?>';
-          $(divNameUrl).attr('href', dir2 + fileId);
-          $(divName).show('fast');
-        } else {
-          $(divName).hide();
-        }
+          var dir = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num)
+  . '/thumbs/'
+  ?>';
+                          $(divName).attr('src', dir + fileId);
+                          var dir2 = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/' ?>';
+                          $(divNameUrl).attr('href', dir2 + fileId);
+                          $(divName).show('fast');
+                        } else {
+                          $(divName).hide();
+                        }
   <?php
 }
 ?>
@@ -108,7 +109,7 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
                  if ($image->tif_file_id) {
                    if ($image->fsScanHumphreyImage->file->id == $element->left_image) {
                      $leftSrc = $image->fsScanHumphreyImage->getPath('thumbs/') . $image->file_name;
-                     $leftHref =  $image->fsScanHumphreyImage->getPath() . $image->file_name;
+                     $leftHref = $image->fsScanHumphreyImage->getPath() . $image->file_name;
                    }
                  }
                }
@@ -121,7 +122,7 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
                  if ($image->tif_file_id) {
                    if ($image->fsScanHumphreyImage->file->id == $element->right_image) {
                      $rightSrc = $image->fsScanHumphreyImage->getPath('thumbs/') . $image->file_name;
-                     $rightHref =  $image->fsScanHumphreyImage->getPath() . $image->file_name;
+                     $rightHref = $image->fsScanHumphreyImage->getPath() . $image->file_name;
                    }
                  }
                }

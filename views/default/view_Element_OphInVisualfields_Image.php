@@ -84,21 +84,21 @@ Yii::import('application.modules.module_esb_mirth.models.*');
   </tbody>
 </table>
 
-<!--<script type="text/javascript">
-  
-  function foo() {
-    var oRequest = new XMLHttpRequest();
-    var sURL = "http://localhost/EsbRestApi/createHumphreyImagePairEvent" 
-      + "?patient_id=22211233&tif_file_id=10184&xml_id=1784&test_strategy=SITA-Standard";
+<script type="text/javascript">
+//  
+//  function foo() {
+//    var oRequest = new XMLHttpRequest();
+//    var sURL = "http://localhost/EsbRestApi/createHumphreyImagePairEvent" 
+//      + "?patient_id=33211237&tif_file_id=11&xml_id=2&test_strategy=SITA-Standard";
+//
+//    oRequest.open("GET",sURL,false);
+//    oRequest.setRequestHeader("X_ASCCPE_USERNAME", 'mirth');
+//    oRequest.setRequestHeader("X_ASCCPE_PASSWORD", '3ntropY');
+//    oRequest.send(null)
+//
+//    if (oRequest.status==200) alert("Response: " + Request.responseText);
+//    else alert("Error: " + oRequest.responseText);
+//  }
+//</script>
 
-    oRequest.open("GET",sURL,false);
-    oRequest.setRequestHeader("X_ASCCPE_USERNAME", 'mirth');
-    oRequest.setRequestHeader("X_ASCCPE_PASSWORD", '3ntropY');
-    oRequest.send(null)
-
-    if (oRequest.status==200) alert("Response: " + Request.responseText);
-    else alert("Error: " + oRequest.responseText);
-  }
-</script>-->
-
-<!--<button value="test" onclick="foo()"/>-->
+<!--<button value="test" onclick="//foo()"/>-->
