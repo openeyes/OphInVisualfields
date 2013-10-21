@@ -19,9 +19,9 @@
 ?>
 
 <?php
-// TODO - how to deal with cross-module dependencies?
-Yii::import('application.modules.module_esb_mirth.models.*');
-
+if (!isset($patient)) {
+  $patient = $this->patient;
+}
 if (isset($element)) {
   Yii::app()->session['_image_element'] = $element;
 }
@@ -31,22 +31,21 @@ if (!isset($element)) {
 
 $divName = $element->elementType->class_name;
 if (!isset($leftImages)) {
-  $leftImages = array();
+  $leftImages = Element_OphInHumphreys_Document::getScannedDocuments(
+                  $patient->hos_num, array('associated' => 0, 'eye' => 'L'));
 }
 if (!isset($rightImages)) {
-  $rightImages = array();
-}
-if (!isset($patient)) {
-  $patient = $this->patient;
+  $rightImages = Element_OphInHumphreys_Document::getScannedDocuments(
+                  $patient->hos_num, array('associated' => 0, 'eye' => 'R'));
 }
 
 // l/r image are file ids
 if ($element->left_image) {
-  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->left_image);
+  $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->left_image);
   array_unshift($leftImages, $image);
 }
 if ($element->right_image) {
-  $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->right_image);
+  $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->right_image);
   array_unshift($rightImages, $image);
 }
 ?>
@@ -54,14 +53,38 @@ if ($element->right_image) {
   
   var patient_id = <?php echo $patient->hos_num ?>
     
+  function checkSelectedValues() {
+      
+    var test_type = $('#Element_OphInVisualfields_Testtype_test_type_id').children('option:selected').val();
+    var pattern = $('#Element_OphInVisualfields_Details_pattern_id').children('option:selected').val();
+    var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected').val();
+    if (test_type < 1) {
+      alert('Error: please set test type.');
+      return false;
+    }
+    if (strategy < 1) {
+      alert('Error: please set test strategy.');
+      return false;
+    }
+    if (pattern < 1) {
+      alert('Error: please set pattern.');
+      return false;
+    }
+    return true;
+  }
+    
   $('#<?php echo $element->elementType->class_name ?>_right_image').change(function() {
-    updateImage('#<?php echo $divName ?>_right_image_thumb', '#<?php echo $divName ?>_right_image_url', $(this).children('option:selected').text(), $(this).children('option:selected').val());
-    return false;
+    if (checkSelectedValues()) {
+      updateImage('#<?php echo $divName ?>_right_image_thumb', '#<?php echo $divName ?>_right_image_url', $(this).children('option:selected').text(), $(this).children('option:selected').val());
+      return false;
+    }
   });
   
   $('#<?php echo $element->elementType->class_name ?>_left_image').change(function() {
-    updateImage('#<?php echo $divName ?>_left_image_thumb', '#<?php echo $divName ?>_left_image_url', $(this).children('option:selected').text(), $(this).children('option:selected').val());
-    return false;
+    if (checkSelectedValues()) {
+      updateImage('#<?php echo $divName ?>_left_image_thumb', '#<?php echo $divName ?>_left_image_url', $(this).children('option:selected').text(), $(this).children('option:selected').val());
+      return false;
+    }
   });
     
   function updateImage(divName, divNameUrl, fileId, index) {
@@ -70,16 +93,33 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
 //if (VfaUtils::getEncodedDiscFileName($patient->hos_num)) {
   ?>
         if (index > 0) {
-          var dir = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num)
-  . '/thumbs/'
-  ?>';
-                          $(divName).attr('src', dir + fileId);
-                          var dir2 = '<?php echo VfaUtils::getEncodedDiscFileName($patient->hos_num) . '/' ?>';
-                          $(divNameUrl).attr('href', dir2 + fileId);
-                          $(divName).show('fast');
-                        } else {
-                          $(divName).hide();
-                        }
+  <?php
+  echo 'var dirs = { \'index\' : \'value\' };';
+  foreach ($rightImages as $imageFile) {
+    // get file path of specified file:
+//                          $scan = new ScannedDocument();
+    $file = OphInVisualfields_Humphrey_Image::model()->find('file_id=:file_id', array(':file_id' => $imageFile->fsScanHumphreyImage->file_id));
+    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath('thumbs/') . '";';
+    ?>
+                                            
+    <?php
+  }
+  foreach ($leftImages as $imageFile) {
+    // get file path of specified file:
+//                          $scan = new ScannedDocument();
+    $file = OphInVisualfields_Humphrey_Image::model()->find('file_id=:file_id', array(':file_id' => $imageFile->fsScanHumphreyImage->file_id));
+    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath('thumbs/') . '";';
+    ?>
+                                            
+    <?php
+  }
+  ?>
+          $(divName).attr('src', dirs[parseInt(index)+1] + fileId);
+          $(divNameUrl).attr('href', dirs[parseInt(index)+1] + fileId);
+          $(divName).show('fast');
+        } else {
+          $(divName).hide();
+        }
   <?php
 }
 ?>

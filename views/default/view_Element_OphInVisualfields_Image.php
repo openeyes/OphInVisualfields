@@ -32,7 +32,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       if ($element->right_image) {
         // l/r image are file ids
 
-        $file = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->right_image);
+        $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->right_image);
         if ($file) {
           ?>
           <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>
@@ -44,7 +44,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
         <?php
       }
       if ($element->left_image) {
-        $file = FsScanHumphreyXml::model()->find('tif_file_id=' . $element->left_image);
+        $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->left_image);
         if ($file) {
           ?>
           <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>

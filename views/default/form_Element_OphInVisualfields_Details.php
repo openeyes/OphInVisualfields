@@ -16,6 +16,7 @@
  * @copyright Copyright (c) 2011-2012, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
+echo CHtml::hiddenField('YII_CSRF_TOKEN', Yii::app()->request->csrfToken);
 ?>
 
 <div class="element <?php echo $element->elementType->class_name ?>"
@@ -55,7 +56,8 @@
   });
     
   function updateImages(test_type, strategy) {
-    $.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy }, function(data){
+    var csrf = $('#YII_CSRF_TOKEN').val();
+    $.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy, 'YII_CSRF_TOKEN': csrf }, function(data){
       $('#form_Element_OphInVisualfields').html(data);
     });
   }

@@ -27,9 +27,9 @@ class DefaultController extends BaseEventTypeController {
    */
   public function actionUpdateImages($patient_id, $test_type, $strategy) {
     $doc = new ScannedDocument;
-    if ($doc->isSupported($test_type)) {
-      $leftImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'L', 'associated' => 0));
-      $rightImages = $doc->getScannedDocuments('humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'R', 'associated' => 0));
+    if ($doc->isSupported('Visualfields', $test_type)) {
+      $leftImages = $doc->getScannedDocuments('Visualfields', 'humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'L', 'associated' => 0));
+      $rightImages = $doc->getScannedDocuments('Visualfields', 'humphreys', $patient_id, array('strategy' => $strategy, 'eye' => 'R', 'associated' => 0));
       $element = Yii::app()->session['_image_element'];
       $patient = Patient::model()->find('hos_num=\'' . $patient_id . '\'');
       $this->renderPartial('form_Element_OphInVisualfields_Image', array('element' => $element, 'rightImages' => $rightImages, 'leftImages' => $leftImages, 'patient' => $patient));

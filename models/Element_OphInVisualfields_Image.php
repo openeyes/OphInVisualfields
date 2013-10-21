@@ -180,28 +180,28 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
     $doc = new ScannedDocument;
     $patient = $this->event->episode->patient;
     if ($leftImageNew) {
-      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $leftImageNew);
+      $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $leftImageNew);
 //      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageNew);
 //      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->id);
       $image->associated = 1;
       $image->save();
     }
     if ($rightImageNew) {
-      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $rightImageNew);
+      $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $rightImageNew);
 //      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageNew);
 //      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->id);
       $image->associated = 1;
       $image->save();
     }
     if ($leftImageOld) {
-      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $leftImageOld);
+      $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $leftImageOld);
 //      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $leftImageOld);
 //      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->id);
       $image->associated = 0;
       $image->save();
     }
     if ($rightImageOld) {
-      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $rightImageOld);
+      $image = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $rightImageOld);
 //      $tif = $doc->getScannedDocument('humphreys', $patient->hos_num, $rightImageOld);
 //      $image = FsScanHumphreyXml::model()->find('tif_file_id=' . $tif->id);
       $image->associated = 0;
