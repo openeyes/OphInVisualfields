@@ -181,12 +181,12 @@ class HumphreyScanController extends RestfulController {
     // ELSE { // what? }
     // likewise, if the image does not exist, add it:
     // ELSE { // what? }
-    if (Yii::app()->params['visualfields.bind'] == true && !$xml_file_exists && !$image_file_exists) {
+    if (Yii::app()->params['visualfields.bind'] == 'true' && !$xml_file_exists && !$image_file_exists) {
       $this->createHumphreyImagePairEvent($xml_data['recorded_pid'], $xmlDataFileImport->tif_file_id, $xmlDataFileImport->id, $xml_data['test_strategy']);
       $this->_sendResponse(200, sprintf("Success: " . var_export(Yii::app()->params['visualfields.bind'], true), $xmlDataFileImport->id), "text/html", "importHumphreyImageSet", "scan");
     } else {
       
-      $this->_sendResponse(200, sprintf("Imported Image (but not bound): " . var_export(Yii::app()->params['visualfields.bind'], true), $xmlDataFileImport->id), "text/html", "importHumphreyImageSet", "scan");
+      $this->_sendResponse(200, sprintf("Imported Image (but not bound)", $xmlDataFileImport->id), "text/html", "importHumphreyImageSet", "scan");
     }
     // ELSE { // what? }
   }
