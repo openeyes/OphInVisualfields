@@ -51,7 +51,7 @@ if ($element->right_image) {
 ?>
 <script TYPE="TEXT/JAVASCRIPT">
   
-  var patient_id = <?php echo $patient->hos_num ?>
+  var patient_id = <?php echo $patient->hos_num ?>;
     
   function checkSelectedValues() {
       
@@ -94,23 +94,24 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
   ?>
         if (index > 0) {
   <?php
+  $name = $this->episode->firm->serviceSubspecialtyAssignment->subspecialty->name;
   echo 'var dirs = { \'index\' : \'value\' };';
   foreach ($rightImages as $imageFile) {
     // get file path of specified file:
 //                          $scan = new ScannedDocument();
     $file = OphInVisualfields_Humphrey_Image::model()->find('file_id=:file_id', array(':file_id' => $imageFile->fsScanHumphreyImage->file_id));
-    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath('thumbs/') . '";';
+    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . '";';
     ?>
-                                            
+                                                
     <?php
   }
   foreach ($leftImages as $imageFile) {
     // get file path of specified file:
 //                          $scan = new ScannedDocument();
     $file = OphInVisualfields_Humphrey_Image::model()->find('file_id=:file_id', array(':file_id' => $imageFile->fsScanHumphreyImage->file_id));
-    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath('thumbs/') . '";';
+    echo 'dirs[' . $imageFile->file->id . ']="' . $file->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . '";';
     ?>
-                                            
+                                                
     <?php
   }
   ?>
@@ -148,7 +149,7 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
                foreach ($leftImages as $image) {
                  if ($image->tif_file_id) {
                    if ($image->fsScanHumphreyImage->file->id == $element->left_image) {
-                     $leftSrc = $image->fsScanHumphreyImage->getPath('thumbs/') . $image->file_name;
+                     $leftSrc = $image->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $image->file_name;
                      $leftHref = $image->fsScanHumphreyImage->getPath() . $image->file_name;
                    }
                  }
@@ -161,7 +162,7 @@ if (ScannedDocumentUid::model()->find('pid=\'' . $patient->hos_num . '\'')) {
                foreach ($rightImages as $image) {
                  if ($image->tif_file_id) {
                    if ($image->fsScanHumphreyImage->file->id == $element->right_image) {
-                     $rightSrc = $image->fsScanHumphreyImage->getPath('thumbs/') . $image->file_name;
+                     $rightSrc = $image->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $image->file_name;
                      $rightHref = $image->fsScanHumphreyImage->getPath() . $image->file_name;
                    }
                  }

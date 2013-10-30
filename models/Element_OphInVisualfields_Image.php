@@ -84,6 +84,7 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
     // will receive user inputs.
     return array(
         array('event_id, left_image, right_image, ', 'safe'),
+        array('left_image, right_image, ', 'required'),
         array('left_image, right_image, ', 'validateImages'),
         // The following rule is used by search().
         // Please remove those attributes that should not be searched.
@@ -207,6 +208,47 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
       $image->associated = 0;
       $image->save();
     }
+  }
+
+  public static function getSubSpecialitySubimage($subspeciality) {
+    $subsp_subimage = Yii::app()->params['visualfields.subspeciality_subimage']['humphreys'];
+//    $name = ;
+    if (isset($subsp_subimage[$subspeciality])) {
+      $image_type = $subsp_subimage[$subspeciality];
+    } else if (isset($subsp_subimage['default'])) {
+      $image_type = $subsp_subimage['default'];
+    }
+    return $image_type;
+  }
+
+  public static function getImageWidth($image_type) {
+
+    $config = Yii::app()->params['visualfields.subimages']['humphreys'];
+    if (isset($config[$image_type]['scale'])) {
+      $data = $config[$image_type]['scale'];
+      $dims = explode('x', $data);
+      $width = $dims[0];
+    } else if (isset($config[$image_type])) {
+      $data = $config[$image_type]['crop'];
+      $dims = explode(',', $data);
+      $width = $dims[0];
+    }
+    return $width;
+  }
+
+  public static function getImageHeight($image_type) {
+
+    $config = Yii::app()->params['visualfields.subimages']['humphreys'];
+    if (isset($config[$image_type]['scale'])) {
+      $data = $config[$image_type]['scale'];
+      $dims = explode('x', $data);
+      $height = $dims[1];
+    }else if (isset($config[$image_type])) {
+      $data = $config[$image_type]['crop'];
+      $dims = explode(',', $data);
+      $height = $dims[1];
+    }
+    return $height;
   }
 
 }

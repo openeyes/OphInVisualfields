@@ -29,13 +29,18 @@ Yii::import('application.modules.module_esb_mirth.models.*');
   <tbody>
     <tr>
       <?php
+      if (isset($this->episode->firm->serviceSubspecialtyAssignment->subspecialty->name)) {
+        $name = $this->episode->firm->serviceSubspecialtyAssignment->subspecialty->name;
+      } else {
+        $name = $this->firm->serviceSubspecialtyAssignment->subspecialty->name;
+      }
       if ($element->right_image) {
         // l/r image are file ids
 
         $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->right_image);
         if ($file) {
           ?>
-          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name ?>"</img></a></td>
           <?php
         }
       } else {
@@ -47,7 +52,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
         $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->left_image);
         if ($file) {
           ?>
-          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath('thumbs/') . $file->file_name ?>"</img></a></td>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name ?>"</img></a></td>
           <?php
         }
       } else {
@@ -61,7 +66,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->right_image) {
         ?>
-        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->right_image)->created_date ?></td>
+        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->right_image)->created_date  ?></td>
         <?php
       } else {
         ?>
@@ -72,7 +77,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
       <?php
       if ($element->left_image) {
         ?>
-        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->left_image)->created_date ?></td>
+        <td width="50%">Date: <?php // echo FsFile::model()->find('id=' . $element->left_image)->created_date  ?></td>
         <?php
       } else {
         ?>
@@ -85,20 +90,20 @@ Yii::import('application.modules.module_esb_mirth.models.*');
 </table>
 
 <script type="text/javascript">
-//  
-//  function foo() {
-//    var oRequest = new XMLHttpRequest();
-//    var sURL = "http://localhost/EsbRestApi/createHumphreyImagePairEvent" 
-//      + "?patient_id=33211237&tif_file_id=11&xml_id=2&test_strategy=SITA-Standard";
-//
-//    oRequest.open("GET",sURL,false);
-//    oRequest.setRequestHeader("X_ASCCPE_USERNAME", 'mirth');
-//    oRequest.setRequestHeader("X_ASCCPE_PASSWORD", '3ntropY');
-//    oRequest.send(null)
-//
-//    if (oRequest.status==200) alert("Response: " + Request.responseText);
-//    else alert("Error: " + oRequest.responseText);
-//  }
-//</script>
+  //  
+  //  function foo() {
+  //    var oRequest = new XMLHttpRequest();
+  //    var sURL = "http://localhost/EsbRestApi/createHumphreyImagePairEvent" 
+  //      + "?patient_id=33211237&tif_file_id=11&xml_id=2&test_strategy=SITA-Standard";
+  //
+  //    oRequest.open("GET",sURL,false);
+  //    oRequest.setRequestHeader("X_ASCCPE_USERNAME", 'mirth');
+  //    oRequest.setRequestHeader("X_ASCCPE_PASSWORD", '3ntropY');
+  //    oRequest.send(null)
+  //
+  //    if (oRequest.status==200) alert("Response: " + Request.responseText);
+  //    else alert("Error: " + oRequest.responseText);
+  //  }
+  //</script>
 
 <!--<button value="test" onclick="//foo()"/>-->

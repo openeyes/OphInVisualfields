@@ -389,7 +389,7 @@ class HumphreyScanController extends RestfulController {
     $createdDate = new DateTime($xml_image->study_date);
     $createdTime = new DateTime($xml_image->study_date . ' ' . $xml_image->study_time);
     //          $x = $createdTime->sub(new DateInterval('PT1H2M'))->format('H:i:s');
-    $interval = Yii::app()->params['visualfields.humphrey_event_bond_time'];
+    $interval = Yii::app()->params['visualfields.event_bond_time'];
     if ($interval) {
       $preTime = $createdTime->sub(new DateInterval($interval));
     }

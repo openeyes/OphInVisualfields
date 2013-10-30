@@ -135,7 +135,7 @@ class OphInVisualfields_Humphrey_Image extends CActiveRecord
           $vfaPath = explode(':', $path['humphreys']);
           $realPath = $vfaPath[0];
           $oePath = $vfaPath[1];
-          $path = str_replace($realPath, $oePath, $this->file->dir->path) . '/' . $subdir;
+          $path = str_replace($realPath, $oePath, $this->file->dir->path) . '/' . $subdir . '/';
         }
       }
       return $path;
