@@ -40,7 +40,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
         $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->right_image);
         if ($file) {
           ?>
-          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name ?>"</img></a></td>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img type="image/tiff" src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name . ".jpg" ?>"</img></a></td>
           <?php
         }
       } else {
@@ -52,7 +52,7 @@ Yii::import('application.modules.module_esb_mirth.models.*');
         $file = OphInVisualfields_Humphrey_Xml::model()->find('tif_file_id=' . $element->left_image);
         if ($file) {
           ?>
-          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name ?>"</img></a></td>
+          <td width="50%"><a href="<?php echo $file->fsScanHumphreyImage->getPath() . $file->file_name ?>"><img src="<?php echo $file->fsScanHumphreyImage->getPath(Element_OphInVisualfields_Image::getSubSpecialitySubimage($name)) . $file->file_name . ".jpg" ?>"</img></a></td>
           <?php
         }
       } else {
