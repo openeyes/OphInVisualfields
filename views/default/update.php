@@ -17,35 +17,28 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
+<?php $this->beginContent('//patient/event_container'); ?>
+        <?php
+                $this->breadcrumbs=array($this->module->id);
+                $this->event_actions[] = EventAction::button('Save', 'save', array('level' => 'save'), array('form'=>'anaesthetic-update'));
+        ?>
 
-<?php
-	$this->breadcrumbs=array($this->module->id);
-//	$this->header();
-?>
+        <h2 class="event-title"><?php echo $this->event_type->name ?></h2>
 
-<h3 class="withEventIcon" style="background:transparent url(<?php echo $this->assetPath?>/img/medium.png) center left no-repeat;"><?php echo $this->event_type->name ?></h3>
+        <?php $this->renderPartial('//base/_messages'); ?>
 
-<div>
-	<?php
-	$form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-		'id'=>'clinical-create',
-		'enableAjaxValidation'=>false,
-		'htmlOptions' => array('class'=>'sliding'),
-		'focus'=>'#procedure_id'
-	))?>
-
-	<?php $this->displayErrors($errors)?>
-	<?php $this->renderDefaultElements($this->action->id, $form)?>
-	<?php $this->renderOptionalElements($this->action->id, $form)?>
-	<?php $this->displayErrors($errors)?>
-
-	<div class="cleartall"></div>
-	<div class="form_button">
-		<img class="loader" style="display: none;" src="<?php echo Yii::app()->createUrl('img/ajax-loader.gif')?>" alt="loading..." />&nbsp;
-		<button type="submit" class="classy green venti" id="et_save" name="save"><span class="button-span button-span-green">Save</span></button>
-		<button type="submit" class="classy red venti" id="et_cancel" name="cancel"><span class="button-span button-span-red">Cancel</span></button>
-	</div>
-	<?php $this->endWidget()?>
-</div>
-
-<?php // $this->footer()?>
+        <?php $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
+                'id'=>'anaesthetic-update',
+                'enableAjaxValidation'=>false,
+                'layoutColumns' => array(
+                        'label' => 2,
+                        'field' => 10
+                )
+        ));
+        ?>
+                <?php $this->displayErrors($errors)?>
+                <?php $this->renderDefaultElements($this->action->id, $form)?>
+                <?php $this->renderOptionalElements($this->action->id, $form)?>
+                <?php $this->displayErrors($errors, true)?>
+        <?php $this->endWidget()?>
+<?php $this->endContent() ;?>
