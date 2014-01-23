@@ -34,11 +34,11 @@ class m130509_081459_event_type_OphInVisualfields extends OEMigration {
     // select the element_type_id for this element type name
     $element_type = $this->dbConnection->createCommand()->select('id')->from('element_type')->where('event_type_id=:eventTypeId and name=:name', array(':eventTypeId' => $event_type['id'], ':name' => 'TestType'))->queryRow();
     // create an element_type entry for this element type name if one doesn't already exist
-    if (!$this->dbConnection->createCommand()->select('id')->from('element_type')->where('name=:name and event_type_id=:eventTypeId', array(':name' => 'Condtition', ':eventTypeId' => $event_type['id']))->queryRow()) {
-      $this->insert('element_type', array('name' => 'Condtition', 'class_name' => 'Element_OphInVisualfields_Condtition', 'event_type_id' => $event_type['id'], 'display_order' => 1));
+    if (!$this->dbConnection->createCommand()->select('id')->from('element_type')->where('name=:name and event_type_id=:eventTypeId', array(':name' => 'Condition', ':eventTypeId' => $event_type['id']))->queryRow()) {
+      $this->insert('element_type', array('name' => 'Condition', 'class_name' => 'Element_OphInVisualfields_Condition', 'event_type_id' => $event_type['id'], 'display_order' => 1));
     }
     // select the element_type_id for this element type name
-    $element_type = $this->dbConnection->createCommand()->select('id')->from('element_type')->where('event_type_id=:eventTypeId and name=:name', array(':eventTypeId' => $event_type['id'], ':name' => 'Condtition'))->queryRow();
+    $element_type = $this->dbConnection->createCommand()->select('id')->from('element_type')->where('event_type_id=:eventTypeId and name=:name', array(':eventTypeId' => $event_type['id'], ':name' => 'Condition'))->queryRow();
     // create an element_type entry for this element type name if one doesn't already exist
     if (!$this->dbConnection->createCommand()->select('id')->from('element_type')->where('name=:name and event_type_id=:eventTypeId', array(':name' => 'Details', ':eventTypeId' => $event_type['id']))->queryRow()) {
       $this->insert('element_type', array('name' => 'Details', 'class_name' => 'Element_OphInVisualfields_Details', 'event_type_id' => $event_type['id'], 'display_order' => 1));
@@ -84,7 +84,7 @@ class m130509_081459_event_type_OphInVisualfields extends OEMigration {
 
 
     // create the table for this element type: et_modulename_elementtypename
-    $this->createTable('et_ophinvisualfields_condtition', array(
+    $this->createTable('et_ophinvisualfields_condition', array(
         'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
         'event_id' => 'int(10) unsigned NOT NULL',
         'ability_id' => 'int(10) unsigned NOT NULL DEFAULT 1', // Ability
@@ -95,14 +95,14 @@ class m130509_081459_event_type_OphInVisualfields extends OEMigration {
         'created_user_id' => 'int(10) unsigned NOT NULL DEFAULT 1',
         'created_date' => 'datetime NOT NULL DEFAULT \'1901-01-01 00:00:00\'',
         'PRIMARY KEY (`id`)',
-        'KEY `et_ophinvisualfields_condtition_lmui_fk` (`last_modified_user_id`)',
-        'KEY `et_ophinvisualfields_condtition_cui_fk` (`created_user_id`)',
-        'KEY `et_ophinvisualfields_condtition_ev_fk` (`event_id`)',
-        'KEY `et_ophinvisualfields_condtition_ability_id_fk` (`ability_id`)',
-        'CONSTRAINT `et_ophinvisualfields_condtition_lmui_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)',
-        'CONSTRAINT `et_ophinvisualfields_condtition_cui_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`)',
-        'CONSTRAINT `et_ophinvisualfields_condtition_ev_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)',
-        'CONSTRAINT `et_ophinvisualfields_condtition_ability_id_fk` FOREIGN KEY (`ability_id`) REFERENCES `ophinvisualfields_ability` (`id`)',
+        'KEY `et_ophinvisualfields_condition_lmui_fk` (`last_modified_user_id`)',
+        'KEY `et_ophinvisualfields_condition_cui_fk` (`created_user_id`)',
+        'KEY `et_ophinvisualfields_condition_ev_fk` (`event_id`)',
+        'KEY `et_ophinvisualfields_condition_ability_id_fk` (`ability_id`)',
+        'CONSTRAINT `et_ophinvisualfields_condition_lmui_fk` FOREIGN KEY (`last_modified_user_id`) REFERENCES `user` (`id`)',
+        'CONSTRAINT `et_ophinvisualfields_condition_cui_fk` FOREIGN KEY (`created_user_id`) REFERENCES `user` (`id`)',
+        'CONSTRAINT `et_ophinvisualfields_condition_ev_fk` FOREIGN KEY (`event_id`) REFERENCES `event` (`id`)',
+        'CONSTRAINT `et_ophinvisualfields_condition_ability_id_fk` FOREIGN KEY (`ability_id`) REFERENCES `ophinvisualfields_ability` (`id`)',
             ), 'ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin');
 
 
@@ -184,7 +184,7 @@ class m130509_081459_event_type_OphInVisualfields extends OEMigration {
 
 
 
-    $this->dropTable('et_ophinvisualfields_condtition');
+    $this->dropTable('et_ophinvisualfields_condition');
 
 
 
