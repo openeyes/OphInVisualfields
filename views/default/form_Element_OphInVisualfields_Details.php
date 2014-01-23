@@ -18,17 +18,20 @@
  */
 echo CHtml::hiddenField('YII_CSRF_TOKEN', Yii::app()->request->csrfToken);
 ?>
+<section class="element <?php echo $element->elementType->class_name?>"
+        data-element-type-id="<?php echo $element->elementType->id?>"
+        data-element-type-class="<?php echo $element->elementType->class_name?>"
+        data-element-type-name="<?php echo $element->elementType->name?>"
+        data-element-display-order="<?php echo $element->elementType->display_order?>">
+        <header class="element-header">
+                <h3 class="element-title"><?php echo $element->elementType->name; ?></h3>
+        </header>
 
-<div class="element <?php echo $element->elementType->class_name ?>"
-     data-element-type-id="<?php echo $element->elementType->id ?>"
-     data-element-type-class="<?php echo $element->elementType->class_name ?>"
-     data-element-type-name="<?php echo $element->elementType->name ?>"
-     data-element-display-order="<?php echo $element->elementType->display_order ?>">
-  <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+        <div class="element-fields">
 
   <?php echo $form->dropDownList($element, 'pattern_id', CHtml::listData(OphInVisualfields_Pattern::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
   <?php echo $form->dropDownList($element, 'strategy_id', CHtml::listData(OphInVisualfields_Strategy::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
-</div>
+</section>
 
 <SCRIPT TYPE="TEXT/JAVASCRIPT">
   

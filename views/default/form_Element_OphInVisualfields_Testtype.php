@@ -19,39 +19,43 @@
 echo CHtml::hiddenField('YII_CSRF_TOKEN', Yii::app()->request->csrfToken);
 ?>
 
-<div class="element <?php echo $element->elementType->class_name ?>"
-     data-element-type-id="<?php echo $element->elementType->id ?>"
-     data-element-type-class="<?php echo $element->elementType->class_name ?>"
-     data-element-type-name="<?php echo $element->elementType->name ?>"
-     data-element-display-order="<?php echo $element->elementType->display_order ?>">
-  <h4 class="elementTypeName"><?php echo $element->elementType->name; ?></h4>
+<section class="element <?php echo $element->elementType->class_name ?>"
+		 data-element-type-id="<?php echo $element->elementType->id ?>"
+		 data-element-type-class="<?php echo $element->elementType->class_name ?>"
+		 data-element-type-name="<?php echo $element->elementType->name ?>"
+		 data-element-display-order="<?php echo $element->elementType->display_order ?>">
+	<header class="element-header">
+		<h3 class="element-title"><?php echo $element->elementType->name; ?></h3>
+	</header>
 
-  <?php echo $form->dropDownList($element, 'test_type_id', CHtml::listData(OphInVisualfields_Testtype::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
-  <?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80)) ?>
-</div>
+	<div class="element-fields">
 
+		<?php echo $form->dropDownList($element, 'test_type_id', CHtml::listData(OphInVisualfields_Testtype::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
+		<?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80)) ?>
+
+</section>
 <SCRIPT TYPE="TEXT/JAVASCRIPT">
   
-  var patient_id = <?php echo $this->patient->hos_num ?>
+	var patient_id = <?php echo $this->patient->hos_num ?>
     
-  $('body').delegate('#Element_OphInVisualfields_Testtype_test_type_id', 'change', function() {
-    var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected');
+	$('body').delegate('#Element_OphInVisualfields_Testtype_test_type_id', 'change', function() {
+		var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected');
       
-    var selected = $(this).children('option:selected');
+		var selected = $(this).children('option:selected');
     
-    if(selected.val().length) {
-      var test_type = $(this).val();
-      if (test_type > 0 && strategy.val() > 0) {
-        updateImages(selected.text(), strategy.text());
-      }
-    }
-    return false;
-  });
+		if(selected.val().length) {
+			var test_type = $(this).val();
+			if (test_type > 0 && strategy.val() > 0) {
+				updateImages(selected.text(), strategy.text());
+			}
+		}
+		return false;
+	});
     
-  function updateImages(test_type, strategy) {
-    var csrf = $('#YII_CSRF_TOKEN').val();
-    $.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy,  'YII_CSRF_TOKEN': csrf }, function(data){
-      $('#form_Element_OphInVisualfields').html(data);
-    });
-  }
+	function updateImages(test_type, strategy) {
+		var csrf = $('#YII_CSRF_TOKEN').val();
+		$.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy,  'YII_CSRF_TOKEN': csrf }, function(data){
+			$('#form_Element_OphInVisualfields').html(data);
+		});
+	}
 </SCRIPT>
