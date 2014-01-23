@@ -21,7 +21,7 @@ class HumphreyScanController extends BaseModuleController {
 	 */
 	function actionImport() {
 		$dest_dir = null;
-				$src_dir = "/var/openeyes/vfa-in";
+
 		$this->_checkAuth();
 		$json = file_get_contents('php://input');
 		$put_vars = CJSON::decode($json, true);
@@ -63,10 +63,6 @@ class HumphreyScanController extends BaseModuleController {
 		$data = file_get_contents($src_file);
 		try {
 			$xml_data = $this->getXmlData($data);
-			// Cardiff check! See if the extraneous char is at the end of the PID:
-//		$pid = $xml_data['recorded_pid'];
-			// TODO - verify PID against the trust's hospital number:
-			// CODE HERE - this is not verification of patient, it's verification that the hos num is correct for this trust:
 		} catch (Exception $ex) {
 			// need to move files to another (error) location
 			$image_scan = basename($xml_file, ".xml")
@@ -85,17 +81,26 @@ class HumphreyScanController extends BaseModuleController {
 		if (!file_exists($image_file)) {
 			// again, need to move XML file to another (error) location
 			$this->moveToErrorDir($src_dir, $xml_file, $image_file, sprintf("Error: parsing file '%s': '%s'", $src_file, $ex->getMessage()));
-			$this->_sendResponse(400, sprintf("Error: Could not find image file '%s' for XML source file '%s'", $xml_data['file_reference'], $src_file), "import", "scan");
+			$this->_sendResponse(404, sprintf("Error: Could not find image file '%s' for XML source file '%s'", $xml_data['file_reference'], $src_file), "import", "scan");
 		}
-		// TODO - scanned document ID is a class that can ultimately
-		// be removed, when patients are automatically imported from the scan:
-		Yii::import('application.modules.OphInVisualfields.components.ScannedDocumentUid');
-		$uid = ScannedDocumentUid::model()->find('pid=\'' . $xml_data['recorded_pid'] . '\'');
-		if (!$uid) {
-			$uid = new ScannedDocumentUid();
-			$uid->pid = $xml_data['recorded_pid'];
-			$uid->save();
+		// validate the PID against main config pattern:
+		$pid = $xml_data['recorded_pid'];
+		if (!preg_match(Yii::app()->params['hos_num_regex'], $pid)) {
+			$this->moveToErrorDir($src_dir, $xml_file, $image_scan, sprintf("Error: Bad patient identifier in '%s': '%s'", $src_file, $ex->getMessage()));
+			$this->_sendResponse(400, "Error: bad patient identifier.");
 		}
+		// if the patient doesn't exist, create them:
+		// TODO check for lower/upper case!
+		// Data check! Any checks to be done (check and amend bad chars?):
+		// TODO - verify PID against the trust's hospital number:
+		// CODE HERE - this is not verification of patient, it's verification that the hos num is correct for this trust:
+		$patient = Patient::model()->find('hos_num=?', array($pid));
+		if (!$patient && Yii::app()->params['visualfields.create_patient']) {
+			$username = $_SERVER['HTTP_X_' . $this->getApplicationId() . '_USERNAME'];
+			$this->createPatient($username, $xml_data);
+		}
+		// patient UID helps make their directory location:
+		$uid = $this->getPatientUid($xml_data['recorded_pid']);
 		// keep track and see if the files exist in the move-to locations
 		// - need to be careful of over-writing files:
 		$xml_file_exists = false;
@@ -103,7 +108,7 @@ class HumphreyScanController extends BaseModuleController {
 		// move files:
 		try {
 			if ($dest_dir) {
-				$dest_dir = $dest_dir . '/' . $xml_data['test_strategy'] . '/' . $uid->id;
+				$dest_dir = $dest_dir . '/' . $xml_data['test_strategy'] . '/' . $uid;
 				if (!file_exists($dest_dir)) {
 					mkdir($dest_dir, 0777, true);
 				}
@@ -133,21 +138,7 @@ class HumphreyScanController extends BaseModuleController {
 				mkdir($dest_dir . '/thumbs', 0777, true);
 			}
 			try {
-				foreach (Yii::app()->params['visualfields.subimages']['humphreys'] as $key => $subimage_config) {
-					$sub_dir = $dest_dir . '/' . $key . '/';
-					if (!file_exists($sub_dir)) {
-						mkdir($sub_dir, 0755, true);
-					}
-					$image = new Imagick($dest_dir . '/' . $xml_data['file_reference']);
-					$cropParams = explode(',', $subimage_config['crop']);
-					$image->cropimage($cropParams[0], $cropParams[1], $cropParams[2], $cropParams[3]);
-
-					if (isset($subimage_config['scale'])) {
-						$configParams = explode('x', $subimage_config['scale']);
-						$image->thumbnailimage($configParams[0], $configParams[1]);
-					}
-					$image->writeimage($sub_dir . $xml_data['file_reference'] . '.jpg');
-				}
+				$this->createSubImages($dest_dir, $xml_data['file_reference']);
 			} catch (Exception $e) {
 				$this->audit("import", "scan", "Failed to create thumbnail images: " . $e->getMessage());
 			}
@@ -172,6 +163,75 @@ class HumphreyScanController extends BaseModuleController {
 			$this->_sendResponse(200, sprintf("Imported Image (but not bound)", $xmlDataFileImport->id), "text/html", "import", "scan");
 		}
 		// ELSE { // what? }
+	}
+
+	/**
+	 * @param type $dest_dir
+	 * @param type $file_ref
+	 */
+	private function createSubImages($dest_dir, $file_ref) {
+
+		foreach (Yii::app()->params['visualfields.subimages']['humphreys']
+		as $key => $subimage_config) {
+			$sub_dir = $dest_dir . '/' . $key . '/';
+			if (!file_exists($sub_dir)) {
+				mkdir($sub_dir, 0755, true);
+			}
+			$image = new Imagick($dest_dir . '/' . $file_ref);
+			$cropParams = explode(',', $subimage_config['crop']);
+			$image->cropimage($cropParams[0], $cropParams[1], $cropParams[2], $cropParams[3]);
+
+			if (isset($subimage_config['scale'])) {
+				$configParams = explode('x', $subimage_config['scale']);
+				$image->thumbnailimage($configParams[0], $configParams[1]);
+			}
+			$image->writeimage($sub_dir . $file_ref . '.jpg');
+		}
+	}
+
+	/**
+	 * TODO - scanned document ID is a class that can ultimately
+	 * be removed, when patients are automatically imported from the scan:
+	 * the UID is really just an ID that took the place of a patient's ID
+	 * in the days when fields were imported prior to patient creation.
+	 * 
+	 * Ultimately this can be replaced by the patient ID.
+	 * 
+	 * @param type $recordedPid
+	 * @return \ScannedDocumentUid
+	 */
+	private function getPatientUid($recordedPid) {
+		Yii::import('application.modules.OphInVisualfields.components.ScannedDocumentUid');
+		$uid = ScannedDocumentUid::model()->find('pid=\'' . $recordedPid . '\'');
+		if (!$uid) {
+			$uid = new ScannedDocumentUid();
+			$uid->pid = $recordedPid;
+			$uid->save();
+		}
+		return $uid->id;
+	}
+
+	/**
+	 * 
+	 * @param type $username
+	 * @param type $xml_data
+	 * @return \Patient
+	 */
+	private function createPatient($username, $xml_data) {
+
+		$c = new Contact();
+		$c->first_name = $xml_data['given_name'];
+		$c->last_name = $xml_data['family_name'];
+		$c->created_user_id = User::model()->find('LOWER(username)=?', array(strtolower($username)))->id;
+		$c->save();
+		$p = new Patient();
+		$p->gender = $xml_data['gender'];
+		$p->dob = $xml_data['birth_date'];
+		$p->hos_num = $pid;
+		$p->created_user_id = User::model()->find('LOWER(username)=?', array(strtolower($username)))->id;
+		$p->contact_id = $c->id;
+		$p->save();
+		return $p;
 	}
 
 	/**
@@ -355,7 +415,6 @@ class HumphreyScanController extends BaseModuleController {
 
 		$createdDate = new DateTime($xml_image->study_date);
 		$createdTime = new DateTime($xml_image->study_date . ' ' . $xml_image->study_time);
-		//          $x = $createdTime->sub(new DateInterval('PT1H2M'))->format('H:i:s');
 		$interval = Yii::app()->params['visualfields.event_bond_time'];
 		if ($interval) {
 			$preTime = $createdTime->sub(new DateInterval($interval));
