@@ -1,6 +1,6 @@
 <?php
-
-class m130509_081459_event_type_OphInVisualfields extends OEMigration {
+require_once 'MigrationHelper.php';
+class m130509_081459_event_type_OphInVisualfields extends MigrationHelper {
 
   public function up() {
 

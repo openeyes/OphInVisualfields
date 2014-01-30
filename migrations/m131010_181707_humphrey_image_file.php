@@ -1,6 +1,7 @@
 <?php
 
-class m131010_181707_humphrey_image_file extends OEMigration
+require_once 'MigrationHelper.php';
+class m131010_181707_humphrey_image_file extends MigrationHelper
 {
   private $suffix_image = 'humphrey_image';
 
