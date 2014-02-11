@@ -36,7 +36,7 @@
  * @property  $test_type
  */
 
-class OphInVisualfields_Pattern extends BaseEventTypeElement
+class OphInVisualfields_Pattern extends BaseActiveRecordVersionedSoftDelete
 {
 	public $service;
 

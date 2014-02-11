@@ -30,7 +30,7 @@
  * @property User $createdUser
  * @property User $lastModifiedUser
  */
-class OphInVisualfields_Humphrey_Image extends CActiveRecord
+class OphInVisualfields_Humphrey_Image extends BaseActiveRecordVersionedSoftDelete
 {
 	/**
 	 * Returns the static model of the specified AR class.
@@ -58,12 +58,11 @@ class OphInVisualfields_Humphrey_Image extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('file_id', 'required'),
-			array('last_modified_user_id, created_user_id, file_id', 'length', 'max'=>10),
+			array('last_modified_user_id, created_user_id, protected_file_id', 'length', 'max'=>10),
 			array('last_modified_date, created_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, last_modified_user_id, last_modified_date, created_user_id, created_date, file_id', 'safe', 'on'=>'search'),
+			array('id, last_modified_user_id, last_modified_date, created_user_id, created_date', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -75,8 +74,7 @@ class OphInVisualfields_Humphrey_Image extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'file' => array(self::BELONGS_TO, 'FsFile', 'file_id'),
-			'xml' => array(self::BELONGS_TO, 'OphInVisualfields_Humphrey_Xml', 'xml_id'),
+			'protected_file' => array(self::BELONGS_TO, 'ProtectedFile', 'id'),
 			'createdUser' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 			'lastModifiedUser' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
@@ -93,7 +91,7 @@ class OphInVisualfields_Humphrey_Image extends CActiveRecord
 			'last_modified_date' => 'Last Modified Date',
 			'created_user_id' => 'Created User',
 			'created_date' => 'Created Date',
-			'file_id' => 'File',
+			'protected_file_id' => 'File',
 		);
 	}
 

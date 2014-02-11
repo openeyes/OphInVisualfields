@@ -1,0 +1,31 @@
+{
+	"resourceType":"DiagnosticReport",
+	"contained":[
+		{
+			"id":"r1",
+			"resourceType":"Observation",
+			"valueAttachment": {
+				"contentType": {
+					":subst": "contentType"
+				},
+				"data": {
+					":subst": "data"
+				},
+				"title": {
+					":subst": "title"
+				}
+			}
+		}],
+		"results": [
+			{
+				"reference": {
+					":subst": "reference"
+				}
+			}
+		],
+		"image": {
+			"reference": {
+				":subst": "reference"
+			}
+		}
+	}
