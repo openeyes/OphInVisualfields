@@ -42,6 +42,7 @@ class OphInVisualfieldsModule extends BaseEventTypeModule
 		));
 		
 		$this->moduleShortSuffix = "visualfields";
+		parent::init();
 	}
 
 	public function beforeControllerAction($controller, $action) {

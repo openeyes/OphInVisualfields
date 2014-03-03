@@ -3,7 +3,7 @@
  * OpenEyes
  *
  * (C) Moorfields Eye Hospital NHS Foundation Trust, 2008-2011
- * (C) OpenEyes Foundation, 2011-2013
+ * (C) OpenEyes Foundation, 2011-2012
  * This file is part of OpenEyes.
  * OpenEyes is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * OpenEyes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
@@ -13,34 +13,18 @@
  * @link http://www.openeyes.org.uk
  * @author OpenEyes <info@openeyes.org.uk>
  * @copyright Copyright (c) 2008-2011, Moorfields Eye Hospital NHS Foundation Trust
- * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
+ * @copyright Copyright (c) 2011-2012, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
 
-<?php $this->beginContent('//patient/event_container'); ?>
-<?php
-$this->breadcrumbs = array($this->module->id);
-$this->event_actions[] = EventAction::button('Save', 'save', array('level' => 'save'), array('form' => 'clinical-create'));
-?>
-<?php $this->renderPartial('//base/_messages'); ?>
+<h4 class="elementTypeName"><?php echo $element->elementType->name?></h4>
 
-<?php
-$form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-	'id' => 'clinical-create',
-	'enableAjaxValidation' => false,
-	'layoutColumns' => array(
-		'label' => 4,
-		'field' => 8
-	)
-		));
-?>
-<?php $this->displayErrors($errors) ?>
-
-<div class="js-active-elements">
-	<?php $this->renderDefaultElements($this->action->id, $form) ?>
-</div>
-<?php $this->displayErrors($errors, true) ?>
-
-<?php $this->endWidget() ?>
-<?php $this->endContent(); ?>
+<table class="subtleWhite normalText">
+	<tbody>
+		<tr>
+			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('comments'))?></td>
+			<td><span class="big"><?php echo CHtml::encode($element->comments)?></span></td>
+		</tr>
+	</tbody>
+</table>

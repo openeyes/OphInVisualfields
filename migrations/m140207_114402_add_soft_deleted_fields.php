@@ -18,7 +18,7 @@ class m140207_114402_add_soft_deleted_fields extends CDbMigration {
 	}
 
 	public function safeDown() {
-		return true;
+		return false;
 	}
 
 }

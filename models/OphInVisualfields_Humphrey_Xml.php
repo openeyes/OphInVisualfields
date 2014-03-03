@@ -45,17 +45,14 @@ class OphInVisualfields_Humphrey_Xml extends BaseActiveRecordVersionedSoftDelete
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('pid, file_name, test_strategy, test_name', 'required'),
-			array('pid', 'length', 'max'=>40),
-			array('given_name, middle_name, family_name', 'length', 'max'=>50),
-			array('birth_date, study_date, last_modified_user_id, created_user_id', 'length', 'max'=>10),
-			array('study_time', 'length', 'max'=>12),
-			array('gender, eye', 'length', 'max'=>1),
-			array('file_name, test_strategy, test_name', 'length', 'max'=>100),
+			array('patient_id, test_strategy, test_name', 'required'),
+			array('patient_id', 'length', 'max'=>40),
+			array('study_datetime', 'length', 'max'=>40),
+			array('test_strategy, test_name', 'length', 'max'=>100),
 			array('last_modified_date, created_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, pid, given_name, middle_name, family_name, birth_date, study_date, study_time, gender, eye, file_name, test_strategy, last_modified_user_id, last_modified_date, created_user_id, created_date, test_name', 'safe', 'on'=>'search'),
+			array('id, patient_id, study_datetime, test_strategy, last_modified_user_id, last_modified_date, created_user_id, created_date, test_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -67,8 +64,10 @@ class OphInVisualfields_Humphrey_Xml extends BaseActiveRecordVersionedSoftDelete
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'xml_file' => array(self::BELONGS_TO, 'ProtectedFile', 'xml_file_id'),
-			'image_file' => array(self::BELONGS_TO, 'OphInVisualfields_Humphrey_Image', 'image_file_id'),
+			'eye' => array(self::BELONGS_TO, 'Eye', 'eye_id'),
+			'patient' => array(self::BELONGS_TO, 'Patient', 'patient_id'),
+			'protected_file' => array(self::BELONGS_TO, 'ProtectedFile', 'humphrey_image_id'),
+			'cropped_image' => array(self::BELONGS_TO, 'ProtectedFile', 'cropped_image_id'),
 			'createdUser' => array(self::BELONGS_TO, 'User', 'created_user_id'),
 			'lastModifiedUser' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
@@ -100,6 +99,9 @@ class OphInVisualfields_Humphrey_Xml extends BaseActiveRecordVersionedSoftDelete
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id,true);
+		$criteria->compare('patient_id',$this->patient_id,true);
+		$criteria->compare('eye',$this->patient_id,true);
+		$criteria->compare('study_datetime',$this->study_datetime,true);
 		$criteria->compare('last_modified_user_id',$this->last_modified_user_id,true);
 		$criteria->compare('last_modified_date',$this->last_modified_date,true);
 		$criteria->compare('created_user_id',$this->created_user_id,true);

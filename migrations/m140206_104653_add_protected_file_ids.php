@@ -18,7 +18,7 @@ class m140206_104653_add_protected_file_ids extends CDbMigration {
 	}
 
 	public function safeDown() {
-		
+		return false;
 	}
 
 }

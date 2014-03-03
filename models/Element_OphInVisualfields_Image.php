@@ -24,8 +24,8 @@
  * The followings are the available columns in table:
  * @property string $id
  * @property integer $event_id
- * @property integer $left_image
- * @property integer $right_image
+ * @property integer $left_field_id
+ * @property integer $right_field_id
  *
  * The followings are the available model relations:
  *
@@ -61,13 +61,10 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
     // NOTE: you should only define rules for those attributes that
     // will receive user inputs.
     return array(
-        array('event_id, left_image, right_image, ', 'safe'),
-//        array('left_image, right_image, ', 'required'),
-//        array('left_image, right_image, '),
-        // The following rule is used by search().
-        // Please remove those attributes that should not be searched.
-        array('id, event_id, left_image, right_image, ', 'safe', 'on' => 'search'),
-        array('left_image', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be higher or equal to 1'),
+        array('event_id, left_field_id, right_field_id, ', 'safe'),
+        array('id, event_id, left_field_id, right_field_id, ', 'safe', 'on' => 'search'),
+        array('left_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be valid'),
+        array('right_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Right image must be valid'),
     );
   }
 
@@ -83,8 +80,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
         'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
         'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
         'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-        'left_tif' => array(self::BELONGS_TO, 'FsFile', 'left_image'),
-        'right_tif' => array(self::BELONGS_TO, 'FsFile', 'right_image'),
+        'left_field' => array(self::HAS_ONE, 'OphInVisualfields_Humphrey_Xml', 'left_field_id'),
+        'right_field' => array(self::HAS_ONE, 'OphInVisualfields_Humphrey_Xml', 'right_field_id'),
     );
   }
 
@@ -95,8 +92,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
     return array(
         'id' => 'ID',
         'event_id' => 'Event',
-        'left_image' => 'Left image',
-        'right_image' => 'Right image',
+        'left_field_id' => 'Left image',
+        'right_field_id' => 'Right image',
     );
   }
 
@@ -112,8 +109,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
     $criteria->compare('id', $this->id, true);
     $criteria->compare('event_id', $this->event_id, true);
-    $criteria->compare('left_image', $this->left_image);
-    $criteria->compare('right_image', $this->right_image);
+    $criteria->compare('left_field_id', $this->left_field_id);
+    $criteria->compare('right_field_id', $this->right_field_id);
 
     return new CActiveDataProvider(get_class($this), array(
                 'criteria' => $criteria,

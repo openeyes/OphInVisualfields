@@ -25,7 +25,6 @@ class m130509_081459_event_type_OphInVisualfields extends MigrationHelper {
     }
     // select the event_type id for this event type name
     $event_type = $this->dbConnection->createCommand()->select('id')->from('event_type')->where('class_name=:class_name', array(':class_name' => 'OphInVisualfields'))->queryRow();
-
     // --- ELEMENT TYPE ENTRIES ---
     // create an element_type entry for this element type name if one doesn't already exist
     if (!$this->dbConnection->createCommand()->select('id')->from('element_type')->where('name=:name and event_type_id=:eventTypeId', array(':name' => 'TestType', ':eventTypeId' => $event_type['id']))->queryRow()) {

@@ -1,31 +1,33 @@
 {
 	"resourceType":"DiagnosticReport",
-	"contained":[
-		{
-			"id":"r1",
-			"resourceType":"Observation",
-			"valueAttachment": {
-				"contentType": {
-					":subst": "contentType"
-				},
-				"data": {
-					":subst": "data"
-				},
-				"title": {
-					":subst": "title"
-				}
+	"subject": {
+		":subst": "subject"
+	},
+	"contained":[{
+		"resourceType":"Observation",
+		"id":"r1",
+		"valueAttachment": {
+			"contentType": {
+				":subst": "contentType"
+			},
+			"data": {
+				":subst": "data"
+			},
+			"title": {
+				":subst": "title"
 			}
-		}],
-		"results": [
-			{
-				"reference": {
-					":subst": "reference"
-				}
-			}
-		],
-		"image": {
+		}
+	}],
+	"result": [{
+		"reference": {
+			":subst": "reference"
+		}
+	}],
+	"image": [{
+		"link": {
 			"reference": {
 				":subst": "reference"
 			}
 		}
-	}
+	}]
+}

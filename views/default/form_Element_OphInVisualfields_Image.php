@@ -18,6 +18,59 @@
  */
 ?>
 
+<?php
+$api = new OphInVisualfields_API;
+$right_fields = $api->getVisualfields($this->patient, Eye::RIGHT);
+$left_fields = $api->getVisualfields($this->patient, Eye::LEFT);
+$divName = $element->elementType->class_name;
+?>
+<script lang="javascript">
+	
+
+	var left_images = [];
+	var right_images = [];
+	var left_strategies = [];
+	var right_strategies = [];
+	var left_types = [];
+	var right_types = [];
+<?php
+foreach ($left_fields as $left_field) {
+	echo 'left_images[' . $left_field->cropped_image->id . ']=\'' . $left_field->cropped_image->getPath() . '\';' . PHP_EOL;
+}
+foreach ($right_fields as $right_field) {
+	echo 'right_images[' . $right_field->cropped_image->id . ']=\'' . $right_field->cropped_image->getPath() . '\';' . PHP_EOL;
+}
+foreach ($left_fields as $left_field) {
+	echo 'left_strategies[' . $left_field->cropped_image->id . ']=\'' . $left_field->test_strategy . '\';' . PHP_EOL;
+}
+foreach ($right_fields as $right_field) {
+	echo 'right_strategies[' . $right_field->cropped_image->id . ']=\'' . $right_field->test_strategy . '\';' . PHP_EOL;
+}
+foreach ($left_fields as $left_field) {
+	echo 'left_types[' . $left_field->cropped_image->id . ']=\'' . $left_field->test_name . '\';' . PHP_EOL;
+}
+foreach ($right_fields as $right_field) {
+	echo 'right_types[' . $right_field->cropped_image->id . ']=\'' . $right_field->test_name . '\';' . PHP_EOL;
+} 'right_datetime[' . $right_field->cropped_image->id . ']=\'' . $right_field->study_datetime . '\';' . PHP_EOL;
+
+?>	
+	function changeImage(select, side) {
+		var index = select.options[select.selectedIndex].value;
+		if (side == 'right' && index > 0) {
+			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
+				"http://localhost:8888/file/view/" + index + "/test.txt";
+			$('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(right_strategies[index]);
+			$('div#Element_OphInVisualfields_Image_' + side + '_type').text(right_types[index]);
+			
+		} else if (index > 0) {
+			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
+				"http://localhost:8888/file/view/" + index + "/test.txt";
+			$('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(left_strategies[index]);
+			$('div#Element_OphInVisualfields_Image_' + side + '_type').text(left_types[index]);
+		}
+	}
+</script>
+
 <section class="element <?php echo $element->elementType->class_name ?>"
 		 data-element-type-id="<?php echo $element->elementType->id ?>"
 		 data-element-type-class="<?php echo $element->elementType->class_name ?>"
@@ -26,7 +79,7 @@
 	<header class="element-header">
 		<h3 class="element-title"><?php echo $element->elementType->name; ?></h3>
 	</header>
-
+	
 	<div class="element-fields">
 
 		<div class="cols2 clearfix">
@@ -34,17 +87,88 @@
 				 data-side="right">
 
 				<?php
-				echo CHtml::activeDropDownList($element, 'right_image', array(), array('empty' => '- Please select -'))
+				echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "right")'	))
 				?>
 			</div>
 
 			<div class="side right eventDetail"
 				 data-side="left">
 					 <?php
-					 echo CHtml::activeDropDownList($element, 'left_image', array(), array('empty' => '- Please select -'))
+					 echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'))
 					 ?>
 
 			</div>
 		</div>
 	</div>
-			</section>
+
+	<div class="element-fields">
+
+		<div class="cols2 clearfix">
+			<div class="side left eventDetail"
+				 data-side="right">
+
+				<a id="<?php echo $divName ?>_right_image_url" href="http://localhost:8888/file/view/110/tes_t.txt"><img id="<?php echo $divName ?>_right_image_thumb" src="" /></a>
+
+			</div>
+
+			<div class="side right eventDetail"
+				 data-side="left">
+
+				<a id="<?php echo $divName ?>_right_image_url" href=""><img id="<?php echo $divName ?>_left_image_thumb" src="" /></a>
+
+
+			</div>
+		</div>
+	</div>
+	<div class="element-fields">
+
+		<div class="cols2 clearfix">
+			<div class="side left eventDetail"
+				 data-side="right">
+
+				<div id="<?php echo $divName ?>_right_strategy">
+					
+				</div>
+			</div>
+
+			<div class="side right eventDetail"
+				 data-side="left">
+				<div id="<?php echo $divName ?>_left_strategy">
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="element-fields">
+
+		<div class="cols2 clearfix">
+			<div class="side left eventDetail"
+				 data-side="right">
+
+				<div id="<?php echo $divName ?>_right_type">
+					
+				</div>
+			</div>
+
+			<div class="side right eventDetail"
+				 data-side="left">
+				<div id="<?php echo $divName ?>_left_type">
+					
+				</div>
+
+			</div>
+		</div>
+	</div>
+</section>
+
+<script lang="javascript">
+	
+	if (left_images.length > 0 ) {
+		changeImage(document.getElementById('Element_OphInVisualfields_Image_left_field_id'), 'left');
+	}
+	if (right_images.length > 0 ) {
+		changeImage(document.getElementById('Element_OphInVisualfields_Image_right_field_id'), 'right');
+	}
+</script>

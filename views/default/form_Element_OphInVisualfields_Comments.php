@@ -30,32 +30,6 @@ echo CHtml::hiddenField('YII_CSRF_TOKEN', Yii::app()->request->csrfToken);
 
 	<div class="element-fields">
 
-		<?php echo $form->dropDownList($element, 'test_type_id', CHtml::listData(OphInVisualfields_Testtype::model()->findAll(array('order' => 'name asc')), 'id', 'name'), array('empty' => '- Please select -')) ?>
 		<?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80)) ?>
 
 </section>
-<SCRIPT TYPE="TEXT/JAVASCRIPT">
-  
-	var patient_id = <?php echo $this->patient->hos_num ?>
-    
-	$('body').delegate('#Element_OphInVisualfields_Testtype_test_type_id', 'change', function() {
-		var strategy = $('#Element_OphInVisualfields_Details_strategy_id').children('option:selected');
-      
-		var selected = $(this).children('option:selected');
-    
-		if(selected.val().length) {
-			var test_type = $(this).val();
-			if (test_type > 0 && strategy.val() > 0) {
-				updateImages(selected.text(), strategy.text());
-			}
-		}
-		return false;
-	});
-    
-	function updateImages(test_type, strategy) {
-		var csrf = $('#YII_CSRF_TOKEN').val();
-		$.get(baseUrl+"/OphInVisualfields/Default/UpdateImages", { patient_id: patient_id, test_type: test_type, strategy: strategy,  'YII_CSRF_TOKEN': csrf }, function(data){
-			$('#form_Element_OphInVisualfields').html(data);
-		});
-	}
-</SCRIPT>

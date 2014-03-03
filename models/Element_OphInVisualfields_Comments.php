@@ -36,7 +36,7 @@
  * @property  $test_type
  */
 
-class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
+class Element_OphInVisualfields_Comments extends BaseEventTypeElement
 {
 	public $service;
 
@@ -54,7 +54,7 @@ class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
 	 */
 	public function tableName()
 	{
-		return 'ophinvisualfields_testtype';
+		return 'et_ophinvisualfields_comments';
 	}
 
 	/**
@@ -65,11 +65,10 @@ class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name, ', 'safe'),
-			array('name, ', 'required'),
+			array('event_id, comments, ', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, ', 'safe', 'on' => 'search'),
+			array('id, event_id, comments, ', 'safe', 'on' => 'search'),
 		);
 	}
 	
@@ -81,12 +80,11 @@ class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-//			'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
-//			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
-//			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-//			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
-//			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-//			'test_type' => array(self::BELONGS_TO, '', 'test_type_id'),
+			'element_type' => array(self::HAS_ONE, 'ElementType', 'id','on' => "element_type.class_name='".get_class($this)."'"),
+			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
+			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
+			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
 		);
 	}
 
@@ -97,7 +95,8 @@ class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
+			'event_id' => 'Event',
+			'comments' => 'Comments',
 		);
 	}
 
@@ -113,7 +112,8 @@ class OphInVisualfields_Testtype extends BaseActiveRecordVersionedSoftDelete
 		$criteria = new CDbCriteria;
 
 		$criteria->compare('id', $this->id, true);
-		$criteria->compare('name', $this->name, true);
+		$criteria->compare('event_id', $this->event_id, true);
+		$criteria->compare('comments', $this->comments);
 		
 		return new CActiveDataProvider(get_class($this), array(
 			'criteria' => $criteria,
