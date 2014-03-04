@@ -18,11 +18,6 @@
  */
 ?>
 
-<?php
-// TODO - how to deal with cross-module dependencies?
-Yii::import('application.modules.module_esb_mirth.models.*');
-?>
-
 <h4 class="elementTypeName"><?php echo $element->elementType->name ?></h4>
 
 <table class="subtleWhite normalText">

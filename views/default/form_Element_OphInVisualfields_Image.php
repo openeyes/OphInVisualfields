@@ -51,7 +51,7 @@ foreach ($left_fields as $left_field) {
 }
 foreach ($right_fields as $right_field) {
 	echo 'right_types[' . $right_field->cropped_image->id . ']=\'' . $right_field->test_name . '\';' . PHP_EOL;
-} 'right_datetime[' . $right_field->cropped_image->id . ']=\'' . $right_field->study_datetime . '\';' . PHP_EOL;
+}
 
 ?>	
 	function changeImage(select, side) {
