@@ -18,6 +18,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 return array(
+    'components' => array(
+        'fhirMap' => array(
+            'class' => 'OphInvisualfields\\Service\\MeasurementVisualFieldHumphreyService',
+            'map' => array(
+                'measurementVisualFieldHumphrey' => array(
+                    'humphreys' => 'OphInVisualfields\\service\\MeasurementVisualFieldHumphrey',
+                ),
+            ),
+        ),
+    ),
     'params' => array(
         /* Attempt to match and bind unassociated images to an event. If
          * set to false, images will be unbound and users will have to bind
