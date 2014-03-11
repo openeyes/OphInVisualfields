@@ -38,7 +38,7 @@ class OphInVisualfieldsModule extends BaseEventTypeModule
 		$this->setImport(array(
 			'OphInVisualfields.models.*',
 			'OphInVisualfields.components.*',
-			'OphInVisualfields.service.*',
+			'OphInVisualfields.Service.*',
 		));
 		
 		$this->moduleShortSuffix = "visualfields";

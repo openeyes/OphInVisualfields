@@ -19,14 +19,20 @@
  */
 return array(
     'components' => array(
-        'fhirMap' => array(
-            'class' => 'OphInvisualfields\\Service\\MeasurementVisualFieldHumphreyService',
-            'map' => array(
-                'measurementVisualFieldHumphrey' => array(
-                    'humphreys' => 'OphInVisualfields\\service\\MeasurementVisualFieldHumphrey',
-                ),
+        'service' => array(
+            'class' => '\\Service\ServiceManager',
+            'services' => array(
+                'OphInvisualfields\\Service\\MeasurementVisualFieldHumphreyService',
             ),
         ),
+//        'fhirMap' => array(
+//            'class' => '',
+//            'map' => array(
+//                'measurementVisualFieldHumphrey' => array(
+//                    'humphreys' => 'OphInVisualfields\\service\\MeasurementVisualFieldHumphrey',
+//                ),
+//            ),
+//        ),
     ),
     'params' => array(
         /* Attempt to match and bind unassociated images to an event. If

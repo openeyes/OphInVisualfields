@@ -19,19 +19,19 @@
 
 class OphInVisualfields_API extends BaseAPI
 {
-	/**
-	 * Get all fields for a patient. This is meant to be the entire set of
-	 * all types of field - Octopus, Humphrey, Henson etc.
-	 * 
-	 * @param Patient $patient 
-	 * @param Eye $eye 
-	 * @return \OphInVisualfields_Humphrey_XML
-	 */
+  
+  /**
+   * 
+   * @param type $patient
+   * @param type $eye
+   * @return type
+   */
 	public function getVisualfields($patient, $eye) {
 		$criteria = new CDbCriteria(array('order'=>'study_datetime ASC'));
 		$model = array('patient_id' => array($patient->id),
 				'eye_id' => array($eye));
-		return OphInVisualfields_Humphrey_Xml::model()->findAllByAttributes(
+    Yii::import("application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey", True);
+		return MeasurementVisualFieldHumphrey::model()->findAllByAttributes(
 				$model, 
 				$criteria);
 	}
