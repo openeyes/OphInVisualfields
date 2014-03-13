@@ -26,7 +26,6 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
   public $pattern;
   public $scanned_field_id;
   public $scanned_field_crop_id;
-  public $image_data;
 
   /**
    * 
@@ -38,35 +37,30 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 
 	$patient = \Patient::model()->find("id=?", array($report->patient_id));
 	$report->patient_id = $patient->id;
-	$report->study_datetime = $report->study_datetime;
 	$eye = 'Right';
 	if ($report->eye == 'L') {
 	  $eye = 'Left';
 	}
-	$report->pattern = $fhirObject->pattern;
-	$report->file_reference = $fhirObject->file_reference;
-	$report->strategy = $fhirObject->strategy;
 	$report->eye_id = \Eye::model()->find("name=:name", array(":name" => $eye))->id;
-	$x = $fhirObject->xml_file_data;
 	$report->source = base64_decode($fhirObject->xml_file_data);
 	
 	$title = $report->file_reference;
 	$protected_file = \ProtectedFile::createForWriting($title);
-	$protected_file->mimetype = 'image/gif';
 	$protected_file->name = $title;
 	file_put_contents($protected_file->getPath(), base64_decode($report->image_scan_data));
+	$protected_file->mimetype = $protected_file->getPath();
 	$protected_file->save();
-	$report->scanned_field_id = $protected_file->id;
+	
 	// now write the contents to files:
-	$title = $report->file_reference;
-	$model = \ProtectedFile::createForWriting($title);
+	$cropped_file = \ProtectedFile::createForWriting($title);
 	// all content is base64 encoded, so decode it:
-	file_put_contents($model->getPath(), base64_decode($report->image_scan_crop_data));
-	$model->mimetype = 'image/gif';
-	$model->name = $title;
-	$val = $model->save();
+	file_put_contents($cropped_file->getPath(), base64_decode($report->image_scan_crop_data));
+	$cropped_file->mimetype = $cropped_file->getPath();
+	$cropped_file->name = $title;
+	$cropped_file->save();
 
-	$report->scanned_field_crop_id = $model->id;
+	$report->scanned_field_id = $protected_file->id;
+	$report->scanned_field_crop_id = $cropped_file->id;
 
 	return $report;
   }

@@ -36,7 +36,7 @@
 				$right_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->right_field_id);
 
 				?>
-				<td width="50%"><a href="<?php echo "/file/view/" . $right_test->image_id . "/" . $right_test->file_reference; ?>"><img src="<?php echo "/file/view/" . $right_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
+				<td width="50%"><a href="<?php echo "/file/view/" . $right_test->image_id . "/test.txt"; ?>"><img src="<?php echo "/file/view/" . $right_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
 				<?php
 
 			} else {
