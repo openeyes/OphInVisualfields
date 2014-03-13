@@ -59,7 +59,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
-            'croppedImage' => array(self::BELONGS_TO, 'ProtectedFile', 'cropped_image_id'),
+            'cropped_image' => array(self::BELONGS_TO, 'ProtectedFile', 'cropped_image_id'),
             'eye' => array(self::BELONGS_TO, 'Eye', 'eye_id'),
             'image' => array(self::BELONGS_TO, 'ProtectedFile', 'image_id'),
             'pattern' => array(self::BELONGS_TO, 'OphInVisualfields_Pattern', 'pattern_id'),
@@ -86,6 +86,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
             'strategy_id' => 'Strategy',
             'pattern_id' => 'Pattern',
             'study_datetime' => 'Study Datetime',
+            'source' => 'Source',
         );
     }
 
@@ -117,6 +118,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
         $criteria->compare('strategy_id',$this->strategy_id,true);
         $criteria->compare('pattern_id',$this->pattern_id,true);
         $criteria->compare('study_datetime',$this->study_datetime,true);
+        $criteria->compare('source',$this->source,true);
 
         return new CActiveDataProvider($this, array(
             'criteria'=>$criteria,

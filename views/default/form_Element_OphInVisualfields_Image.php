@@ -27,141 +27,149 @@ $divName = $element->elementType->class_name;
 <script lang="javascript">
 	
 
-	var left_images = [];
-	var right_images = [];
-	var left_full_size_images = [];
-	var right_full_size_images = [];
-	var left_strategies = [];
-	var right_strategies = [];
-	var left_types = [];
-	var right_types = [];
+  var left_images = [];
+  var right_images = [];
+  var left_full_size_images = [];
+  var right_full_size_images = [];
+  var left_strategies = [];
+  var right_strategies = [];
+  var left_types = [];
+  var right_types = [];
 <?php
 foreach ($left_fields as $left_field) {
-	echo 'left_images[' . $left_field->croppedImage->id . ']=\'' . $left_field->croppedImage->getPath() . '\';' . PHP_EOL;
-	echo 'left_full_size_images[' . $left_field->croppedImage->id . ']=\'' . $left_field->image->id . '\';' . PHP_EOL;
+  echo 'left_images[' . $left_field->cropped_image->id . ']=\'' . $left_field->cropped_image->getPath() . '\';' . PHP_EOL;
+  echo 'left_full_size_images[' . $left_field->cropped_image->id . ']=\'' . $left_field->image->id . '\';' . PHP_EOL;
 }
 foreach ($right_fields as $right_field) {
-	echo 'right_images[' . $right_field->croppedImage->id . ']=\'' . $right_field->croppedImage->getPath() . '\';' . PHP_EOL;
-	echo 'right_full_size_images[' . $right_field->croppedImage->id . ']=\'' . $right_field->image->id . '\';' . PHP_EOL;
+  echo 'right_images[' . $right_field->cropped_image->id . ']=\'' . $right_field->cropped_image->getPath() . '\';' . PHP_EOL;
+  echo 'right_full_size_images[' . $right_field->cropped_image->id . ']=\'' . $right_field->image->id . '\';' . PHP_EOL;
 }
 foreach ($left_fields as $left_field) {
-	echo 'left_strategies[' . $left_field->croppedImage->id . ']=\'' . $left_field->strategy->name . '\';' . PHP_EOL;
+  echo 'left_strategies[' . $left_field->cropped_image->id . ']=\'' . $left_field->strategy->name . '\';' . PHP_EOL;
 }
 foreach ($right_fields as $right_field) {
-	echo 'right_strategies[' . $right_field->croppedImage->id . ']=\'' . $right_field->strategy->name . '\';' . PHP_EOL;
+  echo 'right_strategies[' . $right_field->cropped_image->id . ']=\'' . $right_field->strategy->name . '\';' . PHP_EOL;
 }
 foreach ($left_fields as $left_field) {
-	echo 'left_types[' . $left_field->croppedImage->id . ']=\'' . $left_field->pattern->name . '\';' . PHP_EOL;
+  echo 'left_types[' . $left_field->cropped_image->id . ']=\'' . $left_field->pattern->name . '\';' . PHP_EOL;
 }
 foreach ($right_fields as $right_field) {
-	echo 'right_types[' . $right_field->croppedImage->id . ']=\'' . $right_field->pattern->name . '\';' . PHP_EOL;
+  echo 'right_types[' . $right_field->cropped_image->id . ']=\'' . $right_field->pattern->name . '\';' . PHP_EOL;
 }
-
 ?>	
-	function changeImage(select, side) {
-		var index = select.options[select.selectedIndex].value;
-		if (side == 'right' && index > 0) {
-			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
-				"http://localhost:9999/file/view/" + index + "/test.txt";
-			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
-				"http://localhost:9999/file/view/" + (right_full_size_images[index]) + "/test.txt";
-			$('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(right_strategies[index]);
-			$('div#Element_OphInVisualfields_Image_' + side + '_type').text(right_types[index]);
+  function changeImage(select, side) {
+	var index = select.options[select.selectedIndex].value;
+	if (side == 'right' && index > 0) {
+	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
+		"/file/view/" + index + "/test.txt";
+	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
+		"/file/view/" + (right_full_size_images[index]) + "/test.txt";
+	  $('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(right_strategies[index]);
+	  $('div#Element_OphInVisualfields_Image_' + side + '_type').text(right_types[index]);
 			
-		} else if (index > 0) {
-			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
-				"http://localhost:9999/file/view/" + index + "/test.txt";
-			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
-				"http://localhost:9999/file/view/" + (left_full_size_images[index]) + "/test.txt";
-			$('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(left_strategies[index]);
-			$('div#Element_OphInVisualfields_Image_' + side + '_type').text(left_types[index]);
-		}
+	} else if (index > 0) {
+	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
+		"/file/view/" + index + "/test.txt";
+	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
+		"/file/view/" + (left_full_size_images[index]) + "/test.txt";
+	  $('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(left_strategies[index]);
+	  $('div#Element_OphInVisualfields_Image_' + side + '_type').text(left_types[index]);
 	}
+  }
 </script>
-  
-	
-	<div class="element-fields">
 
-		<div class="cols2 clearfix">
-			<div class="side left eventDetail"
-				 data-side="right">
+  <div class="element-fields">
 
-				<?php
-				echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'croppedImage.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "right")'	))
-				?>
-			</div>
+	<div class="cols2 clearfix">
+	  <div class="side left eventDetail"
+		   data-side="right">
 
-			<div class="side right eventDetail"
-				 data-side="left">
-					 <?php
-					 echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'croppedImage.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'))
-					 ?>
+		<?php
+		echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "right")'))
+		?>
+	  </div>
 
-			</div>
-		</div>
+	  <div class="side right eventDetail"
+		   data-side="left">
+			 <?php
+			 echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'))
+			 ?>
+
+	  </div>
 	</div>
+  </div>
+  <div class="element-fields">
 
-	<div class="element-fields">
+	<div class="cols2 clearfix">
+	  <div class="side left eventDetail"
+		   data-side="right">
 
-		<div class="cols2 clearfix">
-			<div class="side left eventDetail"
-				 data-side="right">
+		<a id="<?php echo $divName ?>_right_image_url" href=""><img id="<?php echo $divName ?>_right_image_thumb" src="" /></a>
 
-				<a id="<?php echo $divName ?>_right_image_url" href=""><img id="<?php echo $divName ?>_right_image_thumb" src="" /></a>
+	  </div>
 
-			</div>
+	  <div class="side right eventDetail"
+		   data-side="left">
 
-			<div class="side right eventDetail"
-				 data-side="left">
-
-				<a id="<?php echo $divName ?>_left_image_url" href=""><img id="<?php echo $divName ?>_left_image_thumb" src="" /></a>
+		<a id="<?php echo $divName ?>_left_image_url" href=""><img id="<?php echo $divName ?>_left_image_thumb" src="" /></a>
 
 
-			</div>
-		</div>
+	  </div>
 	</div>
-	<div class="element-fields">
+  </div>
+  <div class="element-fields">
 
-		<div class="cols2 clearfix">
+	<div class="cols2 clearfix">
 
-				<div id="<?php echo $divName ?>_right_strategy">
-					
-			</div>
+	  <div class="side left eventDetail"
+		   data-side="right">
+		<div id="<?php echo $divName ?>_right_strategy">
 
-				<div id="<?php echo $divName ?>_left_strategy">
-					
-
-			</div>
 		</div>
-	</div>
+	  </div>
 
-	<div class="element-fields">
-
-		<div class="cols2 clearfix">
-			<div class="side left eventDetail"
-				 data-side="right">
-
-				<div id="<?php echo $divName ?>_right_type">
-					
-				</div>
-			</div>
-
-			<div class="side right eventDetail"
-				 data-side="left">
-				<div id="<?php echo $divName ?>_left_type">
-					
-				</div>
-
-			</div>
+	  <div class="side right eventDetail"
+		   data-side="left">
+		<div id="<?php echo $divName ?>_left_strategy">
 		</div>
+
+
+	  </div>
 	</div>
+  </div>
+
+  <div class="element-fields">
+
+	<div class="cols2 clearfix">
+	  <div class="side left eventDetail"
+		   data-side="right">
+
+		<div id="<?php echo $divName ?>_right_type">
+
+		</div>
+	  </div>
+
+	  <div class="side right eventDetail"
+		   data-side="left">
+		<div id="<?php echo $divName ?>_left_type">
+
+		</div>
+
+	  </div>
+	</div>
+  </div>
 
 <script lang="javascript">
-	
+  function loadImages() {
 	if (left_images.length > 0 ) {
-		changeImage(document.getElementById('Element_OphInVisualfields_Image_left_field_id'), 'left');
+	  document.getElementById('Element_OphInVisualfields_Image_left_field_id').selectedIndex = 1;
+	  changeImage(document.getElementById('Element_OphInVisualfields_Image_left_field_id'), 'left');
 	}
 	if (right_images.length > 0 ) {
-		changeImage(document.getElementById('Element_OphInVisualfields_Image_right_field_id'), 'right');
+	  document.getElementById('Element_OphInVisualfields_Image_right_field_id').selectedIndex = 1;
+	  changeImage(document.getElementById('Element_OphInVisualfields_Image_right_field_id'), 'right');
 	}
+  }
+  window.onload=loadImages;
 </script>
+

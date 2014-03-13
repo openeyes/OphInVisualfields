@@ -80,8 +80,8 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
         'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
         'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
         'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-        'left_field' => array(self::HAS_ONE, 'OphInVisualfields_Humphrey_Xml', 'left_field_id'),
-        'right_field' => array(self::HAS_ONE, 'OphInVisualfields_Humphrey_Xml', 'right_field_id'),
+        'left_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'left_field_id'),
+        'right_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'right_field_id'),
     );
   }
 
@@ -117,6 +117,27 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
             ));
   }
 
+  
+  /**
+   * Once the image is saved, it needs to be attached to a measurement reference
+   * and appropriate measurement reference.
+   */
+  public function afterSave() {
+	parent::afterSave();
+	// TODO classpath issue, what's going on with class loading?
+	Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
+	$api = new MeasurementAPI;
+	$criteria = new CdbCriteria;
+	$criteria->condition = "eye_id=:eye_id AND cropped_image_id=:cropped_image_id";
+	$x = $this->left_field_id;
+	$criteria->params = array(":eye_id" => 1, ":cropped_image_id" => $this->left_field_id);
+	$measurementL = MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
+	$criteria->params = array(":eye_id" => 2, ":cropped_image_id" => $this->right_field_id);
+	$measurementR = MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
+	
+	$api->addReference($measurementL, $this->event);
+	$api->addReference($measurementR, $this->event);
+  }
 }
 
 ?>

@@ -17,7 +17,7 @@
 namespace OphInVisualfields\Service;
 
 class MeasurementVisualFieldHumphrey extends \Service\Resource {
-  
+
   public $id;
   public $study_datetime;
   public $patient_id;
@@ -28,71 +28,46 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
   public $scanned_field_crop_id;
   public $image_data;
 
-//	static protected $operations = array(self::OP_READ, self::OP_CREATE, self::OP_SEARCH);
-//	public static function fromModel(\MeasurementHumphreyField $model) {
-//
-//		$resource = new self(
-//						array(
-//							$id = $model->id,
-//							$study_datetime = $model->study_datetime,
-//							$patient_id = $model->patient_id,
-//							$eye = $model->eye,
-//							$test_strategy = $model->test_strategy,
-//							$test_name = $model->test_name,
-//							$scanned_field_crop_id = $model->$scanned_field_crop_id,
-//							$scanned_field_id = $model->$scanned_field_id,
-//							$xml_ref_id = $model->xml_file_id,
-//						)
-//		);
-//
-//		return $resource;
-//	}
-
+  /**
+   * 
+   * @param type $fhirObject
+   * @return type
+   */
   static public function fromFhir($fhirObject) {
-    $report = parent::fromFhir($fhirObject);
+	$report = parent::fromFhir($fhirObject);
 
-    $patient = \Patient::model()->find("id=?", array($report->patient_id));
-    $report->patient_id = $patient->id;
-    $report->study_datetime = $report->study_datetime;
-    $eye = 'Right';
-    if ($report->eye == 'L') {
-      $eye = 'Left';
-    }
-    $report->pattern = $fhirObject->pattern;
-    $report->strategy = $fhirObject->strategy;
-    $report->eye_id = \Eye::model()->find("name=:name", array(":name" => $eye))->id;
-    
-    $title = $report->patient_id . "-" . $report->study_datetime;
-		$protected_file = \ProtectedFile::createForWriting($title);
-    $protected_file->mimetype = 'image/gif';
-    $protected_file->name = $title;
-    file_put_contents($protected_file->getPath(), base64_decode($report->image_scan_data));
-    $protected_file->save();
-		$report->scanned_field_id = $protected_file->id;
-    // now write the contents to files:
-    $title = $report->patient_id . "-" . $report->study_datetime;
-    $model = \ProtectedFile::createForWriting($title . 'a');
-    // all content is base64 encoded, so decode it:
-    file_put_contents($model->getPath(), base64_decode($report->image_scan_crop_data));
-    $model->mimetype = 'image/gif';
-    $model->name = $title;
-    $val = $model->save();
+	$patient = \Patient::model()->find("id=?", array($report->patient_id));
+	$report->patient_id = $patient->id;
+	$report->study_datetime = $report->study_datetime;
+	$eye = 'Right';
+	if ($report->eye == 'L') {
+	  $eye = 'Left';
+	}
+	$report->pattern = $fhirObject->pattern;
+	$report->file_reference = $fhirObject->file_reference;
+	$report->strategy = $fhirObject->strategy;
+	$report->eye_id = \Eye::model()->find("name=:name", array(":name" => $eye))->id;
+	$x = $fhirObject->xml_file_data;
+	$report->source = base64_decode($fhirObject->xml_file_data);
+	
+	$title = $report->file_reference;
+	$protected_file = \ProtectedFile::createForWriting($title);
+	$protected_file->mimetype = 'image/gif';
+	$protected_file->name = $title;
+	file_put_contents($protected_file->getPath(), base64_decode($report->image_scan_data));
+	$protected_file->save();
+	$report->scanned_field_id = $protected_file->id;
+	// now write the contents to files:
+	$title = $report->file_reference;
+	$model = \ProtectedFile::createForWriting($title);
+	// all content is base64 encoded, so decode it:
+	file_put_contents($model->getPath(), base64_decode($report->image_scan_crop_data));
+	$model->mimetype = 'image/gif';
+	$model->name = $title;
+	$val = $model->save();
 
-    $report->scanned_field_crop_id = $model->id;
+	$report->scanned_field_crop_id = $model->id;
 
-    return $report;
+	return $report;
   }
-
-//	public function toModel(\MeasurementHumphreyField $model) {
-//
-//		$model->id = $this->id;
-//		$model->study_datetime = $this->study_datetime;
-//		$model->patient_id = $this->patient_id;
-//		$model->eye_id = $this->eye_id;
-//		$model->test_strategy = $this->test_strategy;
-//		$model->test_name = $this->test_name;
-//		$model->cropped_image_id = $this->cropped_humphrey_image_id;
-//		$model->scanned_field_id = $this->scanned_field_id;
-//		\Service\Service::saveModel($model);
-//	}
 }

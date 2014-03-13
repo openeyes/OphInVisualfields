@@ -113,29 +113,9 @@ class OphInVisualfields_Humphrey_Image extends BaseActiveRecordVersionedSoftDele
 		$criteria->compare('created_user_id',$this->created_user_id,true);
 		$criteria->compare('created_date',$this->created_date,true);
 		$criteria->compare('file_id',$this->file_id,true);
-//		$criteria->compare('xml_id',$this->xml_id,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-    /**
-     * 
-     * @param type $file
-     * @param type $subdir
-     * @return type
-     */
-    public function getPath($subdir = '') {
-      $path = null;
-      if (Yii::app()->params['visualfields.file_system_paths']) {
-        $path = Yii::app()->params['visualfields.file_system_paths'];
-        if ($path['humphreys']) {
-          $vfaPath = explode(':', $path['humphreys']);
-          $realPath = $vfaPath[0];
-          $oePath = $vfaPath[1];
-          $path = str_replace($realPath, $oePath, $this->file->dir->path) . '/' . $subdir . '/';
-        }
-      }
-      return $path;
-    }
 }

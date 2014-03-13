@@ -31,11 +31,12 @@
 			}
 			if ($element->right_field_id) {
 				// l/r image are file ids
-
-				$right_test = OphInVisualfields_Humphrey_Xml::model()->find('cropped_image_id=' . $element->right_field_id);
+// TODO classpath issue - this class will get moved to main ophthalmology module soon
+			  Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
+				$right_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->right_field_id);
 
 				?>
-				<td width="50%"><a href="<?php echo str_replace("/var/www/protected", "", $right_test->cropped_image->getPath()) ?>"><img src="<?php echo "http://localhost:8888/file/view/" . $right_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
+				<td width="50%"><a href="<?php echo "/file/view/" . $right_test->image_id . "/" . $right_test->file_reference; ?>"><img src="<?php echo "/file/view/" . $right_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
 				<?php
 
 			} else {
@@ -45,9 +46,9 @@
 			}
 			if ($element->left_field_id) {
 
-				$left_test = OphInVisualfields_Humphrey_Xml::model()->find('cropped_image_id=' . $element->left_field_id);
+				$left_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->left_field_id);
 				?>
-				<td width="50%"><a href="<?php echo str_replace("/var/www/protected", "", $left_test->cropped_image->getPath()) ?>"><img src="<?php echo "http://localhost:8888/file/view/" . $left_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
+				<td width="50%"><a href="<?php echo "/file/view/" . $left_test->image_id . "/test.txt"; ?>"><img src="<?php echo "/file/view/" . $left_test->cropped_image_id . "/test.txt"; ?>"></img></a></td>
 				<?php
 			} else {
 				?>
@@ -84,7 +85,7 @@
 			<?php
 			if ($element->right_field_id) {
 				?>
-				<td width="50%">Strategy: <?php echo $right_test->test_strategy ?></td>
+				<td width="50%">Strategy: <?php echo $right_test->strategy->name ?></td>
 				<?php
 			} else {
 				?>
@@ -95,7 +96,7 @@
 			<?php
 			if ($element->left_field_id) {
 				?>
-				<td width="50%">Strategy: <?php echo $left_test->test_strategy ?></td>
+				<td width="50%">Strategy: <?php echo $left_test->strategy->name ?></td>
 				<?php
 			} else {
 				?>
@@ -108,7 +109,7 @@
 			<?php
 			if ($element->right_field_id) {
 				?>
-				<td width="50%">Test Name: <?php echo $right_test->test_name ?></td>
+				<td width="50%">Test Name: <?php echo $right_test->pattern->name ?></td>
 				<?php
 			} else {
 				?>
@@ -119,7 +120,7 @@
 			<?php
 			if ($element->left_field_id) {
 				?>
-				<td width="50%">Test Name: <?php echo $left_test->test_name ?></td>
+				<td width="50%">Test Name: <?php echo $left_test->pattern->name ?></td>
 				<?php
 			} else {
 				?>
