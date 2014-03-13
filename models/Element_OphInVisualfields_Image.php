@@ -124,7 +124,19 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
    */
   public function afterSave() {
 	parent::afterSave();
-	// TODO classpath issue, what's going on with class loading?
+	if (isset($_POST['original_left_field_id'])) {
+	  $val = $_POST['original_left_field_id'];
+	  if ($val != $this->right_field_id) {
+		$val = 'different';
+	  }
+	}
+	if (isset($_POST['original_right_field_id'])) {
+	  $val = $_POST['original_right_field_id'];
+	  if ($val != $this->right_field_id) {
+		
+	  }
+	}
+	// TODO classpath issue, what's going on with class loading? Doesn't matter, this will move to ophthalmology module
 	Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 	$api = new MeasurementAPI;
 	$criteria = new CdbCriteria;
