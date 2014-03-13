@@ -61,17 +61,17 @@ foreach ($right_fields as $right_field) {
 	var index = select.options[select.selectedIndex].value;
 	if (side == 'right' && index > 0) {
 	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
-		"/file/view/" + index + "/test.txt";
+		"/file/view/" + index + "/img.gif";
 	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
-		"/file/view/" + (right_full_size_images[index]) + "/test.txt";
+		"/file/view/" + (right_full_size_images[index]) + "/img.gif";
 	  $('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(right_strategies[index]);
 	  $('div#Element_OphInVisualfields_Image_' + side + '_type').text(right_types[index]);
 			
 	} else if (index > 0) {
 	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
-		"/file/view/" + index + "/test.txt";
+		"/file/view/" + index + "/img.gif";
 	  document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
-		"/file/view/" + (left_full_size_images[index]) + "/test.txt";
+		"/file/view/" + (left_full_size_images[index]) + "/img.gif";
 	  $('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(left_strategies[index]);
 	  $('div#Element_OphInVisualfields_Image_' + side + '_type').text(left_types[index]);
 	}
