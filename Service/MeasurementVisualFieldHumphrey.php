@@ -42,7 +42,9 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 	  $eye = 'Left';
 	}
 	$report->eye_id = \Eye::model()->find("name=:name", array(":name" => $eye))->id;
-	$report->source = base64_decode($fhirObject->xml_file_data);
+	if (isset($fhirObject->xml_file_data)) {
+		$report->xml_file_data = base64_decode($fhirObject->xml_file_data);
+	}
 	
 	$title = $report->file_reference;
 	$protected_file = \ProtectedFile::createForWriting($title);

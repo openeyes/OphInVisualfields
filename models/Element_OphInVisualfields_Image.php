@@ -37,119 +37,148 @@
  */
 class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
-  public $service;
+	public $service;
 
-  /**
-   * Returns the static model of the specified AR class.
-   * @return the static model class
-   */
-  public static function model($className = __CLASS__) {
-    return parent::model($className);
-  }
-
-  /**
-   * @return string the associated database table name
-   */
-  public function tableName() {
-    return 'et_ophinvisualfields_image';
-  }
-
-  /**
-   * @return array validation rules for model attributes.
-   */
-  public function rules() {
-    // NOTE: you should only define rules for those attributes that
-    // will receive user inputs.
-    return array(
-        array('event_id, left_field_id, right_field_id, ', 'safe'),
-        array('id, event_id, left_field_id, right_field_id, ', 'safe', 'on' => 'search'),
-        array('left_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be valid'),
-        array('right_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Right image must be valid'),
-    );
-  }
-
-  /**
-   * @return array relational rules.
-   */
-  public function relations() {
-    // NOTE: you may need to adjust the relation name and the related
-    // class name for the relations automatically generated below.
-    return array(
-        'element_type' => array(self::HAS_ONE, 'ElementType', 'id', 'on' => "element_type.class_name='" . get_class($this) . "'"),
-        'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
-        'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-        'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
-        'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
-        'left_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'left_field_id'),
-        'right_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'right_field_id'),
-    );
-  }
-
-  /**
-   * @return array customized attribute labels (name=>label)
-   */
-  public function attributeLabels() {
-    return array(
-        'id' => 'ID',
-        'event_id' => 'Event',
-        'left_field_id' => 'Left image',
-        'right_field_id' => 'Right image',
-    );
-  }
-
-  /**
-   * Retrieves a list of models based on the current search/filter conditions.
-   * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
-   */
-  public function search() {
-    // Warning: Please modify the following code to remove attributes that
-    // should not be searched.
-
-    $criteria = new CDbCriteria;
-
-    $criteria->compare('id', $this->id, true);
-    $criteria->compare('event_id', $this->event_id, true);
-    $criteria->compare('left_field_id', $this->left_field_id);
-    $criteria->compare('right_field_id', $this->right_field_id);
-
-    return new CActiveDataProvider(get_class($this), array(
-                'criteria' => $criteria,
-            ));
-  }
-
-  
-  /**
-   * Once the image is saved, it needs to be attached to a measurement reference
-   * and appropriate measurement reference.
-   */
-  public function afterSave() {
-	parent::afterSave();
-	if (isset($_POST['original_left_field_id'])) {
-	  $val = $_POST['original_left_field_id'];
-	  if ($val != $this->right_field_id) {
-		$val = 'different';
-	  }
+	/**
+	 * Returns the static model of the specified AR class.
+	 * @return the static model class
+	 */
+	public static function model($className = __CLASS__) {
+		return parent::model($className);
 	}
-	if (isset($_POST['original_right_field_id'])) {
-	  $val = $_POST['original_right_field_id'];
-	  if ($val != $this->right_field_id) {
-		
-	  }
+
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName() {
+		return 'et_ophinvisualfields_image';
 	}
-	// TODO classpath issue, what's going on with class loading? Doesn't matter, this will move to ophthalmology module
-	Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
-	$api = new MeasurementAPI;
-	$criteria = new CdbCriteria;
-	$criteria->condition = "eye_id=:eye_id AND cropped_image_id=:cropped_image_id";
-	$x = $this->left_field_id;
-	$criteria->params = array(":eye_id" => 1, ":cropped_image_id" => $this->left_field_id);
-	$measurementL = MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
-	$criteria->params = array(":eye_id" => 2, ":cropped_image_id" => $this->right_field_id);
-	$measurementR = MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
+
+	/**
+	 * @return array validation rules for model attributes.
+	 */
+	public function rules() {
+		// NOTE: you should only define rules for those attributes that
+		// will receive user inputs.
+		return array(
+			array('event_id, left_field_id, right_field_id, ', 'safe'),
+			array('id, event_id, left_field_id, right_field_id, ', 'safe', 'on' => 'search'),
+//        array('left_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Left image must be valid'),
+//        array('right_field_id', 'numerical', 'integerOnly' => true, 'min' => 1, 'message' => 'Right image must be valid'),
+		);
+	}
+
+	/**
+	 * @return array relational rules.
+	 */
+	public function relations() {
+		// NOTE: you may need to adjust the relation name and the related
+		// class name for the relations automatically generated below.
+		return array(
+			'element_type' => array(self::HAS_ONE, 'ElementType', 'id', 'on' => "element_type.class_name='" . get_class($this) . "'"),
+			'eventType' => array(self::BELONGS_TO, 'EventType', 'event_type_id'),
+			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+			'user' => array(self::BELONGS_TO, 'User', 'created_user_id'),
+			'usermodified' => array(self::BELONGS_TO, 'User', 'last_modified_user_id'),
+			'left_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'left_field_id'),
+			'right_field' => array(self::HAS_ONE, 'MeasurementVisualFieldHumphrey', 'right_field_id'),
+		);
+	}
+
+	/**
+	 * @return array customized attribute labels (name=>label)
+	 */
+	public function attributeLabels() {
+		return array(
+			'id' => 'ID',
+			'event_id' => 'Event',
+			'left_field_id' => 'Left image',
+			'right_field_id' => 'Right image',
+		);
+	}
+
+	/**
+	 * Retrieves a list of models based on the current search/filter conditions.
+	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
+	 */
+	public function search() {
+		// Warning: Please modify the following code to remove attributes that
+		// should not be searched.
+
+		$criteria = new CDbCriteria;
+
+		$criteria->compare('id', $this->id, true);
+		$criteria->compare('event_id', $this->event_id, true);
+		$criteria->compare('left_field_id', $this->left_field_id);
+		$criteria->compare('right_field_id', $this->right_field_id);
+
+		return new CActiveDataProvider(get_class($this), array(
+					'criteria' => $criteria,
+				));
+	}
+
+	/**
+	 * Once the image is saved, it needs to be attached to a measurement reference
+	 * and appropriate measurement reference.
+	 */
+	public function afterSave() {
+		parent::afterSave();
+		// TODO classpath issue, what's going on with class loading? Doesn't matter, this will move to ophthalmology module
+		Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
+		// we only set references to valid images that are NOT associated with a legacy episode
+		$api = new MeasurementAPI;
+		if (isset($this->left_field_id) && $this->event->episode->legacy == 0) {
+			$measurementL = $this->getPatientMeasurement(1, $this->left_field_id);
+			// is this an edit?
+			if (isset($_POST['original_left_field_id'])) {
+				$val = $_POST['original_left_field_id'];
+				$oldRef = $this->getPatientMeasurement(1, $val);
+				$orig = $this->left_field_id;
+				if ($oldRef->id != $this->left_field_id) {
+					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id",
+							array(":event_id" => $this->event->id, ":pm_id" => $oldRef->id));
+					$this->updateReference($ref, $measurementL, $this->event->id);
+				}
+			} else {
+				$api->addReference($measurementL, $this->event);
+			}
+		}
+		if (isset($this->right_field_id) && $this->event->episode->legacy == 0) {
+			$measurementR = $this->getPatientMeasurement(2, $this->right_field_id);
+			// edit?
+			if (isset($_POST['original_right_field_id'])) {
+				$val = $_POST['original_right_field_id'];
+				$oldRef = $this->getPatientMeasurement(2, $val);
+				$orig = $this->right_field_id;
+				if ($oldRef->id != $this->right_field_id) {
+					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id",
+							array(":event_id" => $this->event->id, ":pm_id" => $oldRef->id));
+					$this->updateReference($ref, $measurementR, $this->event->id);
+				}
+			} else {
+				$api->addReference($measurementR, $this->event);
+			}
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 * @param type $old
+	 * @param type $new
+	 * @param type $event
+	 */
+	private function updateReference($old, $new, $event) {
+		$old->patient_measurement_id = $new->id;
+		$old->save();
+	}
 	
-	$api->addReference($measurementL, $this->event);
-	$api->addReference($measurementR, $this->event);
-  }
+	private function getPatientMeasurement($eye_id, $thumbnail_id) {
+		$criteria = new CdbCriteria;
+		$criteria->condition = "eye_id=:eye_id AND cropped_image_id=:cropped_image_id";
+		$criteria->params = array(":eye_id" => $eye_id, ":cropped_image_id" => $thumbnail_id);
+		return MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
+	}
 }
 
 ?>

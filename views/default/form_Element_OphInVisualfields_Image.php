@@ -33,8 +33,12 @@ if (isset($element->left_field_id)) {
 ?>
 <?php
 $api = new OphInVisualfields_API;
-$right_fields = $api->getVisualfields($this->patient, Eye::RIGHT);
-$left_fields = $api->getVisualfields($this->patient, Eye::LEFT);
+$event_id = null;
+if (isset($this->event)) {
+	$event_id = $this->event->id;
+}
+$right_fields = $api->getVisualfields($this->patient, Eye::RIGHT, $event_id);
+$left_fields = $api->getVisualfields($this->patient, Eye::LEFT, $event_id);
 $divName = $element->elementType->class_name;
 ?>
 
@@ -176,11 +180,8 @@ foreach ($right_fields as $right_field) {
 if (isset($element->left_field_id)) {
 	?>
 				var id = <?php echo $element->left_field_id ?>;
-				alert(left_images.length);
-				alert(left_images[id].value);
 				for (i=0; i<left_images.length; i++) {
 					if (left_images[id].value == id) {
-						alert('matched ' + id + " for index " + i);
 						document.getElementById('Element_OphInVisualfields_Image_left_field_id').selectedIndex = id;
 					}
 				}
@@ -202,7 +203,6 @@ if (isset($element->right_field_id)) {
 				var id = <?php echo $element->right_field_id ?>;
 				for (i=0; i<right_images.length; i++) {
 					if (right_images[id].value == id) {
-						alert('matched ' + id + " for index " + i);
 						document.getElementById('Element_OphInVisualfields_Image_right_field_id').selectedIndex = id;
 					}
 				}

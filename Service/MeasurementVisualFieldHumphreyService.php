@@ -47,7 +47,9 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
 	$measurement->study_datetime = $res->study_datetime;
 	$measurement->cropped_image_id = $res->scanned_field_crop_id;
 	$measurement->image_id = $res->scanned_field_id;
-	$measurement->source = base64_decode($res->xml_file_data);
+	if (isset($res->xml_file_data)) {
+		$measurement->source = base64_decode($res->xml_file_data);
+	}
 	$saved = $measurement->save();
 	return $measurement;
   }

@@ -32,13 +32,13 @@
 			if ($element->right_field_id) {
 				// l/r image are file ids
 // TODO classpath issue - this class will get moved to main ophthalmology module soon
-			  Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
-				$right_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->right_field_id);
-
+				Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
+//				$right_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->right_field_id);
+				$right_test = MeasurementVisualFieldHumphrey::model()->find("cropped_image_id=:cropped_image_id", array(':cropped_image_id' => $element->right_field_id));
+				$x = $element->right_field_id;
 				?>
 				<td width="50%"><a href="<?php echo "/file/view/" . $right_test->image_id . "/img.gif"; ?>"><img src="<?php echo "/file/view/" . $right_test->cropped_image_id . "/img.gif"; ?>"></img></a></td>
 				<?php
-
 			} else {
 				?>
 				<td>&nbsp;</td>
@@ -46,7 +46,10 @@
 			}
 			if ($element->left_field_id) {
 
-				$left_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->left_field_id);
+				Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
+				$x = $element->left_field_id;
+//				$left_test = MeasurementVisualFieldHumphrey::model()->find('cropped_image_id=' . $element->left_field_id);
+				$left_test = MeasurementVisualFieldHumphrey::model()->find("cropped_image_id=:cropped_image_id", array(':cropped_image_id' => $element->left_field_id));
 				?>
 				<td width="50%"><a href="<?php echo "/file/view/" . $left_test->image_id . "/img.gif"; ?>"><img src="<?php echo "/file/view/" . $left_test->cropped_image_id . "/img.gif"; ?>"></img></a></td>
 				<?php
@@ -72,7 +75,7 @@
 			<?php
 			if ($element->left_field_id) {
 				?>
-				<td width="50%">Date: <?php echo $left_test->study_datetime  ?></td>
+				<td width="50%">Date: <?php echo $left_test->study_datetime ?></td>
 				<?php
 			} else {
 				?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * OpenEyes
  *
@@ -16,23 +17,38 @@
  * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
+class OphInVisualfields_API extends BaseAPI {
 
-class OphInVisualfields_API extends BaseAPI
-{
-  
-  /**
-   * 
-   * @param type $patient
-   * @param type $eye
-   * @return type
-   */
-	public function getVisualfields($patient, $eye) {
-		$criteria = new CDbCriteria(array('order'=>'study_datetime ASC'));
-		$model = array('patient_id' => array($patient->id),
-				'eye_id' => array($eye));
-    Yii::import("application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey", True);
-		return MeasurementVisualFieldHumphrey::model()->findAllByAttributes(
-				$model, 
+	/**
+	 * Gets all non-referenced (by event or episodes) visual field measurements,
+	 * unless the event ID is passed in 
+	 * 
+	 * @param Patient $patient
+	 * @param int $eye
+	 * @param int event_id the event ID, may be null
+	 * @return an array of all appropriate visual fields for the specified
+	 * patient and eye.
+	 */
+	public function getVisualfields($patient, $eye, $event_id = null) {
+		$criteria = new CDbCriteria();
+		$criteria->order = 'study_datetime ASC';
+		$extra = null;
+		if ($event_id != null) {
+			$extra = ' OR (t.patient_measurement_id IN (SELECT patient_measurement_id from (measurement_reference) WHERE event_id=' . $event_id . '))';
+		}
+		$criteria->condition = 'patient_id=' . $patient->id
+				. ' and eye_id=' . $eye
+				. ' and (t.patient_measurement_id NOT IN '
+				. ' (SELECT patient_measurement_id from (measurement_reference))'
+				. $extra . ')';
+//		$criteria->join = "LEFT JOIN measurement_reference on measurement_reference.patient_measurement_id=patient_measurement_id";
+//		$model = array('patient_id' => array($patient->id),
+//				'eye_id' => array($eye));
+		Yii::import("application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey", True);
+		$x = MeasurementVisualFieldHumphrey::model()->findAll(
 				$criteria);
+		return MeasurementVisualFieldHumphrey::model()->findAll(
+						$criteria);
 	}
+
 }
