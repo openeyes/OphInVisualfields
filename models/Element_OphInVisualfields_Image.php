@@ -118,45 +118,48 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 	}
 
 	/**
+	 * 
+	 * @return boolean
+	 */
+	public function beforeSave() {
+		// the IDs are protected file IDs of the cropped images (this should be changed at a later date):
+		$this->left_field_id = $this->getFieldMeasurement(1, $this->left_field_id)->id;
+		$this->right_field_id = $this->getFieldMeasurement(2, $this->right_field_id)->id;
+		return true;
+	}
+
+	/**
 	 * Once the image is saved, it needs to be attached to a measurement reference
 	 * and appropriate measurement reference.
 	 */
 	public function afterSave() {
 		parent::afterSave();
-		// TODO classpath issue, what's going on with class loading? Doesn't matter, this will move to ophthalmology module
-		Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 		// we only set references to valid images that are NOT associated with a legacy episode
 		$api = new MeasurementAPI;
 		if (isset($this->left_field_id) && $this->event->episode->legacy == 0) {
-			$measurementL = $this->getPatientMeasurement(1, $this->left_field_id);
+			$measurementL = MeasurementVisualFieldHumphrey::model()->findByPk($this->left_field_id);
 			// is this an edit?
 			if (isset($_POST['original_left_field_id'])) {
-				$val = $_POST['original_left_field_id'];
-				$oldRef = $this->getPatientMeasurement(1, $val);
-				$orig = $this->left_field_id;
-				if ($oldRef->id != $this->left_field_id) {
-					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id",
-							array(":event_id" => $this->event->id, ":pm_id" => $oldRef->id));
+				$oldRef = $_POST['original_left_field_id'];
+				if ($oldRef != $this->left_field_id) {
+					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id", array(":event_id" => $this->event->id, ":pm_id" => $oldRef));
 					$this->updateReference($ref, $measurementL, $this->event->id);
 				}
 			} else {
-				$api->addReference($measurementL, $this->event);
+				$api->addReference($measurementL->patientMeasurement, $this->event);
 			}
 		}
 		if (isset($this->right_field_id) && $this->event->episode->legacy == 0) {
-			$measurementR = $this->getPatientMeasurement(2, $this->right_field_id);
+			$measurementR = MeasurementVisualFieldHumphrey::model()->findByPk($this->right_field_id);
 			// edit?
 			if (isset($_POST['original_right_field_id'])) {
-				$val = $_POST['original_right_field_id'];
-				$oldRef = $this->getPatientMeasurement(2, $val);
-				$orig = $this->right_field_id;
-				if ($oldRef->id != $this->right_field_id) {
-					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id",
-							array(":event_id" => $this->event->id, ":pm_id" => $oldRef->id));
+				$oldRef = $_POST['original_right_field_id'];
+				if ($oldRef != $this->right_field_id) {
+					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id", array(":event_id" => $this->event->id, ":pm_id" => $oldRef));
 					$this->updateReference($ref, $measurementR, $this->event->id);
 				}
 			} else {
-				$api->addReference($measurementR, $this->event);
+				$api->addReference($measurementR->patientMeasurement, $this->event);
 			}
 		}
 		return true;
@@ -168,17 +171,23 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 	 * @param type $new
 	 * @param type $event
 	 */
-	private function updateReference($old, $new, $event) {
+	private function updateReference($old, $new) {
 		$old->patient_measurement_id = $new->id;
 		$old->save();
 	}
-	
+
 	private function getPatientMeasurement($eye_id, $thumbnail_id) {
+		return getFieldMeasurement($eye_id, $thumbnail_id)->patientMeasurement;
+	}
+
+	private function getFieldMeasurement($eye_id, $thumbnail_id) {
+		Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 		$criteria = new CdbCriteria;
 		$criteria->condition = "eye_id=:eye_id AND cropped_image_id=:cropped_image_id";
 		$criteria->params = array(":eye_id" => $eye_id, ":cropped_image_id" => $thumbnail_id);
-		return MeasurementVisualFieldHumphrey::model()->find($criteria)->patientMeasurement;
+		return MeasurementVisualFieldHumphrey::model()->find($criteria);
 	}
+
 }
 
 ?>
