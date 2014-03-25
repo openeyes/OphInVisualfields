@@ -44,10 +44,10 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
         return array(
             array('patient_measurement_id, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'required'),
             array('deleted', 'numerical', 'integerOnly'=>true),
-            array('patient_measurement_id, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id', 'length', 'max'=>10),
+            array('patient_measurement_id, patient_id, legacy, eye_id, image_id, cropped_image_id, strategy_id, pattern_id', 'length', 'max'=>10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, patient_measurement_id, deleted, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'safe', 'on'=>'search'),
+            array('id, patient_measurement_id, deleted, legacy, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'safe', 'on'=>'search'),
         );
     }
 
@@ -81,6 +81,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
             'deleted' => 'Deleted',
             'patient_id' => 'Patient',
             'eye_id' => 'Eye',
+            'legacy' => 'Legacy',
             'image_id' => 'Image',
             'cropped_image_id' => 'Cropped Image',
             'strategy_id' => 'Strategy',
@@ -112,6 +113,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
         $criteria->compare('patient_measurement_id',$this->patient_measurement_id,true);
         $criteria->compare('deleted',$this->deleted);
         $criteria->compare('patient_id',$this->patient_id,true);
+        $criteria->compare('legacy',$this->legacy,true);
         $criteria->compare('eye_id',$this->eye_id,true);
         $criteria->compare('image_id',$this->image_id,true);
         $criteria->compare('cropped_image_id',$this->cropped_image_id,true);

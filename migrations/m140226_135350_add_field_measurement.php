@@ -7,6 +7,7 @@ class m140226_135350_add_field_measurement extends CDbMigration
 		$this->execute("create table `ophinvisualfields_field_measurement` (`id` INT(10) UNSIGNED NOT NULL primary key AUTO_INCREMENT,
 			`patient_measurement_id` INT(10) UNSIGNED NOT NULL,
 			`deleted` tinyint default 0 NOT NULL,
+			`legacy` tinyint default 0 NOT NULL,
 			`event_id` int(10) unsigned DEFAULT NULL,
 			`last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
 			`last_modified_date` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',

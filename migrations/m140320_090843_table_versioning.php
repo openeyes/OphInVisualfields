@@ -10,6 +10,7 @@ CREATE TABLE `ophinvisualfields_field_measurement_version` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `patient_measurement_id` int(10) unsigned NOT NULL,
   `deleted` tinyint(4) NOT NULL DEFAULT '0',
+  `legacy` tinyint(4) NOT NULL DEFAULT '0',
   `event_id` int(10) unsigned DEFAULT NULL,
   `last_modified_user_id` int(10) unsigned NOT NULL DEFAULT '1',
   `last_modified_date` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',

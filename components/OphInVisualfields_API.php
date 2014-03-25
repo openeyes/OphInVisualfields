@@ -29,7 +29,7 @@ class OphInVisualfields_API extends BaseAPI {
 	 * @return an array of all appropriate visual fields for the specified
 	 * patient and eye.
 	 */
-	public function getVisualfields($patient, $eye, $event_id = null) {
+	public function getVisualfields($patient, $eye, $event_id = null, $legacy = 0) {
 		$criteria = new CDbCriteria();
 		$criteria->order = 'study_datetime ASC';
 		$extra = null;
@@ -38,6 +38,7 @@ class OphInVisualfields_API extends BaseAPI {
 		}
 		$criteria->condition = 'patient_id=' . $patient->id
 				. ' and eye_id=' . $eye
+				. ' and legacy=' . $legacy
 				. ' and (t.patient_measurement_id NOT IN '
 				. ' (SELECT patient_measurement_id from (measurement_reference))'
 				. $extra . ')';
