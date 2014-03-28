@@ -1,6 +1,5 @@
 {
 	"patient_id": {":subst": "patient_id"},
-	"patient_measurement_id":  {":subst": "patient_measurement_id"},
 	"file_reference":  {":subst": "file_reference"},
 	"image_scan_data":  {":subst": "image_scan_data"},
 	"image_scan_crop_data":  {":subst": "image_scan_crop_data"},

@@ -43,14 +43,15 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
 	$measurement->eye_id = $res->eye_id;
 	$measurement->pattern_id = \OphInVisualfields_Pattern::model()->find("name=:name", array(":name" => $res->pattern))->id;
 	$measurement->strategy_id = \OphInVisualfields_Strategy::model()->find("name=:name", array(":name" => $res->strategy))->id;
-	$measurement->patient_measurement_id = \PatientMeasurement::model()->findByPk($res->patient_measurement_id)->id;
 	$measurement->study_datetime = $res->study_datetime;
 	$measurement->cropped_image_id = $res->scanned_field_crop_id;
 	$measurement->image_id = $res->scanned_field_id;
 	if (isset($res->xml_file_data)) {
 		$measurement->source = base64_decode($res->xml_file_data);
 	}
-	$saved = $measurement->save();
+	$api = new \MeasurementAPI;
+	$npm = $api->addPatientMeasurement($measurement);
+	$measurement->save();
 	return $measurement;
   }
 
