@@ -49,8 +49,6 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
 	if (isset($res->xml_file_data)) {
 		$measurement->source = base64_decode($res->xml_file_data);
 	}
-	$api = new \MeasurementAPI;
-	$npm = $api->addPatientMeasurement($measurement);
 	$measurement->save();
 	return $measurement;
   }
