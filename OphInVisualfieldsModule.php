@@ -38,6 +38,7 @@ class OphInVisualfieldsModule extends BaseEventTypeModule
 		$this->setImport(array(
 			'OphInVisualfields.models.*',
 			'OphInVisualfields.components.*',
+			'OphInVisualfields.commands.*',
 			'OphInVisualfields.Service.*',
 		));
 		
