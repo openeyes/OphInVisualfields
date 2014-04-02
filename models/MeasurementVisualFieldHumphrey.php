@@ -24,7 +24,7 @@
  * @property OphinvisualfieldsStrategy $strategy
  * @property OphinvisualfieldsFieldMeasurementVersion[] $ophinvisualfieldsFieldMeasurementVersions
  */
-class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
+class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
 {
 
     /**
@@ -37,6 +37,16 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
     {
 		return parent::model($className);
     }
+	
+	public function beforeSave() {
+		$this->measurement_type_id = MeasurementType::model()->find("class_name=:class_name", array(":class_name" => __CLASS__))->id;
+		$saved = parent::beforeSave();
+		if ($this->patientMeasurement) {
+			$this->patient_measurement_id = $this->patientMeasurement->id;
+		}
+		return $saved;
+		
+	}
 	
     /**
      * @return string the associated database table name
@@ -54,7 +64,7 @@ class MeasurementVisualFieldHumphrey extends BaseActiveRecordVersioned
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
-            array('patient_measurement_id, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'required'),
+            array('patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'required'),
             array('deleted', 'numerical', 'integerOnly'=>true),
             array('patient_measurement_id, patient_id, legacy, eye_id, image_id, cropped_image_id, strategy_id, pattern_id', 'length', 'max'=>10),
             // The following rule is used by search().
