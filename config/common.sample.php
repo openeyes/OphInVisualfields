@@ -26,14 +26,6 @@ return array(
 			),
 		),
 	),
-	'commandMap' => array(
-		'legacyfields' => array(
-			'class' => 'application.modules.OphInVisualfields.commands.LegacyFieldsCommand',
-		),
-	),
-//    'aliases' => array(
-//        'OphInVisualfields.Service' => 'application.modules.OphInVisualfields.Service',
-//    ),
 	'params' => array(
 		/* Attempt to match and bind unassociated images to an event. If
 		 * set to false, images will be unbound and users will have to bind
@@ -133,28 +125,5 @@ return array(
 				'Cataract' => 'pattern_deviation',
 			)
 		),
-		// TO BE DEPRECATED:
-		// API requests only work when true; otherwise requests are ignored
-		'visualfields.use_rest' => 'false',
-		// at least one user must be in the database for the API to work
-		'visualfields.users' => array('mirth'),
-		/*
-		 * 
-		 */
-		'visualfields.viewable' => array('OphInVisualfields_Testtype',
-			'OphInVisualfields_Strategy', 'EventType'),
-		/*
-		 * 
-		 */
-		'visualfields.updatable' => array('FsFile', 'FsDirectory', 'FsFileAudit',
-			'FsScanHumphreyImage', 'FsScanHumphreyXml',
-			'Element_OphInVisualfields_Testtype',
-			'Element_OphInVisualfields_Details',
-			'Element_OphInVisualfields_Image', 'ScannedDocumentUid',
-			'Episode', 'Event'),
-		/*
-		 * 
-		 */
-		'visualfields.api_id' => 'ASCCPE'
 	)
 );
