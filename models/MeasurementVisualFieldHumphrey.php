@@ -112,6 +112,14 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
             'source' => 'Source',
         );
     }
+    
+    /**
+     *
+     * @return type 
+     */
+    public function getPatientMeasurement() {
+        return PatientMeasurement::model()->findByPk($this->patient_measurement_id);
+    }
 
     /**
      * Retrieves a list of models based on the current search/filter conditions.

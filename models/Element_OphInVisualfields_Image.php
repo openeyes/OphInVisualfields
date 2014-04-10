@@ -135,19 +135,18 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 		// we only set references to valid images that are NOT associated with a legacy episode
 		$api = new MeasurementAPI;
 		if (isset($this->left_field_id) && $this->event->episode->legacy == 0) {
-			Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 			$measurementL = MeasurementVisualFieldHumphrey::model()->find("cropped_image_id=:cropped_image_id", array(':cropped_image_id' => $this->left_field_id));
-			// Edit - the image has changed from old to new:
+                        // Edit - the image has changed from old to new:
 			if (isset($_POST['original_left_field_id'])) {
 				$oldRef = $_POST['original_left_field_id'];
 				if ($oldRef != $this->left_field_id) {
 					$oldPm = $this->getPatientMeasurement(1, $oldRef);
 					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id", array(":event_id" => $this->event->id, ":pm_id" => $oldPm->id));
-					$this->updateReference($ref, $measurementL->patientMeasurement);
+					$this->updateReference($ref, $measurementL->getPatientMeasurement());
 				}
 			} else {
 				// starting from create:
-				$api->addReference($measurementL->patientMeasurement, $this->event);
+				$api->addReference($measurementL->getPatientMeasurement(), $this->event);
 			}
 		}
 		if (isset($this->right_field_id) && $this->event->episode->legacy == 0) {
@@ -158,10 +157,10 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 				if ($oldRef != $this->right_field_id) {
 					$oldPm = $this->getPatientMeasurement(2, $oldRef);
 					$ref = MeasurementReference::model()->find("event_id=:event_id and patient_measurement_id=:pm_id", array(":event_id" => $this->event->id, ":pm_id" => $oldPm->id));
-					$this->updateReference($ref, $measurementR->patientMeasurement);
+					$this->updateReference($ref, $measurementR->getPatientMeasurement());
 				}
 			} else {
-				$api->addReference($measurementR->patientMeasurement, $this->event);
+				$api->addReference($measurementR->getPatientMeasurement(), $this->event);
 			}
 		}
 		return true;
@@ -185,7 +184,7 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 	 * @return type
 	 */
 	private function getPatientMeasurement($eye_id, $thumbnail_id) {
-		return $this->getFieldMeasurement($eye_id, $thumbnail_id)->patientMeasurement;
+		return $this->getFieldMeasurement($eye_id, $thumbnail_id)->getPatientMeasurement();
 	}
 
 	/**
@@ -195,7 +194,6 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 	 * @return type
 	 */
 	private function getFieldMeasurement($eye_id, $thumbnail_id) {
-		Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 		$criteria = new CdbCriteria;
 		$criteria->condition = "eye_id=:eye_id AND cropped_image_id=:cropped_image_id";
 		$criteria->params = array(":eye_id" => $eye_id, ":cropped_image_id" => $thumbnail_id);

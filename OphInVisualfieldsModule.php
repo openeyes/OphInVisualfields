@@ -37,6 +37,8 @@ class OphInVisualfieldsModule extends BaseEventTypeModule
 		// import the module-level models and components
 		$this->setImport(array(
 			'OphInVisualfields.models.*',
+                        // this class does not follow conventions for OE naming, therefore needs to be class-loaded separately:
+			'OphInVisualfields.models.MeasurementVisualFieldHumphrey',
 			'OphInVisualfields.components.*',
 			'OphInVisualfields.commands.*',
 			'OphInVisualfields.Service.*',
