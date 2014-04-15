@@ -24,8 +24,7 @@
  * @property OphinvisualfieldsStrategy $strategy
  * @property OphinvisualfieldsFieldMeasurementVersion[] $ophinvisualfieldsFieldMeasurementVersions
  */
-class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
-{
+class MeasurementVisualFieldHumphrey extends BasePatientMeasurement {
 
     /**
      * Returns the static model of the specified AR class.
@@ -33,51 +32,46 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
      * @param string $className active record class name.
      * @return OphinvisualfieldsFieldMeasurement the static model class
      */
-    public static function model($className=__CLASS__)
-    {
-		return parent::model($className);
+    public static function model($className=__CLASS__) {
+        return parent::model($className);
     }
-	
-	public function beforeSave() {
-		$this->measurement_type_id = MeasurementType::model()->find("class_name=:class_name", array(":class_name" => __CLASS__))->id;
-		$saved = parent::beforeSave();
-		if ($this->patientMeasurement) {
-			$this->patient_measurement_id = $this->patientMeasurement->id;
-		}
-		return $saved;
-		
-	}
-	
+
+    public function beforeSave() {
+        $this->measurement_type_id = MeasurementType::model()->find("class_name=:class_name", array(":class_name" => __CLASS__))->id;
+        $saved = parent::beforeSave();
+        if ($saved && $this->patientMeasurement) {
+            $this->patient_measurement_id = $this->patientMeasurement->id;
+        }
+        return $saved;
+    }
+
     /**
      * @return string the associated database table name
      */
-    public function tableName()
-    {
+    public function tableName() {
         return 'ophinvisualfields_field_measurement';
     }
 
     /**
      * @return array validation rules for model attributes.
      */
-    public function rules()
-    {
+    public function rules() {
         // NOTE: you should only define rules for those attributes that
         // will receive user inputs.
         return array(
             array('patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'required'),
-            array('deleted', 'numerical', 'integerOnly'=>true),
-            array('patient_measurement_id, patient_id, legacy, eye_id, image_id, cropped_image_id, strategy_id, pattern_id', 'length', 'max'=>10),
+            array('deleted', 'numerical', 'integerOnly' => true),
+            array('patient_measurement_id, patient_id, legacy, eye_id, image_id, cropped_image_id, strategy_id, pattern_id', 'length', 'max' => 10),
             // The following rule is used by search().
             // @todo Please remove those attributes that should not be searched.
-            array('id, patient_measurement_id, deleted, legacy, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'safe', 'on'=>'search'),
+            array('id, patient_measurement_id, deleted, legacy, patient_id, eye_id, image_id, cropped_image_id, strategy_id, pattern_id, study_datetime', 'safe', 'on' => 'search'),
         );
     }
 
     /**
      * @return array relational rules.
      */
-    public function relations()
-    {
+    public function relations() {
         // NOTE: you may need to adjust the relation name and the related
         // class name for the relations automatically generated below.
         return array(
@@ -95,8 +89,7 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
     /**
      * @return array customized attribute labels (name=>label)
      */
-    public function attributeLabels()
-    {
+    public function attributeLabels() {
         return array(
             'id' => 'ID',
             'patient_measurement_id' => 'Patient Measurement',
@@ -112,7 +105,7 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
             'source' => 'Source',
         );
     }
-    
+
     /**
      *
      * @return type 
@@ -133,27 +126,27 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement
      * @return CActiveDataProvider the data provider that can return the models
      * based on the search/filter conditions.
      */
-    public function search()
-    {
+    public function search() {
         // @todo Please modify the following code to remove attributes that should not be searched.
 
-        $criteria=new CDbCriteria;
+        $criteria = new CDbCriteria;
 
-        $criteria->compare('id',$this->id,true);
-        $criteria->compare('patient_measurement_id',$this->patient_measurement_id,true);
-        $criteria->compare('deleted',$this->deleted);
-        $criteria->compare('patient_id',$this->patient_id,true);
-        $criteria->compare('legacy',$this->legacy,true);
-        $criteria->compare('eye_id',$this->eye_id,true);
-        $criteria->compare('image_id',$this->image_id,true);
-        $criteria->compare('cropped_image_id',$this->cropped_image_id,true);
-        $criteria->compare('strategy_id',$this->strategy_id,true);
-        $criteria->compare('pattern_id',$this->pattern_id,true);
-        $criteria->compare('study_datetime',$this->study_datetime,true);
-        $criteria->compare('source',$this->source,true);
+        $criteria->compare('id', $this->id, true);
+        $criteria->compare('patient_measurement_id', $this->patient_measurement_id, true);
+        $criteria->compare('deleted', $this->deleted);
+        $criteria->compare('patient_id', $this->patient_id, true);
+        $criteria->compare('legacy', $this->legacy, true);
+        $criteria->compare('eye_id', $this->eye_id, true);
+        $criteria->compare('image_id', $this->image_id, true);
+        $criteria->compare('cropped_image_id', $this->cropped_image_id, true);
+        $criteria->compare('strategy_id', $this->strategy_id, true);
+        $criteria->compare('pattern_id', $this->pattern_id, true);
+        $criteria->compare('study_datetime', $this->study_datetime, true);
+        $criteria->compare('source', $this->source, true);
 
         return new CActiveDataProvider($this, array(
-            'criteria'=>$criteria,
-        ));
+                    'criteria' => $criteria,
+                ));
     }
+
 }

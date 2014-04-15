@@ -10,7 +10,7 @@ class m140410_094713_remove_xml extends CDbMigration {
     }
 
     public function safeDown() {
-        
+        return true;
     }
 
 }
