@@ -21,7 +21,7 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
   static protected $operations = array(self::OP_READ, self::OP_UPDATE, self::OP_CREATE, self::OP_SEARCH);
   static protected $primary_model = 'MeasurementVisualFieldHumphrey';
 
-  public function search(array &$params) {
+  public function search(array $params) {
 	$this->setUsedParams($params, 'id');
 
 	$model = $this->getSearchModel();
