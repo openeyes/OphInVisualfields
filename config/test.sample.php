@@ -18,13 +18,13 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 return array(
-    'components' => array(
-        'legacyfields' => array(),
-        'service' => array(
-            'class' => '\\Service\ServiceManager',
-            'internal_services' => array(
-                'OphInVisualfields\\Service\\MeasurementVisualFieldHumphreyService',
-            ),
-        ),
-    ),
+	'components' => array(
+            'legacyfields' => array(),
+		'service' => array(
+			'class' => '\\Service\ServiceManager',
+			'internal_services' => array(
+				'OphInVisualfields\\Service\\MeasurementVisualFieldHumphreyService',
+			),
+		),
+	),
 );
