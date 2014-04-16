@@ -47,6 +47,7 @@ class LegacyFieldsCommandTest extends CDbTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->cleanDirectories();
         require_once(dirname(__FILE__) . '/../../../commands/LegacyFieldsCommand.php');
         $this->archiveDir = sys_get_temp_dir() . '/openeyes_vis_fields_tmp_archive';
         $this->errorDir = sys_get_temp_dir() . '/openeyes_vis_fields_tmp_error';
@@ -105,8 +106,8 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         // should be one file in the duplicates directory:
         $this->assertEquals(1, count(glob($this->dupDir . '/*.fmes')));
         // no measurements should have been recorded:
-        assertEquals($field_measurements, count($this->getPatientFieldMeasurements('12345')));
-        assertEquals($patient_measurements, count($this->getPatientMeasurements('12345')));
+        $this->assertEquals($field_measurements + 8, count($this->getPatientFieldMeasurements('12345')));
+        $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements('12345')));
     }
 
     public function testWithNoSuchPatient() {
@@ -114,17 +115,19 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         $field_measurements = count($this->getPatientFieldMeasurements('12345'));
         $patient_measurements = count($this->getPatientMeasurements('12345'));
         $this->assertEquals(0, count(glob($this->errorDir . '/*.fmes')));
-        $files = scandir($this->importDir);
-        $contents = file_get_contents($this->importDir . '/' . $files[2]);
-        $contents = str_replace('_12345__', '_99876__', $contents);
-        file_put_contents($this->importDir . "/" . $files[2], $contents);
+        $files = glob($this->importDir . '/*.fmes');
+        foreach($files as $file) {
+            $contents = file_get_contents($file);
+            $contents = str_replace('_12345__', '_99876__', $contents);
+            file_put_contents($file, $contents);
+        }
         
         $this->legacyFieldCommand->run(array('import', '--importDir=' . $this->importDir, '--archiveDir=' . $this->archiveDir,
             '--errorDir=' . $this->errorDir, '--dupDir=' . $this->dupDir, '--interval=PT10M'));
-        $this->assertEquals(1, count(glob($this->errorDir . '/*.fmes')));
+        $this->assertEquals(8, count(glob($this->errorDir . '/*.fmes')));
         // should be no extra measurements:
-        assertEquals($field_measurements, count($this->getPatientFieldMeasurements('12345')));
-        assertEquals($patient_measurements, count($this->getPatientMeasurements('12345')));
+        $this->assertEquals($field_measurements, count($this->getPatientFieldMeasurements('12345')));
+        $this->assertEquals($patient_measurements, count($this->getPatientMeasurements('12345')));
     }
     
     public function testWithBadHosNum() {
@@ -144,6 +147,10 @@ class LegacyFieldsCommandTest extends CDbTestCase {
      * Delete temporary files and directories.
      */
     protected function tearDown() {
+        $this->cleanDirectories();
+    }
+    
+    protected function cleanDirectories() {
         foreach (glob($this->archiveDir . '/*.fmes') as $file) {
             unlink($file);
         }
@@ -156,10 +163,11 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         foreach (glob($this->importDir . '/*.fmes') as $file) {
             unlink($file);
         }
-        rmdir($this->archiveDir);
-        rmdir($this->errorDir);
-        rmdir($this->dupDir);
-        rmdir($this->importDir);
+        foreach (array($this->archiveDir, $this->errorDir, $this->dupDir, $this->importDir)  as $file) {
+            if (file_exists($file)) {
+                rmdir($file);
+            }
+        }
     }
     
     /**
@@ -170,8 +178,13 @@ class LegacyFieldsCommandTest extends CDbTestCase {
     private function getPatientFieldMeasurements($patient_id) {
         $patient = Patient::model()->find('hos_num=:hos_num', 
                 array(':hos_num' => $patient_id));
-        return MeasurementVisualFieldHumphrey::model()->findAll('patient_id=:patient_id',
-                array(':patient_id' => $patient->id));
+        if ($patient) {
+            $criteria = new CDbCriteria;
+            $criteria->join = 'join patient_measurement on patient_measurement.id=patient_measurement_id';
+            $criteria->condition = 'patient_measurement.patient_id=' . $patient->id;
+            return MeasurementVisualFieldHumphrey::model()->findAll($criteria);
+        }
+        return array();
     }
     
     /**

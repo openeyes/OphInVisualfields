@@ -24,26 +24,7 @@
  * @property OphinvisualfieldsStrategy $strategy
  * @property OphinvisualfieldsFieldMeasurementVersion[] $ophinvisualfieldsFieldMeasurementVersions
  */
-class MeasurementVisualFieldHumphrey extends BasePatientMeasurement {
-
-    /**
-     * Returns the static model of the specified AR class.
-     * Please note that you should have this exact method in all your CActiveRecord descendants!
-     * @param string $className active record class name.
-     * @return OphinvisualfieldsFieldMeasurement the static model class
-     */
-    public static function model($className=__CLASS__) {
-        return parent::model($className);
-    }
-
-    public function beforeSave() {
-        $this->measurement_type_id = MeasurementType::model()->find("class_name=:class_name", array(":class_name" => __CLASS__))->id;
-        $saved = parent::beforeSave();
-        if ($saved && $this->patientMeasurement) {
-            $this->patient_measurement_id = $this->patientMeasurement->id;
-        }
-        return $saved;
-    }
+class MeasurementVisualFieldHumphrey extends Measurement {
 
     /**
      * @return string the associated database table name
@@ -78,9 +59,8 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement {
             'cropped_image' => array(self::BELONGS_TO, 'ProtectedFile', 'cropped_image_id'),
             'eye' => array(self::BELONGS_TO, 'Eye', 'eye_id'),
             'image' => array(self::BELONGS_TO, 'ProtectedFile', 'image_id'),
-            'pattern' => array(self::BELONGS_TO, 'OphInVisualfields_Pattern', 'pattern_id'),
-            'patient' => array(self::BELONGS_TO, 'Patient', 'patient_id'),
             'patientMeasurement' => array(self::BELONGS_TO, 'PatientMeasurement', 'patient_measurement_id'),
+            'pattern' => array(self::BELONGS_TO, 'OphInVisualfields_Pattern', 'pattern_id'),
             'strategy' => array(self::BELONGS_TO, 'OphInVisualfields_Strategy', 'strategy_id'),
             'ophinvisualfieldsFieldMeasurementVersions' => array(self::HAS_MANY, 'OphinvisualfieldsFieldMeasurementVersion', 'id'),
         );
@@ -104,14 +84,6 @@ class MeasurementVisualFieldHumphrey extends BasePatientMeasurement {
             'study_datetime' => 'Study Datetime',
             'source' => 'Source',
         );
-    }
-
-    /**
-     *
-     * @return type 
-     */
-    public function getPatientMeasurement() {
-        return PatientMeasurement::model()->findByPk($this->patient_measurement_id);
     }
 
     /**

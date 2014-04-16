@@ -42,5 +42,56 @@ $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
 </div>
 <?php $this->displayErrors($errors, true) ?>
 
+
+<script type="text/javascript">
+  var http = new XMLHttpRequest();
+  var url = "http://localhost/api/MeasurementVisualFieldHumphrey?resource_type=MeasurementVisualFieldHumphrey_format=xml";
+//  var url = "http://localhost/api/PatientMeasurement?resource_type=PatientMeasurement&_format=xml";
+//  var url = "http://localhost/api/Patient?resource_type=Patient&_format=xml";
+  /*
+	"patient_id": "4",
+	"image_scan_data": "-- image data --",
+	"image_scan_crop_data": "-- cropped image data --",
+	"xml_file_data": "-- contents of xml file --",
+	"study_datetime": "2014-03-04",
+	"eye": "L",
+	"test_name": "test1",
+	"test_strategy": "strategy1",*/
+//  var encodedData = "testdata";
+    var encodedData = "/var/www/openeyes/protected/files/0/9/7/09702dbf7a6e26ecb4f229de3474eff0d5e35108";
+    var encodedDataThumb = "/var/www/openeyes/protected/files/0/9/7/09702dbf7a6e26ecb4f229de3474eff0d5e35108";
+    //var encodedData = "<?php echo base64_encode(file_get_contents('/var/www/openeyes/protected/files/0/9/7/09702dbf7a6e26ecb4f229de3474eff0d5e35108')) ?>";
+    //var encodedDataThumb = "<?php echo base64_encode(file_get_contents('/var/www/openeyes/protected/files/f/5/e/f5ec53b213fdde0a0af1e79877043ddffa7643c2')) ?>";
+  var d = new Date();
+  var params = "<MeasurementVisualFieldHumphrey><patient_id value=\"1\"/> "
+    + "<image_scan_data contentType=\"text/html\" value=\"" + encodedData
+    + "\"/>" + "<image_scan_crop_data value=\""+encodedDataThumb+"\"/>"
+    + "<xml_file_data value=\"some data here\"/>"
+    + "<study_datetime value=\"2000-01-01 12:00:00\"/>"
+    + "<file_reference value=\"" + d.getMinutes() + d.getSeconds() + d.getMilliseconds() + "\"/>"
+    + "<eye value=\"L\"/>"
+    + "<pattern value=\"10-2\"/>"
+    + "<strategy value=\"SITA-Standard\"/>"
+    + "</MeasurementVisualFieldHumphrey>";
+//var params = "<PatientMeasurement><patient_id value=\"1\"/> "
+//    + "</PatientMeasurement>";
+//var params = "<Patient><id value=\"1\"/> "
+//    + "</Patient>";
+  http.open("POST", url, true, "admin", "admin");
+//  http.open("GET", url, true);
+
+  //Send the proper header information along with the request
+  http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  http.setRequestHeader("Content-length", params.length);
+  http.setRequestHeader("Connection", "close");
+
+  http.onreadystatechange = function() {//Call a function when the state changes.
+    if(http.readyState == 4 && http.status == 200) {
+      alert(http.responseText);
+    }
+  }
+http.send(params);
+</script>
+
 <?php $this->endWidget() ?>
 <?php $this->endContent(); ?>

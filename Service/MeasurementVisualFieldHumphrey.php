@@ -53,7 +53,6 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 	$protected_file->mimetype = $protected_file->getPath();
 	$protected_file->save();
 	
-	// now write the contents to files:
 	$cropped_file = \ProtectedFile::createForWriting($title);
 	// all content is base64 encoded, so decode it:
 	file_put_contents($cropped_file->getPath(), base64_decode($report->image_scan_crop_data));
@@ -63,7 +62,7 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 
 	$report->scanned_field_id = $protected_file->id;
 	$report->scanned_field_crop_id = $cropped_file->id;
-
+        
 	return $report;
   }
 }

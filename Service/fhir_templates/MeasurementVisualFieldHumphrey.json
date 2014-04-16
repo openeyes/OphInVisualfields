@@ -7,5 +7,6 @@
 	"study_datetime":  {":subst": "study_datetime"},
 	"eye": {":subst": "eye"},
 	"pattern":  {":subst": "pattern"},
-	"strategy":  {":subst": "strategy"}
+	"strategy":  {":subst": "strategy"},
+	"legacy": {":subst": "legacy"}
 }

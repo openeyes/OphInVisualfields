@@ -96,14 +96,12 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $resource_type = 'MeasurementVisualFieldHumphrey';
                 $service = Yii::app()->service->getFhirService($resource_type, array());
                 $fieldObject = $fhirMarshal->parseXml($field);
-
                 $tx = Yii::app()->db->beginTransaction();
                 $ref = $service->fhirCreate($fieldObject);
                 $tx->commit();
                 $refId = $ref->getId();
                 $measurement = MeasurementVisualFieldHumphrey::model()->findByPk($refId);
-                $measurement->legacy = 1;
-                $measurement->save();
+
                 $study_datetime = $measurement->study_datetime;
 
                 // does the user have any legacy field events associated with them?

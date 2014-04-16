@@ -39,7 +39,6 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
    * @return type
    */
   public function resourceToModel($res, $measurement) {
-	$measurement->patient_id = $res->patient_id;
 	$measurement->eye_id = $res->eye_id;
 	$measurement->pattern_id = \OphInVisualfields_Pattern::model()->find("name=:name", array(":name" => $res->pattern))->id;
 	$measurement->strategy_id = \OphInVisualfields_Strategy::model()->find("name=:name", array(":name" => $res->strategy))->id;
@@ -49,7 +48,8 @@ class MeasurementVisualFieldHumphreyService extends \Service\ModelService {
 	if (isset($res->xml_file_data)) {
 		$measurement->source = base64_decode($res->xml_file_data);
 	}
-	$measurement->save();
+        $measurement->patient_id = $res->patient_id;
+        $measurement->save();
 	return $measurement;
   }
 

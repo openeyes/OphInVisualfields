@@ -36,8 +36,8 @@ class OphInVisualfields_API extends BaseAPI {
 		if ($event_id != null) {
 			$extra = ' OR (t.patient_measurement_id IN (SELECT patient_measurement_id from (measurement_reference) WHERE event_id=' . $event_id . '))';
 		}
-		$criteria->condition = 'patient_id=' . $patient->id
-				. ' and eye_id=' . $eye
+		$criteria->condition = 
+				' eye_id=' . $eye
 				. ' and legacy=' . $legacy
 				. ' and (t.patient_measurement_id NOT IN '
 				. ' (SELECT patient_measurement_id from (measurement_reference))'
