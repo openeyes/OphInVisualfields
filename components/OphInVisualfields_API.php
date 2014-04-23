@@ -42,12 +42,7 @@ class OphInVisualfields_API extends BaseAPI {
 				. ' and (t.patient_measurement_id NOT IN '
 				. ' (SELECT patient_measurement_id from (measurement_reference))'
 				. $extra . ')';
-//		$criteria->join = "LEFT JOIN measurement_reference on measurement_reference.patient_measurement_id=patient_measurement_id";
-//		$model = array('patient_id' => array($patient->id),
-//				'eye_id' => array($eye));
-		Yii::import("application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey", True);
-		$x = MeasurementVisualFieldHumphrey::model()->findAll(
-				$criteria);
+
 		return MeasurementVisualFieldHumphrey::model()->findAll(
 						$criteria);
 	}
