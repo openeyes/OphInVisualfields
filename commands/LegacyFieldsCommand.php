@@ -108,6 +108,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $eventType = EventType::model()->find("class_name=?", array("OphInVisualfields"));
                 if (!isset($eventType)) {
                     echo "Correct event type, OphInVisualfields, is not present; quitting...\n";
+                    echo "OphInVisualfields is required in order to import legacy field images.\n";
                     exit(1);
                 }
                 $legacyEpisode = Episode::model()->find("legacy=1 AND patient_id=" . $pid);
@@ -141,7 +142,8 @@ class LegacyFieldsCommand extends CConsoleCommand {
 
                     if ($interval) {
                         $criteria->condition = 'created_date >= "' . $startCreatedTime->format('Y-m-d H:i:s')
-                                . '" and created_date <= "' . $endCreatedTime->format('Y-m-d H:i:s') . '"';
+                                . '" and created_date <= "' . $endCreatedTime->format('Y-m-d H:i:s') . '"'
+                            . ' and event_type_id=' . $eventType->id;
                     }
                     $events = Event::model()->findAll($criteria);
                     if (count($events) == 1) {
@@ -161,6 +163,8 @@ class LegacyFieldsCommand extends CConsoleCommand {
                     } else if (count($events) == 0) {
                         $this->newEvent($legacyEpisode, $eventType, $measurement);
                         $this->move($this->archiveDir, $file);
+                    } else {
+                        echo 'events=' . count($events);
                     }
                 }
             }
