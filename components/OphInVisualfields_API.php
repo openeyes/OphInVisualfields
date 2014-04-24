@@ -42,7 +42,7 @@ class OphInVisualfields_API extends BaseAPI {
 				. ' and (t.patient_measurement_id NOT IN '
 				. ' (SELECT patient_measurement_id from (measurement_reference))'
 				. $extra . ')';
-
+                $criteria->join = ' join patient_measurement on patient_measurement.patient_id = ' . $patient->id;
 		return MeasurementVisualFieldHumphrey::model()->findAll(
 						$criteria);
 	}

@@ -49,14 +49,24 @@ $divName = $element->elementType->class_name;
 			 data-side="right">
 
 			<?php
-			echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "right")'))
-			?>
+			
+                        if (count($right_fields) > 0) {
+                            echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'cropped_image.id', 'study_datetime'), array('onclick' => 'changeImage(this, "right")'));
+                        } else {
+                            echo 'There are no fields to view for the right eye.';
+                        }
+                        ?>
 		</div>
 
 		<div class="side right eventDetail"
 			 data-side="left">
 				 <?php
-				 echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'))
+                                 
+                        if (count($right_fields) > 0) {
+                            echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'));
+                        } else {
+                            echo 'There are no fields to view for the right eye.';
+                        }
 				 ?>
 
 		</div>
@@ -67,17 +77,27 @@ $divName = $element->elementType->class_name;
 	<div class="cols2 clearfix">
 		<div class="side left eventDetail"
 			 data-side="right">
+<?php
 
+                        if (count($right_fields) > 0) {
+                            ?>
 			<a id="<?php echo $divName ?>_right_image_url" href=""><img id="<?php echo $divName ?>_right_image_thumb" src="" /></a>
-
+<?php
+                        }
+                        ?>
 		</div>
 
 		<div class="side right eventDetail"
 			 data-side="left">
 
+<?php
+
+                        if (count($left_fields) > 0) {
+                            ?>
 			<a id="<?php echo $divName ?>_left_image_url" href=""><img id="<?php echo $divName ?>_left_image_thumb" src="" /></a>
-
-
+<?php
+                        }
+?>
 		</div>
 	</div>
 </div>
