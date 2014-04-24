@@ -54,7 +54,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
         $this->errorDir = $this->checkSeparator($errorDir);
         $this->dupDir = $this->checkSeparator($dupDir);
         $this->interval = $interval;
-//        $smgr = Yii::app()->service;
+        $smgr = Yii::app()->service;
         $fhirMarshal = new FhirMarshal;
         $directory = $this->importDir;
         if ($entry = glob($directory . '/*.fmes')) {
@@ -66,6 +66,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $resource_type = 'MeasurementVisualFieldHumphrey';
                 $service = Yii::app()->service->getFhirService($resource_type, array());
                 $fieldObject = $fhirMarshal->parseXml($field);
+
                 if (count(ProtectedFile::model()->find("name=:name", array(":name" => $fieldObject->file_reference))) > 0) {
                     echo "Moving " . basename($file) . " to duplicates directory; "
                     . $fieldObject->file_reference . " already exists within OE" . PHP_EOL;
@@ -100,8 +101,8 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $ref = $service->fhirCreate($fieldObject);
                 $tx->commit();
                 $refId = $ref->getId();
-                $measurement = MeasurementVisualFieldHumphrey::model()->findByPk($refId);
 
+                $measurement = MeasurementVisualFieldHumphrey::model()->findByPk($refId);
                 $study_datetime = $measurement->study_datetime;
 
                 // does the user have any legacy field events associated with them?

@@ -62,6 +62,7 @@ class MeasurementVisualFieldHumphrey extends Measurement {
             'patientMeasurement' => array(self::BELONGS_TO, 'PatientMeasurement', 'patient_measurement_id'),
             'pattern' => array(self::BELONGS_TO, 'OphInVisualfields_Pattern', 'pattern_id'),
             'strategy' => array(self::BELONGS_TO, 'OphInVisualfields_Strategy', 'strategy_id'),
+            'patient' => array(self::BELONGS_TO, 'Patient', 'patient_id'),
             'ophinvisualfieldsFieldMeasurementVersions' => array(self::HAS_MANY, 'OphinvisualfieldsFieldMeasurementVersion', 'id'),
         );
     }

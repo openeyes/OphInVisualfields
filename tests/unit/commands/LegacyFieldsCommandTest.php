@@ -28,6 +28,7 @@ class LegacyFieldsCommandTest extends CDbTestCase {
     
     public $fixtures = array(
         'patients' => 'Patient',
+        'measurement_type' => 'MeasurementType',
     );
     
     /**
