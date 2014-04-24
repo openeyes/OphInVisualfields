@@ -56,7 +56,11 @@ $divName = $element->elementType->class_name;
                             echo 'There are no fields to view for the right eye.';
                         }
                         ?>
-		</div>
+		</div>if (count($right_fields) > 0) {
+                            echo CHtml::activeDropDownList($element, 'right_field_id', CHtml::listData($right_fields, 'cropped_image.id', 'study_datetime'), array('onclick' => 'changeImage(this, "right")'));
+                        } else {
+                            echo 'There are no fields to view for the right eye.';
+                        }
 
 		<div class="side right eventDetail"
 			 data-side="left">
