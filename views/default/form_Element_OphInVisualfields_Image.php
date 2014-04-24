@@ -63,7 +63,7 @@ $divName = $element->elementType->class_name;
 				 <?php
                                  
                         if (count($right_fields) > 0) {
-                            echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('empty' => '- Please select -', 'onclick' => 'changeImage(this, "left")'));
+                            echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('onclick' => 'changeImage(this, "left")'));
                         } else {
                             echo 'There are no fields to view for the right eye.';
                         }
