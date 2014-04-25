@@ -20,6 +20,7 @@
 
 <!-- Keep track of old values: -->
 <?php
+
 if (isset($element->right_field_id)) {
 	?>
 	<input type="hidden" name="<?php echo "original_right_field_id" ?>" value="<?php echo $element->right_field_id ?>"/>
@@ -176,7 +177,7 @@ foreach ($right_fields as $right_field) {
 ?>	
 	function changeImage(select, side) {
 		var index = select.options[select.selectedIndex].value;
-		if (side == 'right' && index > 0) {
+		if (side == 'right') {
 			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
 				"/file/view/" + index + "/img.gif";
 			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
@@ -184,7 +185,7 @@ foreach ($right_fields as $right_field) {
 			$('div#Element_OphInVisualfields_Image_' + side + '_strategy').text(right_strategies[index]);
 			$('div#Element_OphInVisualfields_Image_' + side + '_type').text(right_types[index]);
 			
-		} else if (index > 0) {
+		} else {
 			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_thumb').src = 
 				"/file/view/" + index + "/img.gif";
 			document.getElementById('Element_OphInVisualfields_Image_' + side + '_image_url').href = 
@@ -211,7 +212,7 @@ if (isset($element->left_field_id)) {
 } else {
 	?>
 				if (left_images.length > 0 ) {
-					document.getElementById('Element_OphInVisualfields_Image_left_field_id').selectedIndex = 1;
+					document.getElementById('Element_OphInVisualfields_Image_left_field_id').selectedIndex = 0;
 					changeImage(document.getElementById('Element_OphInVisualfields_Image_left_field_id'), 'left');
 				}
 	<?php
@@ -232,7 +233,7 @@ if (isset($element->right_field_id)) {
 } else {
 	?>
 				if (right_images.length > 0 ) {
-					document.getElementById('Element_OphInVisualfields_Image_right_field_id').selectedIndex = 1;
+					document.getElementById('Element_OphInVisualfields_Image_right_field_id').selectedIndex = 0;
 					changeImage(document.getElementById('Element_OphInVisualfields_Image_right_field_id'), 'right');
 				}
 	<?php
