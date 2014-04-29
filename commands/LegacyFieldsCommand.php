@@ -81,7 +81,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
                     $this->move($this->errorDir, $file);
                     continue;
                 }
-                $match = $matches[1];
+                $match = str_pad($matches[1], 7, '0', STR_PAD_LEFT);
 
                 $patient = Patient::model()->find("hos_num=?", array($match));
                 if (!$patient) {

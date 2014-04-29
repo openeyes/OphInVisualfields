@@ -26,11 +26,16 @@ class OphInVisualfields_API extends BaseAPI {
 	 * @param Patient $patient
 	 * @param int $eye
 	 * @param int event_id the event ID, may be null
+	 * @param bool bound
 	 * @return an array of all appropriate visual fields for the specified
 	 * patient and eye.
 	 */
-	public function getVisualfields($patient, $eye, $event_id = null, $legacy = 0) {
+	public function getVisualfields($patient, $eye, $event_id = null, $bound=False, $legacy = 0) {
 		$criteria = new CDbCriteria();
+                $BOUNDED = 'NOT IN';
+                if ($bound ==True) {
+                    $BOUNDED = 'IN';
+                }
 		$criteria->order = 'study_datetime ASC';
 		$extra = null;
 		if ($event_id != null) {
@@ -38,11 +43,11 @@ class OphInVisualfields_API extends BaseAPI {
 		}
 		$criteria->condition = 
 				' eye_id=' . $eye
-				. ' and legacy=' . $legacy
-				. ' and (t.patient_measurement_id NOT IN '
+				. ' and legacy<=' . $legacy
+				. ' and (t.patient_measurement_id ' . $BOUNDED
 				. ' (SELECT patient_measurement_id from (measurement_reference))'
-				. $extra . ')';
-                $criteria->join = ' join patient_measurement on patient_measurement.patient_id = ' . $patient->id;
+				. $extra . ') and patient_id=' . $patient->id;
+                $criteria->join = ' right join patient_measurement on patient_measurement.id = t.patient_measurement_id';
 		return MeasurementVisualFieldHumphrey::model()->findAll(
 						$criteria);
 	}

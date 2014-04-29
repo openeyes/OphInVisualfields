@@ -20,6 +20,7 @@
 
 <!-- Keep track of old values: -->
 <?php
+$content=$this->renderPartial('_view_Element_OphInVisualfields_Humphrey_Scan_Pair');
 
 if (isset($element->right_field_id)) {
 	?>
@@ -66,7 +67,7 @@ $divName = $element->elementType->class_name;
                         if (count($right_fields) > 0) {
                             echo CHtml::activeDropDownList($element, 'left_field_id', CHtml::listData($left_fields, 'cropped_image.id', 'study_datetime'), array('onclick' => 'changeImage(this, "left")'));
                         } else {
-                            echo 'There are no fields to view for the right eye.';
+                            echo 'There are no fields to view for the left eye.';
                         }
 				 ?>
 
