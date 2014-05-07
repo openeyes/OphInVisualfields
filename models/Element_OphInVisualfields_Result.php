@@ -45,4 +45,15 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 			'assessment_id' => 'Assessment Result',
 		);
 	}
+
+	public function getValidators()
+	{
+		$validators = parent::getValidators();
+
+		if ($this->assessmentResult && $this->assessmentResult->name == 'Other') {
+			$validators[] = CValidator::createValidator('required', $this, 'other');
+		}
+
+		return $validators;
+	}
 }

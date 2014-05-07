@@ -46,4 +46,15 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 			'ability_id' => 'Ability',
 		);
 	}
+
+	public function getValidators()
+	{
+		$validators = parent::getValidators();
+
+		if ($this->ability && $this->ability->name == 'Other') {
+			$validators[] = CValidator::createValidator('required', $this, 'other');
+		}
+
+		return $validators;
+	}
 }
