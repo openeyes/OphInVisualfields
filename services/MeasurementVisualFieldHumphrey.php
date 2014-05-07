@@ -14,9 +14,10 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 
-namespace OphInVisualfields\Service;
+namespace OEModule\OphInVisualfields\services;
 
-class MeasurementVisualFieldHumphrey extends \Service\Resource {
+class MeasurementVisualFieldHumphrey extends \services\Resource
+{
 
   public $id;
   public $study_datetime;
@@ -27,12 +28,8 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
   public $scanned_field_id;
   public $scanned_field_crop_id;
 
-  /**
-   * 
-   * @param type $fhirObject
-   * @return type
-   */
-  static public function fromFhir($fhirObject) {
+  static public function fromFhir($fhirObject)
+  {
 	$report = parent::fromFhir($fhirObject);
 
 	$patient = \Patient::model()->find("id=?", array($report->patient_id));
@@ -45,14 +42,14 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 	if (isset($fhirObject->xml_file_data)) {
 		$report->xml_file_data = base64_decode($fhirObject->xml_file_data);
 	}
-	
+
 	$title = $report->file_reference;
 	$protected_file = \ProtectedFile::createForWriting($title);
 	$protected_file->name = $title;
 	file_put_contents($protected_file->getPath(), base64_decode($report->image_scan_data));
 	$protected_file->mimetype = $protected_file->getPath();
 	$protected_file->save();
-	
+
 	$cropped_file = \ProtectedFile::createForWriting($title);
 	// all content is base64 encoded, so decode it:
 	file_put_contents($cropped_file->getPath(), base64_decode($report->image_scan_crop_data));
@@ -62,7 +59,7 @@ class MeasurementVisualFieldHumphrey extends \Service\Resource {
 
 	$report->scanned_field_id = $protected_file->id;
 	$report->scanned_field_crop_id = $cropped_file->id;
-        
+
 	return $report;
   }
 }

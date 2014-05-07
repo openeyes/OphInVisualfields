@@ -55,7 +55,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
         $this->dupDir = $this->checkSeparator($dupDir);
         $this->interval = $interval;
         $smgr = Yii::app()->service;
-        $fhirMarshal = new FhirMarshal;
+        $fhirMarshal = Yii::app()->fhirMarshal;
         $directory = $this->importDir;
         if ($entry = glob($directory . '/*.fmes')) {
             foreach ($entry as $file) {
@@ -64,7 +64,6 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 // first check the file has not already been imported:
                 $field = file_get_contents($file);
                 $resource_type = 'MeasurementVisualFieldHumphrey';
-                $service = Yii::app()->service->getFhirService($resource_type, array());
                 $fieldObject = $fhirMarshal->parseXml($field);
 
                 if (count(ProtectedFile::model()->find("name=:name", array(":name" => $fieldObject->file_reference))) > 0) {
@@ -95,14 +94,14 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 // first check the file has not already been imported:
 
                 $resource_type = 'MeasurementVisualFieldHumphrey';
-                $service = Yii::app()->service->getFhirService($resource_type, array());
+                $service = Yii::app()->service->getService($resource_type);
                 $fieldObject = $fhirMarshal->parseXml($field);
                 $tx = Yii::app()->db->beginTransaction();
                 $ref = $service->fhirCreate($fieldObject);
                 $tx->commit();
                 $refId = $ref->getId();
 
-                $measurement = MeasurementVisualFieldHumphrey::model()->findByPk($refId);
+                $measurement = OphInVisualfields_Field_Measurement::model()->findByPk($refId);
                 $study_datetime = $measurement->study_datetime;
 
                 // does the user have any legacy field events associated with them?
@@ -127,7 +126,6 @@ class LegacyFieldsCommand extends CConsoleCommand {
                     // so if we've got a legacy episode that means there's probably an event with the 
                     // image bound to it - let's look for it:
                     $eye = $fieldObject->eye;
-                    $measurement->legacy = 1;
                     if ($eye == 'L') {
                         // we're looking for the other eye:
                         $eye = Eye::RIGHT;
@@ -196,7 +194,6 @@ class LegacyFieldsCommand extends CConsoleCommand {
         } else {
             $image->right_field_id = $measurement->cropped_image->id;
         }
-        $measurement->legacy = 1;
         $measurement->save();
         $image->save();
         echo "Successfully added " . basename($measurement->cropped_image->name) . " to new event.\n";
