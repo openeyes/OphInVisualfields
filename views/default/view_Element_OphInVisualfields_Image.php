@@ -30,7 +30,6 @@
 				$name = $this->firm->serviceSubspecialtyAssignment->subspecialty->name;
 			}
 			if ($element->right_field_id) {
-				Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 				$right_test = $element->right_field;
 				$x = $element->right_field_id;
 				?>
@@ -42,8 +41,6 @@
 				<?php
 			}
 			if ($element->left_field_id) {
-
-				Yii::import('application.modules.OphInVisualfields.models.MeasurementVisualFieldHumphrey');
 				$x = $element->left_field_id;
 				$left_test = $element->left_field;
 				?>
