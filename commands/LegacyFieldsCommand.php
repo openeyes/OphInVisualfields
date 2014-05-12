@@ -171,10 +171,9 @@ class LegacyFieldsCommand extends CConsoleCommand
 		$event = new Event;
 		$event->episode_id = $episode->id;
 		$event->event_type_id = $eventType->id;
+		$event->created_user_id = 1;
 		$event->created_date = $measurement->study_datetime;
-		$event->save($allow_overriding = true);
-		$event->created_date = $measurement->study_datetime;
-		$event->save($allow_overriding = true);
+		$event->save(true, null, true);
 
 		$image = new Element_OphInVisualfields_Image;
 		$image->event_id = $event->id;
