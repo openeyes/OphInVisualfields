@@ -96,13 +96,19 @@ class m140506_161243_visual_fields extends OEMigration
 			$event_type_id
 		);
 
+		$this->insert('episode_summary_item', array('event_type_id' => $event_type_id, 'name' => 'Visual Fields History'));
+
 		$this->initialiseData(__DIR__);
 	}
 
 	public function safeDown()
 	{
-		$this->delete('element_type', array('in', 'class_name', array('Element_OphInVisualfields_Image', 'Element_OphInVisualfields_Condition', 'Element_OphInVisualfields_Comments', 'Element_OphInVisualfields_Result')));
-		$this->delete('event_type', 'class_name = "OphInVisualfields"');
+		$event_type_id = $this->dbConnection->createCommand()->select('id')->from('event_type')->where('class_name = ?', array('OphInVisualFields'))->queryScalar();
+
+		$this->delete('episode_summary_item', 'event_type_id = ? and name = ?', array($event_type_id, 'Visual Fields History'));
+
+		$this->delete('element_type', 'event_type_id = ?', array($event_type_id));
+		$this->delete('event_type', 'id = ?', array($event_type_id));
 
 		$this->dropTable('et_ophinvisualfields_image');
 		$this->dropTable('et_ophinvisualfields_image_version');
