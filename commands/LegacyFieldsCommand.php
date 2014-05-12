@@ -109,7 +109,6 @@ class LegacyFieldsCommand extends CConsoleCommand
 				$legacyEpisode = Episode::model()->find("legacy=1 AND patient_id=" . $pid);
 				if (count($legacyEpisode) == 0) {
 					$episode = new Episode;
-					//					$episode->event_type_id = $eventType->id;
 					$episode->legacy = 1;
 					$episode->start_date = date("y-mm-dd H:i:s");
 					$episode->patient_id = $pid;
@@ -145,12 +144,10 @@ class LegacyFieldsCommand extends CConsoleCommand
 						$image = Element_OphInVisualfields_Image::model()->find("event_id=:event_id", array(":event_id" => $events[0]->id));
 
 						if ($measurement->eye->name == 'Left') {
-							$image->left_field_id = $measurement->cropped_image->id;
+							$image->left_field_id = $measurement->id;
 						} else {
-							$image->right_field_id = $measurement->cropped_image->id;
+							$image->right_field_id = $measurement->id;
 						}
-						$measurement->legacy = 1;
-						$measurement->save();
 						$image->save();
 						$this->move($this->archiveDir, $file);
 						echo "Successfully bound " . basename($file) . " to existing event.\n";
@@ -178,11 +175,10 @@ class LegacyFieldsCommand extends CConsoleCommand
 		$image = new Element_OphInVisualfields_Image;
 		$image->event_id = $event->id;
 		if ($measurement->eye->name == 'Left') {
-			$image->left_field_id = $measurement->cropped_image->id;
+			$image->left_field_id = $measurement->id;
 		} else {
-			$image->right_field_id = $measurement->cropped_image->id;
+			$image->right_field_id = $measurement->id;
 		}
-		$measurement->save();
 		$image->save();
 		echo "Successfully added " . basename($measurement->cropped_image->name) . " to new event.\n";
 	}
