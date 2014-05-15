@@ -46,9 +46,9 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 		);
 	}
 
-	public function getValidators()
+	public function getValidators($attribute=null)
 	{
-		$validators = parent::getValidators();
+		$validators = parent::getValidators($attribute);
 
 		if ($this->assessmentResult && $this->assessmentResult->name == 'Other') {
 			$validators[] = CValidator::createValidator('required', $this, 'other');
