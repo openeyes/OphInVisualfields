@@ -4,14 +4,16 @@ class m140520_074221_pattern_details extends CDbMigration {
 
     public function safeUp() {
 
+        // ********************************
         // change pattern_ocr to something else
         $this->createTable('et_ophinvisualfields_pattern_ocr', array(
             'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
+            // ********************************
             // give appropriate names to values:
-            'val1' => 'int(10) unsigned NOT NULL', // Test Type
-            'val2' => 'int(10) unsigned NOT NULL', // Test Type
+            'val1' => 'int(10) unsigned NOT NULL',
+            'val2' => 'int(10) unsigned NOT NULL',
             // ...
-            'val32' => 'int(10) unsigned NOT NULL', // Test Type
+            'val32' => 'int(10) unsigned NOT NULL', 
             // now core table fields:
             'last_modified_user_id' => 'int(10) unsigned NOT NULL DEFAULT 1',
             'last_modified_date' => 'datetime NOT NULL DEFAULT \'1901-01-01 00:00:00\'',
