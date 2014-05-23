@@ -14,6 +14,7 @@
  */
 ?>
 <?php if ($elements): ?>
+	<div id="vf-slider-container">
 	<?php foreach ($elements as $element): ?>
 		<div id="OphInVisualfields_Episode_VisualFieldsHistory_element_<?= $element->id ?>" class="OphInVisualfields_Episode_VisualFieldsHistory_element element-fields element-eyes hidden">
 			<?php
@@ -22,25 +23,87 @@
 			?>
 		</div>
 	<?php endforeach ?>
+	</div>
 	<div id="OphInVisualfields_Episode_VisualFieldsHistory_slider"></div>
 	<script>
 		$(document).ready(function () {
+
+			var elementIds = window.OphInVisualfields_Episode_VisualFieldsHistory_element_ids;
+			var sliderContainer = $('#vf-slider-container');
+			var slider = $('#OphInVisualfields_Episode_VisualFieldsHistory_slider');
+			var elements = $('.OphInVisualfields_Episode_VisualFieldsHistory_element');
+			var max = elementIds.length - 1;
+			var throttle = false;
+			var timer = 0;
+			var diff = -1;
+
 			function showElement(elementId) {
 				$('#OphInVisualfields_Episode_VisualFieldsHistory_element_' + elementId).show();
 			}
 
-			var elementIds = window.OphInVisualfields_Episode_VisualFieldsHistory_element_ids;
+			function updateElements(val) {
+					elements.hide();
+					showElement(elementIds[val]);
+			}
 
-			$('#OphInVisualfields_Episode_VisualFieldsHistory_slider').slider({
+			// This is a POC, written in haste.
+			// We throttle the execution of this handler because trackpads (and possibly
+			// other touch devices) will emit the mousewheel event continuesly while scrolling.
+			function onMouseWheel(e, delta) {
+
+				e.preventDefault();
+
+				if (throttle) return;
+
+				// This helps to prevent the slider from jittering from a sudden change of
+				// direction.
+				if (delta > 0) {
+					if (diff < 0) {
+						diff = delta;
+						return;
+					}
+				}
+				if (delta < 0) {
+					if (diff > 0) {
+						diff = delta;
+						return;
+					}
+				}
+
+				diff = delta;
+
+				var sliderVal = slider.slider('value');
+
+				// Left or right scrolling?
+				if (delta >= 0 && sliderVal > 0) {
+					sliderVal--;
+				} else if (delta < 0 && sliderVal <= max) {
+					sliderVal++;
+				}
+
+				slider.slider('value', sliderVal);
+
+				throttle = true;
+				clearTimeout(timer);
+
+				timer = setTimeout(function() {
+					throttle = false;
+				}, 160);
+			}
+
+			slider.slider({
 				'min': 0,
-				'max': elementIds.length - 1,
-				'value': elementIds.length - 1,
-				'slide': function (e, ui) {
-					$('.OphInVisualfields_Episode_VisualFieldsHistory_element').hide();
-					showElement(elementIds[ui.value]);
+				'max': max,
+				'value': max,
+				'change': function (e, ui) {
+					updateElements(ui.value);
 				},
+				'slide': function(e, ui) {
+					updateElements(ui.value);
+				}
 			});
 
+			sliderContainer.on('mousewheel', onMouseWheel);
 			showElement(elementIds[elementIds.length - 1]);
 		});
 	</script>
