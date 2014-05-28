@@ -56,9 +56,9 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement
 		$existing = $this->dbConnection->createCommand()
 			->select(array('pm.id pm_id', 'mr.id mr_id'))
 			->from('ophinvisualfields_field_measurement fm')
-			->join('patient_measurement pm', 'pm.id = fm.patient_measurement_id')
+			->join('patient_measurement pm', 'pm.patient_id = ' . $this->event->episode->patient->id)
 			->join('measurement_reference mr', 'mr.patient_measurement_id = pm.id and mr.event_id = :event_id')
-			->where('fm.eye_id = :eye_id and mr.event_id = :event_id',  array(':eye_id' => $eye_id, ':event_id' => $this->event_id))
+                        ->where('fm.eye_id = :eye_id and mr.event_id = :event_id and pm.patient_id = :patient_id', array(':eye_id' => $eye_id, ':event_id' => $this->event_id, ':patient_id' => $this->event->episode->patient->id))
 			->queryRow();
 
 		if ($existing) {
