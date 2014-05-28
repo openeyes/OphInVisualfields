@@ -17,11 +17,9 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-
-        <div class="element-fields">
-
-
-	<?php echo $form->dropDownList($element, 'ability_id', CHtml::listData(OphInVisualfields_Ability::model()->findAll(array('order'=> 'name asc')),'id','name'),array('empty'=>'- Please select -'))?>
-	<?php echo $form->textArea($element, 'other', array('rows' => 3, 'cols' => 80))?>
-	<?php echo $form->checkBox($element, 'glasses')?>
+<div class="element-fields">
+	<?= $form->dropDownList($element, 'ability_id', CHtml::listData(OphInVisualfields_Ability::model()->findAll(array('order'=> 'name asc')),'id','name'),array('empty'=>'- Please select -')) ?>
+	<?= $form->textArea($element, 'other', array('rows' => 3, 'cols' => 80), !$element->other) ?>
+	<?= $form->checkBox($element, 'glasses') ?>
+</div>
 

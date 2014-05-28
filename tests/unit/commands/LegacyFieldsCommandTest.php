@@ -183,7 +183,7 @@ class LegacyFieldsCommandTest extends CDbTestCase {
             $criteria = new CDbCriteria;
             $criteria->join = 'join patient_measurement on patient_measurement.id=patient_measurement_id';
             $criteria->condition = 'patient_measurement.patient_id=' . $patient->id;
-            return MeasurementVisualFieldHumphrey::model()->findAll($criteria);
+            return OphInVisualfields_Field_Measurement::model()->findAll($criteria);
         }
         return array();
     }

@@ -16,31 +16,25 @@
  * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-?>
 
-<?php $this->beginContent('//patient/event_container'); ?>
-<?php
+$this->beginContent('//patient/event_container');
 $this->breadcrumbs = array($this->module->id);
 $this->event_actions[] = EventAction::button('Save', 'save', array('level' => 'save'), array('form' => 'clinical-create'));
-?>
-<?php $this->renderPartial('//base/_messages'); ?>
+$this->renderPartial('//base/_messages');
 
-<?php
 $form = $this->beginWidget('BaseEventTypeCActiveForm', array(
-    'id' => 'clinical-create',
-    'enableAjaxValidation' => false,
-    'layoutColumns' => array(
-        'label' => 4,
-        'field' => 8
-    )
-        ));
+	'id' => 'clinical-create',
+	'enableAjaxValidation' => false,
+));
+
+$this->displayErrors($errors);
+
 ?>
-<?php $this->displayErrors($errors) ?>
-
 <div class="js-active-elements">
-  <?php $this->renderDefaultElements($this->action->id, $form) ?>
+	<?php $this->renderOpenElements($this->action->id, $form) ?>
 </div>
-<?php $this->displayErrors($errors, true) ?>
+<?php
 
-<?php $this->endWidget() ?>
-<?php $this->endContent(); ?>
+$this->displayErrors($errors, true);
+$this->endWidget();
+$this->endContent();
