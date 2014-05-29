@@ -7,7 +7,6 @@ class m140506_161243_visual_fields extends OEMigration
 		$this->createOETable('ophinvisualfields_strategy', array('id' => 'pk', 'name' => 'string not null'), true);
 		$this->createOETable('ophinvisualfields_pattern', array('id' => 'pk', 'name' => 'string not null'), true);
 		$this->createOETable('ophinvisualfields_ability', array('id' => 'pk', 'name' => 'string not null', 'active' => 'boolean not null default true'), true);
-		$this->createOETable('ophinvisualfields_assessment', array('id' => 'pk', 'name' => 'string not null', 'active' => 'boolean not null default true'), true);
 
 		$this->createOETable(
 			'ophinvisualfields_field_measurement',
@@ -70,28 +69,12 @@ class m140506_161243_visual_fields extends OEMigration
 			true
 		);
 
-		$this->createOETable(
-			'et_ophinvisualfields_result',
-			array(
-				'id' => 'pk',
-				'event_id' => 'integer unsigned not null',
-				'reliability' => 'boolean not null',
-				'assessment' => 'boolean not null',
-				'assessment_id' => 'integer not null',
-				'other' => 'text',
-				'constraint et_ophinvisualfields_result_event_id_fk foreign key (event_id) references event (id)',
-				'constraint et_ophinvisualfields_result_assessment_id_fk foreign key (assessment_id) references ophinvisualfields_assessment (id)',
-			),
-			true
-		);
-
 		$event_type_id = $this->insertOEEventType('Visual Fields', 'OphInVisualfields', 'In');
 		$this->insertOEElementType(
 			array(
 				'Element_OphInVisualfields_Image' => array('name' => 'Image', 'required' => true),
 				'Element_OphInVisualfields_Condition' => array('name' => 'Condition', 'required' => true),
 				'Element_OphInVisualfields_Comments' => array('name' => 'Comments', 'required' => true),
-				'Element_OphInVisualfields_Result' => array('name' => 'Result', 'required' => true),
 			),
 			$event_type_id
 		);
@@ -116,8 +99,6 @@ class m140506_161243_visual_fields extends OEMigration
 		$this->dropTable('et_ophinvisualfields_condition_version');
 		$this->dropTable('et_ophinvisualfields_comments');
 		$this->dropTable('et_ophinvisualfields_comments_version');
-		$this->dropTable('et_ophinvisualfields_result');
-		$this->dropTable('et_ophinvisualfields_result_version');
 
 		$this->dropTable('ophinvisualfields_field_measurement');
 		$this->dropTable('ophinvisualfields_field_measurement_version');
@@ -128,7 +109,5 @@ class m140506_161243_visual_fields extends OEMigration
 		$this->dropTable('ophinvisualfields_pattern_version');
 		$this->dropTable('ophinvisualfields_ability');
 		$this->dropTable('ophinvisualfields_ability_version');
-		$this->dropTable('ophinvisualfields_assessment');
-		$this->dropTable('ophinvisualfields_assessment_version');
 	}
 }
