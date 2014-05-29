@@ -45,8 +45,10 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement
 	{
 		parent::afterSave();
 
-		if ($this->left_field) $this->updateMeasurementReference($this->left_field, Eye::LEFT);
-		if ($this->right_field) $this->updateMeasurementReference($this->right_field, Eye::RIGHT);
+                if ($this->event->episode->legacy == 0) { 
+                    if ($this->left_field) $this->updateMeasurementReference($this->left_field, Eye::LEFT);
+                    if ($this->right_field) $this->updateMeasurementReference($this->right_field, Eye::RIGHT);
+                }
 	}
 
 	private function updateMeasurementReference(OphInVisualfields_Field_Measurement $measurement, $eye_id)
