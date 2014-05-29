@@ -17,12 +17,17 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-
-<table class="subtleWhite normalText">
-	<tbody>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('comments'))?></td>
-			<td><span class="big"><?php echo CHtml::encode($element->comments)?></span></td>
-		</tr>
-	</tbody>
-</table>
+<div class="element-data">
+	<div class="row data-row">
+		<div class="large-2 column">
+			<div class="data-label">
+				<?php echo $element->getAttributeLabel('comments')?>:
+			</div>
+		</div>
+		<div class="large-10 column">
+			<div class="data-value">
+				<?php echo $element->textWithLineBreaks('comments')?>
+			</div>
+		</div>
+	</div>
+</div>

@@ -17,24 +17,53 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-
-<table class="subtleWhite normalText">
-	<tbody>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('reliability'))?></td>
-			<td><span class="big"><?php $element->reliability ? 'Yes' : 'No'?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('assessment'))?>:</td>
-			<td><span class="big"><?php echo $element->assessment ? 'Yes' : 'No'?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('assessment_id'))?></td>
-			<td><span class="big"><?php echo $element->assessmentResult ? $element->assessmentResult->name : 'None'?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('other'))?></td>
-			<td><span class="big"><?php echo CHtml::encode($element->other)?></span></td>
-		</tr>
-	</tbody>
-</table>
+<div class="element-data">
+	<div class="row data-row">
+		<div class="large-2 column">
+			<div class="data-label">
+				<?php echo $element->getAttributeLabel('reliability')?>:
+			</div>
+		</div>
+		<div class="large-10 column">
+			<div class="data-value">
+				<?php $element->reliability ? 'Yes' : 'No'?>
+			</div>
+		</div>
+	</div>
+	<div class="row data-row">
+		<div class="large-2 column">
+			<div class="data-label">
+				<?php echo $element->getAttributeLabel('assessment')?>:
+			</div>
+		</div>
+		<div class="large-10 column">
+			<div class="data-value">
+				<?php echo $element->assessment ? 'Yes' : 'No'?>
+			</div>
+		</div>
+	</div>
+	<div class="row data-row">
+		<div class="large-2 column">
+			<div class="data-label">
+				<?php echo $element->getAttributeLabel('assessment_id')?>:
+			</div>
+		</div>
+		<div class="large-10 column">
+			<div class="data-value">
+				<?php echo $element->assessmentResult ? $element->assessmentResult->name : 'None'?>
+			</div>
+		</div>
+	</div>
+	<div class="row data-row">
+		<div class="large-2 column">
+			<div class="data-label">
+				<?php echo $element->getAttributeLabel('other')?>:
+			</div>
+		</div>
+		<div class="large-10 column">
+			<div class="data-value">
+				<?php echo CHtml::encode($element->other)?>
+			</div>
+		</div>
+	</div>
+</div>

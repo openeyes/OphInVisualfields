@@ -16,7 +16,6 @@
  * @copyright Copyright (c) 2011-2012, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-echo CHtml::hiddenField('YII_CSRF_TOKEN', Yii::app()->request->csrfToken);
 ?>
 <section class="element <?php echo $element->elementType->class_name?>"
         data-element-type-id="<?php echo $element->elementType->id?>"
