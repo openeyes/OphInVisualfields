@@ -19,5 +19,5 @@
 ?>
 <div class="element-fields">
 	<?= $form->dropDownList($element, 'assessment_id', CHtml::listData(OphInVisualfields_Assessment::model()->findAll(array('order'=> 'name asc')),'id','name'),array('empty'=>'- Please select -')) ?>
-	<?= $form->textArea($element, 'other', array('rows' => 3, 'cols' => 80), , !($element->assessment && $element->assessment->name == 'Other')) ?>
+	<?= $form->textArea($element, 'other', array('rows' => 4), !($element->assessment && $element->assessment->name == 'Other')) ?>
 </div>
