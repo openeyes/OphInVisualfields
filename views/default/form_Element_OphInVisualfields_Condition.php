@@ -21,6 +21,6 @@
 	<?= $form->dropDownList($element, 'ability_id', CHtml::listData(OphInVisualfields_Ability::model()->findAll(array('order'=> 'name asc')),'id','name'),
 		array('empty'=>'- Please select -'), false, array('field' => 4)) ?>
 	<?= $form->textArea($element, 'other', array('rows' => 4), !$element->other) ?>
-	<?= $form->checkBox($element, 'glasses') ?>
+	<?= $form->radioBoolean($element, 'glasses') ?>
 </div>
 
