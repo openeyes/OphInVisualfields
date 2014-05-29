@@ -136,7 +136,7 @@ class LegacyFieldsCommand extends CConsoleCommand
 					if ($interval) {
 						$criteria->condition = 'created_date >= "' . $startCreatedTime->format('Y-m-d H:i:s')
 								. '" and created_date <= "' . $endCreatedTime->format('Y-m-d H:i:s') . '"'
-							. ' and event_type_id=' . $eventType->id;
+							. ' and event_type_id=' . $eventType->id . ' and deleted=0';
                                                 $criteria->join='join episode on patient_id=' . $pid;
 
 					}
