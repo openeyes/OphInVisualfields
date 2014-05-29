@@ -28,7 +28,7 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 	{
 		return array(
 			array('ability_id, other, glasses', 'safe'),
-			array('ability_id', 'required'),
+			array('ability_id, glasses', 'required'),
 		);
 	}
 
@@ -47,14 +47,19 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 		);
 	}
 
-	public function getValidators($attribute=null)
+	public function afterValidate()
 	{
-		$validators = parent::getValidators($attribute);
-
-		if ($this->ability && $this->ability->name == 'Other') {
-			$validators[] = CValidator::createValidator('required', $this, 'other');
+		if ($this->ability && $this->ability->name == 'Other' && !$this->other) {
+			$this->addError('other', 'Please enter details');
 		}
 
-		return $validators;
+		parent::afterValidate();
+	}
+
+	public function beforeSave()
+	{
+		if ($this->ability->name != 'Other') $this->other = null;
+
+		return parent::beforeSave();
 	}
 }

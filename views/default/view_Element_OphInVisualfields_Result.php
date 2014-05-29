@@ -19,27 +19,7 @@
 ?>
 <div class="element-data">
 	<div class="row data-row">
-		<div class="large-2 column">
-			<div class="data-label">
-				<?php echo $element->getAttributeLabel('assessment_id')?>:
-			</div>
-		</div>
-		<div class="large-10 column">
-			<div class="data-value">
-				<?php echo $element->assessmentResult ? $element->assessmentResult->name : 'None'?>
-			</div>
-		</div>
-	</div>
-	<div class="row data-row">
-		<div class="large-2 column">
-			<div class="data-label">
-				<?php echo $element->getAttributeLabel('other')?>:
-			</div>
-		</div>
-		<div class="large-10 column">
-			<div class="data-value">
-				<?php echo CHtml::encode($element->other)?>
-			</div>
-		</div>
+		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('assessment_id')) ?></div>
+		<div class="large-10 column data-value"><?= CHtml::encode(($element->assessment->name == 'Other') ? $element->other : $element->assessment->name) ?></div>
 	</div>
 </div>

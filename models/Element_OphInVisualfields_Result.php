@@ -27,7 +27,8 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 	public function rules()
 	{
 		return array(
-			array('reliability, assessment, assessment_id, other', 'safe'),
+			array('assessment_id, other', 'safe'),
+			array('assessment_id', 'required'),
 		);
 	}
 
@@ -35,7 +36,7 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 	{
 		return array(
 			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'assessmentResult' => array(self::BELONGS_TO, 'OphInVisualfields_Assessment', 'assessment_id'),
+			'assessment' => array(self::BELONGS_TO, 'OphInVisualfields_Assessment', 'assessment_id'),
 		);
 	}
 
@@ -46,14 +47,20 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 		);
 	}
 
-	public function getValidators($attribute=null)
+	public function afterValidate()
 	{
-		$validators = parent::getValidators($attribute);
-
-		if ($this->assessmentResult && $this->assessmentResult->name == 'Other') {
-			$validators[] = CValidator::createValidator('required', $this, 'other');
+		if ($this->assessment && $this->assessment->name == 'Other' && !$this->other) {
+			$this->addError('other', 'Please enter details');
 		}
 
-		return $validators;
+		parent::afterValidate();
 	}
+
+	public function beforeSave()
+	{
+		if ($this->assessment->name != 'Other') $this->other = null;
+
+		return parent::beforeSave();
+	}
+
 }
