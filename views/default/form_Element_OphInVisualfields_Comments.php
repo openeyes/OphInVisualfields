@@ -18,5 +18,5 @@
  */
 ?>
 <div class="element-fields">
-	<?php echo $form->textArea($element, 'comments', array('rows' => 3, 'cols' => 80)) ?>
+	<?php echo $form->textArea($element, 'comments', array('rows' => 4)) ?>
 </div>
