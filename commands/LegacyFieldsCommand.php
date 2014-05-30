@@ -137,9 +137,9 @@ class LegacyFieldsCommand extends CConsoleCommand {
                         // this accounts for multiple tests per eye - the implication
                         // being that the newest test overrides the last test for the same eye
                         // (e.g. when a mistake is made and the test is re-ran):
-                        $criteria->condition = 't.created_date >= "' . $startCreatedTime->format('Y-m-d H:i:s')
-                                . '" and t.created_date < "' . $endCreatedTime->format('Y-m-d H:i:s')
-                                . '" and event_type_id=' . $eventType->id
+                        $criteria->condition = 't.study_datetime >= ' . STRTOTIME($startCreatedTime->format('Y-m-d H:i:s'))
+                                . ' and t.study_datetime < ' . STRTOTIME($endCreatedTime->format('Y-m-d H:i:s'))
+                                . ' and event_type_id=' . $eventType->id
                                 . ' and t.deleted=0 and ep.legacy=1';
                         $criteria->join = 'join episode ep on patient_id=' . $pid;
                         $criteria->order = 't.created_date desc';
@@ -180,7 +180,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
         $event->episode_id = $episode->id;
         $event->event_type_id = $eventType->id;
         $event->created_user_id = 1;
-        $event->created_date = $melasurement->study_datetime;
+        $event->created_date = $measurement->study_datetime;
         $event->save(true, null, true);
 
         $image = new Element_OphInVisualfields_Image;
