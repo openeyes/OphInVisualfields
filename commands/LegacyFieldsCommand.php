@@ -137,28 +137,34 @@ class LegacyFieldsCommand extends CConsoleCommand {
                         // this accounts for multiple tests per eye - the implication
                         // being that the newest test overrides the last test for the same eye
                         // (e.g. when a mistake is made and the test is re-ran):
-                        $criteria->condition = 't.study_datetime >= ' . STRTOTIME($startCreatedTime->format('Y-m-d H:i:s'))
-                                . ' and t.study_datetime < ' . STRTOTIME($endCreatedTime->format('Y-m-d H:i:s'))
-                                . ' and event_type_id=' . $eventType->id
-                                . ' and t.deleted=0 and ep.legacy=1';
-                        $criteria->join = 'join episode ep on patient_id=' . $pid;
+
+                        $criteria->condition = 't.created_date >= STR_TO_DATE("' . $startCreatedTime->format('Y-m-d H:i:s')
+                                . '", "%Y-%m-%d %H:%i:%s")  and t.created_date < STR_TO_DATE("' . $endCreatedTime->format('Y-m-d H:i:s')
+                                . '", "%Y-%m-%d %H:%i:%s") and event_type_id=' . $eventType->id
+                                . ' and t.deleted=0 and ep.legacy=1 and ep.patient_id=' . $pid;
+                        $criteria->join = 'left join episode ep on patient_id=' . $pid;
                         $criteria->order = 't.created_date desc';
                         $criteria->distinct = true;
-                    }
+		}
+
                     // Of events, there can only be one or none:
                     $events = Event::model()->findAll($criteria);
                     if (count($events) == 1) {
                         // test already picked up - bind it to the event
                         $image = Element_OphInVisualfields_Image::model()->find("event_id=:event_id", array(":event_id" => $events[0]->id));
 
-                        if ($measurement->eye->name == 'Left') {
-                            $image->left_field_id = $measurement->id;
-                        } else {
-                            $image->right_field_id = $measurement->id;
-                        }
-                        $image->save();
-                        $this->move($this->archiveDir, $file);
-                        echo "Successfully bound " . basename($file) . " to existing event.\n";
+                        try {
+				if ($measurement->eye->name == 'Left') {
+                            	$image->left_field_id = $measurement->id;
+                        	} else {
+                        	    $image->right_field_id = $measurement->id;
+                        	}
+	                        $image->save();
+        	                $this->move($this->archiveDir, $file);
+                	        echo "Successfully bound " . basename($file) . " to existing event.\n";
+			} catch (Exception $ex) {
+				echo $ex . PHP_EOL;
+			}
                     } else if (count($events) == 0) {
                         // existing legacy episode needs new event - first time a test taken for this episode::
                         $this->newEvent($legacyEpisode, $eventType, $measurement);
@@ -191,7 +197,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
             $image->right_field_id = $measurement->id;
         }
         $image->save();
-        echo "Successfully added " . basename($measurement->cropped_image->name) . " to new event.\n";
+        echo "Successfully added " . basename($measurement->cropped_image->name) . " to new event id " . $event->id. "\n";
     }
 
     /**
