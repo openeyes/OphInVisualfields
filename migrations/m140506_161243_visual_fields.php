@@ -75,8 +75,6 @@ class m140506_161243_visual_fields extends OEMigration
 			array(
 				'id' => 'pk',
 				'event_id' => 'integer unsigned not null',
-				'reliability' => 'boolean not null',
-				'assessment' => 'boolean not null',
 				'assessment_id' => 'integer not null',
 				'other' => 'text',
 				'constraint et_ophinvisualfields_result_event_id_fk foreign key (event_id) references event (id)',

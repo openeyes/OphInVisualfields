@@ -17,10 +17,16 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
-<div class="element-fields element-eyes">
-<?php
-	$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'right'));
-	$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'left'));
-?>
-</div>
+<section class="element <?php echo $element->elementType->class_name ?>"
+		 data-element-type-id="<?php echo $element->elementType->id ?>"
+		 data-element-type-class="<?php echo $element->elementType->class_name ?>"
+		 data-element-type-name="<?php echo $element->elementType->name ?>"
+		 data-element-display-order="<?php echo $element->elementType->display_order ?>">
+	<div class="element-fields element-eyes row">
+	<?php
+		$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'right'));
+		$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'left'));
+	?>
+	</div>
+</section>
 

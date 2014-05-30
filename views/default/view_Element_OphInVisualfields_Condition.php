@@ -18,19 +18,13 @@
  */
 ?>
 
-<table class="subtleWhite normalText">
-	<tbody>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('ability_id'))?></td>
-			<td><span class="big"><?php echo $element->ability ? $element->ability->name : 'None'?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('other'))?></td>
-			<td><span class="big"><?php echo CHtml::encode($element->other)?></span></td>
-		</tr>
-		<tr>
-			<td width="30%"><?php echo CHtml::encode($element->getAttributeLabel('glasses'))?></td>
-			<td><span class="big"><?php $element->glasses ? 'Yes' : 'No'?></span></td>
-		</tr>
-	</tbody>
-</table>
+<div class="element-data">
+	<div class="row data-row">
+		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('ability_id')) ?></div>
+		<div class="large-10 column data-value"><?= CHtml::encode(($element->ability->name == 'Other') ? $element->other : $element->ability->name) ?></div>
+	</div>
+	<div class="row data-row">
+		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('glasses')) ?></div>
+		<div class="large-10 column data-value"><?= $element->glasses ? "Yes" : "No" ?></div>
+	</div>
+</div>
