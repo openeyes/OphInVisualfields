@@ -137,9 +137,9 @@ class LegacyFieldsCommand extends CConsoleCommand {
                         // this accounts for multiple tests per eye - the implication
                         // being that the newest test overrides the last test for the same eye
                         // (e.g. when a mistake is made and the test is re-ran):
-                        $criteria->condition = 't.created_date >= ' . $startCreatedTime->format('Y-m-d H:i:s')
-                                . '" and t.created_date < ' . $endCreatedTime->format('Y-m-d H:i:s')
-                                . ' and event_type_id=' . $eventType->id
+                        $criteria->condition = 't.created_date >= "' . $startCreatedTime->format('Y-m-d H:i:s')
+                                . '" and t.created_date < "' . $endCreatedTime->format('Y-m-d H:i:s')
+                                . '" and event_type_id=' . $eventType->id
                                 . ' and t.deleted=0 and ep.legacy=1';
                         $criteria->join = 'join episode ep on patient_id=' . $pid;
                         $criteria->order = 't.created_date desc';
