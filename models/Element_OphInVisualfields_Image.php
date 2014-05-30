@@ -17,59 +17,55 @@
  * @copyright Copyright (c) 2011-2012, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
+class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
-class Element_OphInVisualfields_Image extends BaseEventTypeElement
-{
-	public function tableName()
-	{
-		return 'et_ophinvisualfields_image';
-	}
+    public function tableName() {
+        return 'et_ophinvisualfields_image';
+    }
 
-	public function rules()
-	{
-		return array(
-			array('left_field_id, right_field_id', 'safe'),
-		);
-	}
+    public function rules() {
+        return array(
+            array('left_field_id, right_field_id', 'safe'),
+        );
+    }
 
-	public function relations()
-	{
-		return array(
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'left_field' => array(self::BELONGS_TO, 'OphInVisualfields_Field_Measurement', 'left_field_id'),
-			'right_field' => array(self::BELONGS_TO, 'OphInVisualfields_Field_Measurement', 'right_field_id'),
-		);
-	}
+    public function relations() {
+        return array(
+            'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+            'left_field' => array(self::BELONGS_TO, 'OphInVisualfields_Field_Measurement', 'left_field_id'),
+            'right_field' => array(self::BELONGS_TO, 'OphInVisualfields_Field_Measurement', 'right_field_id'),
+        );
+    }
 
-	public function afterSave()
-	{
-		parent::afterSave();
+    public function afterSave() {
+        parent::afterSave();
+        if ($this->left_field)
+            $this->updateMeasurementReference($this->left_field, Eye::LEFT);
+        if ($this->right_field)
+            $this->updateMeasurementReference($this->right_field, Eye::RIGHT);
+    }
 
-		if ($this->left_field) $this->updateMeasurementReference($this->left_field, Eye::LEFT);
-		if ($this->right_field) $this->updateMeasurementReference($this->right_field, Eye::RIGHT);
-	}
+    private function updateMeasurementReference(OphInVisualfields_Field_Measurement $measurement, $eye_id) {
+        $patient_measurement_id = $measurement->getPatientMeasurement()->id;
 
-	private function updateMeasurementReference(OphInVisualfields_Field_Measurement $measurement, $eye_id)
-	{
-		$patient_measurement_id = $measurement->getPatientMeasurement()->id;
+        $existing = $this->dbConnection->createCommand()
+                ->select(array('pm.id pm_id', 'mr.id mr_id'))
+                ->from('ophinvisualfields_field_measurement fm')
+                ->join('patient_measurement pm', 'pm.patient_id = ' . $this->event->episode->patient->id)
+                ->join('measurement_reference mr', 'mr.patient_measurement_id = pm.id and mr.event_id = :event_id')
+                ->where('fm.eye_id = :eye_id and mr.event_id = :event_id and pm.patient_id = :patient_id', array(':eye_id' => $eye_id, ':event_id' => $this->event_id, ':patient_id' => $this->event->episode->patient->id))
+                ->queryRow();
 
-		$existing = $this->dbConnection->createCommand()
-			->select(array('pm.id pm_id', 'mr.id mr_id'))
-			->from('ophinvisualfields_field_measurement fm')
-			->join('patient_measurement pm', 'pm.patient_id = ' . $this->event->episode->patient->id)
-			->join('measurement_reference mr', 'mr.patient_measurement_id = pm.id and mr.event_id = :event_id')
-                        ->where('fm.eye_id = :eye_id and mr.event_id = :event_id and pm.patient_id = :patient_id', array(':eye_id' => $eye_id, ':event_id' => $this->event_id, ':patient_id' => $this->event->episode->patient->id))
-			->queryRow();
+        if ($existing) {
+            if ($existing['pm_id'] != $patient_measurement_id) {
+                MeasurementReference::model()->deleteByPk($existing['mr_id']);
+            } else {
+                // Nothing to do
+                return;
+            }
+        }
 
-		if ($existing) {
-			if ($existing['pm_id'] != $patient_measurement_id) {
-				MeasurementReference::model()->deleteByPk($existing['mr_id']);
-			} else {
-				// Nothing to do
-				return;
-			}
-		}
+        $measurement->attach($this->event);
+    }
 
-		$measurement->attach($this->event);
-	}
 }
