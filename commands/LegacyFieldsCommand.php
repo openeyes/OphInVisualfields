@@ -41,7 +41,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 . "\n";
     }
 
-    public function actionImport($importDir, $archiveDir, $errorDir, $dupDir, $interval='PT30M') {
+    public function actionImport($importDir, $archiveDir, $errorDir, $dupDir, $interval='PT45M') {
         $this->importDir = $this->checkSeparator($importDir);
         $this->archiveDir = $this->checkSeparator($archiveDir);
         $this->errorDir = $this->checkSeparator($errorDir);
