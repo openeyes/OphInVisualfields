@@ -75,7 +75,7 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 }
                 $match = str_pad($matches[1], 7, '0', STR_PAD_LEFT);
 
-                $patient = Patient::model()->find("hos_num=?", array($match));
+                $patient = Patient::model()->find("hos_num=:hos_num", array(":hos_num" => $match));
                 if (!$patient) {
                     echo "Failed to find patient in " . basename($file) . "; moving to " . $this->errorDir . PHP_EOL;
                     $this->move($this->errorDir, $file);
@@ -98,13 +98,13 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $study_datetime = $measurement->study_datetime;
 
                 // does the user have any legacy field events associated with them?
-                $eventType = EventType::model()->find("class_name=?", array("OphInVisualfields"));
+                $eventType = EventType::model()->find("class_name=:class_name", array(":class_name" => "OphInVisualfields"));
                 if (!isset($eventType)) {
                     echo "Correct event type, OphInVisualfields, is not present; quitting...\n";
                     echo "OphInVisualfields is required in order to import legacy field images.\n";
                     exit(1);
                 }
-                $legacyEpisode = Episode::model()->find("legacy=1 AND patient_id=" . $pid);
+                $legacyEpisode = Episode::model()->find("legacy=1 AND patient_id=:patient_id", array(":patient_id" => $pid));
                 if (count($legacyEpisode) == 0) {
                     $episode = new Episode;
                     $episode->legacy = 1;
