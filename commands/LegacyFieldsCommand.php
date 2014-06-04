@@ -138,12 +138,13 @@ class LegacyFieldsCommand extends CConsoleCommand {
                         // being that the newest test overrides the last test for the same eye
                         // (e.g. when a mistake is made and the test is re-ran):
 
-                        $criteria->condition = 't.event_date >= STR_TO_DATE("' . $startCreatedTime->format('Y-m-d H:i:s')
-                                . '", "%Y-%m-%d %H:%i:%s")  and t.event_date <= STR_TO_DATE("' . $endCreatedTime->format('Y-m-d H:i:s')
-                                . '", "%Y-%m-%d %H:%i:%s") and event_type_id=' . $eventType->id
-                                . ' and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id =' . $pid;
+                        $criteria->condition = 't.event_date >= ' . strtotime($startCreatedTime->format('Y-m-d H:i:s'))
+                                . '  and t.event_date <= ' . strtotime($endCreatedTime->format('Y-m-d H:i:s'))
+                                . ' and event_type_id=' . $eventType->id
+                                . ' and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = ":patient_id"';
                         $criteria->join = 'join episode ep on ep.id = t.episode_id';
                         $criteria->order = 't.event_date desc';
+                        $criteria->params = array(':patient_id' => $pid);
                         //$criteria->distinct = true;
 		}
                     // Of events, there can only be one or none:
