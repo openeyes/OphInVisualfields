@@ -29,6 +29,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
                 . "anonymisefields redact --pattern=[filePattern]\n\n"
                 . "For all files that match the specified pattern, perform image oerations to remove name, PID etc.\n"
                 . "Only images of the correct size (2400x3180) are transformed.\n";
+
     }
 
     /**
@@ -46,6 +47,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
                 exit(1);
             }
         }
+
         $realPids = file_get_contents($realPidFile);
         $anonPids = file_get_contents($anonPidFile);
         $rPids = explode(PHP_EOL, $realPids);
@@ -68,6 +70,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         $entries = array();
         // build up an array of matches we've encountered so far, and if it's
         // been matched before, ignore it.
+
         $smgr = Yii::app()->service;
         $fhirMarshal = Yii::app()->fhirMarshal;
         if ($entry = glob($fmesDir . '/*.fmes')) {
@@ -87,6 +90,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         // need to go through each one, pairing anonymised IDs with real ones,
         // replacing the real ID with the anonymised ID; note that we also
         // need to swap out the image and do some redaction: 
+
         if ($entry = glob($fmesDir . '/*.fmes')) {
             foreach ($entry as $file) {
                 $field = file_get_contents($file);
@@ -96,7 +100,6 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
                 if (in_array($match, $rPids)) {
                     $index = array_search($match, $rPids);
                     $anonPid = $aPids[$index];
-//                        $field = preg_replace("/__OE_PATIENT_ID_([0-9]*)__/", $anonPid, $field);
                     unset($fieldObject->patient_id);
                     $fieldObject->patient_id = "__OE_PATIENT_ID_" . $anonPid . "__";
                     echo 'replacing ' . $match . ' with ' . $anonPid . PHP_EOL;
@@ -141,7 +144,10 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
             echo 'You MUST specify a file pattern to match.';
         }
         $files = ProtectedFile::model()->findAll($criteria);
-        echo count($files) . " files found for modification.";
+        // we can't really filter images, except on size - for now just
+        // assume the count is half the amount when taking thumbnails into
+        // consideration
+        echo count($files / 2) . " files found for modification.";
         if ($files) {
             foreach ($files as $file) {
                 if (file_exists($file->getPath())) {
