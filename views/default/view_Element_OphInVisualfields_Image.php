@@ -17,7 +17,11 @@
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
 ?>
+<A HREF="/imageviewer/view/1_3_5">View all images, </A>
+<?php
+echo CHtml::link('View all 3 images', '../../../imageviewer/view/1_3_5', array('file_ids' => '1_3_5', 'patient_id' => $this->episode->patient->id));
 
+?>
 <table class="subtleWhite normalText">
 	<tbody>
 		<tr>
