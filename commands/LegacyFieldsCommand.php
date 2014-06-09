@@ -93,8 +93,9 @@ class LegacyFieldsCommand extends CConsoleCommand {
                 $ref = $service->fhirCreate($fieldObject);
                 $tx->commit();
                 $refId = $ref->getId();
-
+echo 'Looking for ' . $refId .  PHP_EOL;
                 $measurement = OphInVisualfields_Field_Measurement::model()->findByPk($refId);
+	//echo 'null? ' . var_dump($measurement) . PHP_EOL;
                 $study_datetime = $measurement->study_datetime;
 
                 // does the user have any legacy field events associated with them?
@@ -141,16 +142,18 @@ class LegacyFieldsCommand extends CConsoleCommand {
                         $criteria->condition = 't.event_date >= STR_TO_DATE("' . $startCreatedTime->format('Y-m-d H:i:s')
                                 . '", "%Y-%m-%d %H:%i:%s") and t.event_date <= STR_TO_DATE("' . $endCreatedTime->format('Y-m-d H:i:s')
                                 . '", "%Y-%m-%d %H:%i:%s") and event_type_id=' . $eventType->id
-                                . ' and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = ":patient_id"';
+                                . ' and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = :patient_id';
                         $criteria->join = 'join episode ep on ep.id = t.episode_id';
                         $criteria->order = 't.event_date desc';
                         $criteria->params = array(':patient_id' => $pid);
-                        //$criteria->distinct = true;
+//			$criteria->distinct = true;
 		}
                     // Of events, there can only be one or none:
                     $events = Event::model()->findAll($criteria);
-                    if (count($events) == 1) {
+echo 'Got ' . count($events) . PHP_EOL;
+                    if (count($events) > 0) {
                         // test already picked up - bind it to the event
+echo 'e.id=' . $events[0]->id . PHP_EOL;
                         $image = Element_OphInVisualfields_Image::model()->find("event_id=:event_id", array(":event_id" => $events[0]->id));
 			
                         try {
