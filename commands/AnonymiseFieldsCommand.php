@@ -147,7 +147,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         // we can't really filter images, except on size - for now just
         // assume the count is half the amount when taking thumbnails into
         // consideration
-        echo count($files / 2) . " files found for modification.";
+        echo (count($files)/2) . " files found for modification.";
         if ($files) {
             foreach ($files as $file) {
                 if (file_exists($file->getPath())) {
