@@ -178,14 +178,12 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         $draw = new ImagickDraw();    //Create a new drawing class (?)
 
         $draw->setFillColor('grey');
-        // name and ID:
-        $draw->rectangle(1704, 230, 346, 138);
-        // pad the ID which is set in a little more
-        $draw->rectangle(282, 186, 362, 230);
-        // DoB:
-        $draw->rectangle(1798, 136, 2104, 230);
-        // HFA serial number/ID
-        $draw->rectangle(1734, 3018, 1904, 3076);
+        // main patient details - name, pid, dob:
+        $draw->rectangle(190, 80, 2210, 254);
+        // date, time, age:
+        $draw->rectangle(1773, 291, 2160, 489);
+        // bottom of image - serial number etc.:
+        $draw->rectangle(190, 2960, 2160, 3099);
         $image->drawImage($draw);
     }
 
