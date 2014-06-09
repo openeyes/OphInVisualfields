@@ -37,7 +37,9 @@ class MeasurementVisualFieldHumphrey extends \services\Resource
 	$eye = 'Right';
 	if ($report->eye == 'L') {
 	  $eye = 'Left';
-	}
+	} else if ($report->eye == 'B') {
+            $eye = 'Both';
+        }
 	$report->eye_id = \Eye::model()->find("name=:name", array(":name" => $eye))->id;
 	if (isset($fhirObject->xml_file_data)) {
 		$report->xml_file_data = base64_decode($fhirObject->xml_file_data);
