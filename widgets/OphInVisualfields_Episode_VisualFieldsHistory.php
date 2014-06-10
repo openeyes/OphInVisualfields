@@ -23,7 +23,7 @@ class OphInVisualfields_Episode_VisualFieldsHistory extends EpisodeSummaryWidget
 			array(
 				'join' => 'inner join episode ep on ep.id = t.episode_id',
 				'condition' => 't.event_type_id = :event_type_id and ep.patient_id = :patient_id',
-				'order' => 't.created_date',
+				'order' => 't.event_date',
 				'params' => array(
 					':event_type_id' => $this->event_type->id,
 					':patient_id' => $this->episode->patient->id,
