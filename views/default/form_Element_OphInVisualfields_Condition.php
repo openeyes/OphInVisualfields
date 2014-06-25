@@ -18,8 +18,7 @@
  */
 ?>
 <div class="element-fields">
-	<?= $form->dropDownList($element, 'ability_id', CHtml::listData(OphInVisualfields_Ability::model()->findAll(array('order'=> 'name asc')),'id','name'),
-		array('empty'=>'- Please select -'), false, array('field' => 4)) ?>
-	<?= $form->textArea($element, 'other', array('rows' => 4), !($element->ability && $element->ability->name == 'Other')) ?>
+	<?= $form->multiSelectList($element, 'MultiSelect_ability', 'abilitys', 'ophinvisualfields_condition_ability_id', CHtml::listData(OphInVisualfields_Condition_Ability::model()->findAll(array('order'=>'display_order asc')),'id','name'), $element->ophinvisualfields_condition_ability_defaults, array('empty' => '- Please select -', 'label' => 'Ability'))?>
+	<?= $form->textArea($element, 'other', array('rows' => 4), false) ?>
 	<?= $form->radioBoolean($element, 'glasses') ?>
 </div>
