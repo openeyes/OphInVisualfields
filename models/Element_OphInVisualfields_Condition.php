@@ -27,16 +27,30 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 	public function rules()
 	{
 		return array(
-			array('ability_id, other, glasses', 'safe'),
-			array('ability_id, glasses', 'required'),
+			array('other, glasses', 'safe'),
+			array('glasses', 'required'),
 		);
+	}
+
+	protected function afterSave()
+	{
+		return parent::afterSave();
+	}
+
+
+	public function getophinvisualfields_condition_ability_defaults() {
+		$ids = array();
+		foreach (OphInVisualfields_Condition_Ability::model()->findAll('`default` = ?',array(1)) as $item) {
+			$ids[] = $item->id;
+		}
+		return $ids;
 	}
 
 	public function relations()
 	{
 		return array(
 			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'ability' => array(self::BELONGS_TO, 'OphInVisualfields_Ability', 'ability_id'),
+			'abilitys' => array(self::HAS_MANY, 'Element_OphInVisualfields_Condition_Ability_Assignment', 'element_id'),
 		);
 	}
 
@@ -49,8 +63,11 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 
 	public function afterValidate()
 	{
-		if ($this->ability && $this->ability->name == 'Other' && !$this->other) {
+		if ($this->hasMultiSelectValue('abilitys','Other'))
+		{
+			if(empty($this->other)) {
 			$this->addError('other', 'Please enter details');
+			}
 		}
 
 		parent::afterValidate();
@@ -58,7 +75,7 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 
 	public function beforeSave()
 	{
-		if ($this->ability->name != 'Other') $this->other = null;
+		if (!$this->hasMultiSelectValue('abilitys','Other')) $this->other = null;
 
 		return parent::beforeSave();
 	}

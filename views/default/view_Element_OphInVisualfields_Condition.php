@@ -21,7 +21,14 @@
 <div class="element-data">
 	<div class="row data-row">
 		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('ability_id')) ?></div>
-		<div class="large-10 column data-value"><?= Yii::app()->format->nText(($element->ability->name == 'Other') ? $element->other : $element->ability->name) ?></div>
+		<div class="large-10 column end"><div class="data-value"><?php if (!$element->abilitys) {?>
+					None
+				<?php } else {?>
+					<?php foreach ($element->abilitys as $item) {
+						echo $item->ophinvisualfields_condition_ability->name?><br/>
+					<?php }?>
+				<?php }?>
+			</div></div>
 	</div>
 	<div class="row data-row">
 		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('glasses')) ?></div>
