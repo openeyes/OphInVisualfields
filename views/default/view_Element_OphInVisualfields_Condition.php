@@ -30,8 +30,14 @@
 				<?php }?>
 			</div></div>
 	</div>
+	<?php if ($element->hasMultiSelectValue('abilitys','Other')) { ?>
 	<div class="row data-row">
-		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('glasses')) ?></div>
+		<div class="large-2 column data-label"><?= CHtml::encode($element->getAttributeLabel('other')) ?></div>
+		<div class="large-10 column data-value"><?= $element->textWithLineBreaks('other') ?></div>
+	</div>
+	<?php } ?>
+	<div class="row data-row">
+		<div class="large-2 column data-label"><?= $element->getAttributeLabel('glasses') ?></div>
 		<div class="large-10 column data-value"><?= $element->glasses ? "Yes" : "No" ?></div>
 	</div>
 </div>

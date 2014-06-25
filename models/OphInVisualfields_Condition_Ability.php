@@ -90,36 +90,6 @@ class OphInVisualfields_Condition_Ability extends BaseActiveRecordVersioned
 
 	protected function afterSave()
 	{
-		if (!empty($_POST['MultiSelect_ability'])) {
-
-			$existing_ids = array();
-
-			foreach (Element_OphInVisualfields_Condition_Ability_Assignment::model()->findAll('element_id = :elementId', array(':elementId' => $this->id)) as $item) {
-				$existing_ids[] = $item->ophinvisualfields_condition_ability_id;
-			}
-
-			foreach ($_POST['MultiSelect_ability'] as $id) {
-				if (!in_array($id,$existing_ids)) {
-					$item = new Element_OphInVisualfields_Condition_Ability_Assignment;
-					$item->element_id = $this->id;
-					$item->ophinvisualfields_condition_ability_id = $id;
-
-					if (!$item->save()) {
-						throw new Exception('Unable to save MultiSelect item: '.print_r($item->getErrors(),true));
-					}
-				}
-			}
-
-			foreach ($existing_ids as $id) {
-				if (!in_array($id,$_POST['MultiSelect_ability'])) {
-					$item = Element_OphInVisualfields_Condition_Ability_Assignment::model()->find('element_id = :elementId and ophinvisualfields_condition_ability_id = :lookupfieldId',array(':elementId' => $this->id, ':lookupfieldId' => $id));
-					if (!$item->delete()) {
-						throw new Exception('Unable to delete MultiSelect item: '.print_r($item->getErrors(),true));
-					}
-				}
-			}
-		}
-
 		return parent::afterSave();
 	}
 

@@ -26,7 +26,7 @@
 		</div>
 		<div class="large-10 column">
 			<div class="data-value">
-				<?= Yii::app()->format->nText($element->comments) ?>
+				<?= $element->textWithLineBreaks('comments') ?>
 			</div>
 		</div>
 	</div>
