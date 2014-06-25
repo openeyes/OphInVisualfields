@@ -93,9 +93,10 @@ class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 
 	public function afterValidate()
 	{
-	/*	if ($this->ability && $this->ability->name == 'Other' && !$this->other) {
+		if ($this->hasMultiSelectValue('abilitys','Other'))
+		{
 			$this->addError('other', 'Please enter details');
-		}*/
+		}
 
 		parent::afterValidate();
 	}

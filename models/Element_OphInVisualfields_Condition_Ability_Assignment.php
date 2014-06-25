@@ -87,6 +87,11 @@ class Element_OphInVisualfields_Condition_Ability_Assignment extends BaseActiveR
 		);
 	}
 
+	public function getName()
+	{
+		return $this->ophinvisualfields_condition_ability->name;
+	}
+
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.
