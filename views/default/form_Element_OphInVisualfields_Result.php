@@ -18,7 +18,6 @@
  */
 ?>
 <div class="element-fields">
-	<?= $form->dropDownList($element, 'assessment_id', CHtml::listData(OphInVisualfields_Assessment::model()->findAll(array('order'=> 'name asc')),'id','name'),
-		array('empty'=>'- Please select -'), false, array('field' => 4)) ?>
-	<?= $form->textArea($element, 'other', array('rows' => 4), !($element->assessment && $element->assessment->name == 'Other')) ?>
+	<?= $form->multiSelectList($element, 'MultiSelect_assessment', 'assessment', 'ophinvisualfields_result_assessment_id', CHtml::listData(OphInVisualfields_Result_Assessment::model()->findAll(array('order'=>'display_order asc')),'id','name'), $element->ophinvisualfields_result_assessment_defaults, array('empty' => '- Please select -', 'label' => 'Result Assessment', 'class' => 'linked-fields','data-linked-fields' => 'other', 'data-linked-values' => 'Other'))?>
+	<?= $form->textArea($element, 'other', array('rows' => 4), !$element->hasMultiSelectValue('assessment','Other')) ?>
 </div>

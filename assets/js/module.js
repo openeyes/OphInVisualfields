@@ -8,18 +8,8 @@ $(document).ready(function() {
 		$('#Element_OphInVisualfields_Image_strategy_' + side).text(field.strategy);
 		$('#Element_OphInVisualfields_Image_pattern_' + side).text(field.pattern);
 	}
-
-	function showHideOther(e) {
-		if ($(this).find(":selected").text() == 'Other') {
-			e.data.other.slideDown();
-		} else {
-
-		}
-	}
-
+	
 	$('#Element_OphInVisualfields_Image_right_field_id').change({side: "right"}, selectField);
 	$('#Element_OphInVisualfields_Image_left_field_id').change({side: "left"}, selectField);
-
-	$('#Element_OphInVisualfields_Result_assessment_id').change({other: $('#div_Element_OphInVisualfields_Result_other')}, showHideOther);
 });
 

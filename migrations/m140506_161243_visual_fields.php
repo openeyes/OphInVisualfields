@@ -6,7 +6,16 @@ class m140506_161243_visual_fields extends OEMigration
 	{
 		$this->createOETable('ophinvisualfields_strategy', array('id' => 'pk', 'name' => 'string not null'), true);
 		$this->createOETable('ophinvisualfields_pattern', array('id' => 'pk', 'name' => 'string not null'), true);
-		$this->createOETable('ophinvisualfields_assessment', array('id' => 'pk', 'name' => 'string not null', 'active' => 'boolean not null default true'), true);
+
+		$this->createOETable('ophinvisualfields_result_assessment', array(
+			'id' => 'pk',
+			'name' => 'varchar(128) NOT NULL',
+			'display_order' => 'int(10) unsigned NOT NULL DEFAULT 1',
+			'default' => 'tinyint(1) unsigned NOT NULL DEFAULT 0',
+			'deleted' => 'tinyint(1) unsigned not null',
+			'active' => 'int(11) unsigned not null',
+		),
+			true);
 
 
 		$this->createOETable('ophinvisualfields_condition_ability', array(
@@ -97,13 +106,23 @@ class m140506_161243_visual_fields extends OEMigration
 			array(
 				'id' => 'pk',
 				'event_id' => 'integer unsigned not null',
-				'assessment_id' => 'integer not null',
 				'other' => 'text',
 				'constraint et_ophinvisualfields_result_event_id_fk foreign key (event_id) references event (id)',
-				'constraint et_ophinvisualfields_result_assessment_id_fk foreign key (assessment_id) references ophinvisualfields_assessment (id)',
 			),
 			true
 		);
+
+		$this->createOETable('et_ophinvisualfields_result_assessment_assignment', array(
+				'id' => 'pk',
+				'element_id' => 'int(11) NOT NULL',
+				'ophinvisualfields_result_assessment_id' => 'int(11) NOT NULL',
+				'deleted' => 'tinyint(1) unsigned not null',
+				'KEY `et_ophinvisualfields_result_assessment_assignment_ele_fk` (`element_id`)',
+				'KEY `et_ophinvisualfields_result_assessment_assignment_lku_fk` (`ophinvisualfields_result_assessment_id`)',
+				'CONSTRAINT `et_ophinvisualfields_result_ass_ele_fk` FOREIGN KEY (`element_id`) REFERENCES `et_ophinvisualfields_result` (`id`)',
+				'CONSTRAINT `et_ophinvisualfields_result_ass_lku_fk` FOREIGN KEY (`ophinvisualfields_result_assessment_id`) REFERENCES `ophinvisualfields_result_assessment` (`id`)',
+			),
+			true);
 
 		$event_type_id = $this->insertOEEventType('Visual Fields', 'OphInVisualfields', 'In');
 		$this->insertOEElementType(

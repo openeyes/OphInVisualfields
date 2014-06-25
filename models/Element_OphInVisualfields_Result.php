@@ -27,16 +27,25 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 	public function rules()
 	{
 		return array(
-			array('assessment_id, other', 'safe'),
-			array('assessment_id', 'required'),
+			array(' other', 'safe'),
 		);
 	}
+
+
+	public function getophinvisualfields_result_assessment_defaults() {
+		$ids = array();
+		foreach (OphInVisualfields_Result_Assessment::model()->findAll('`default` = ?',array(1)) as $item) {
+			$ids[] = $item->id;
+		}
+		return $ids;
+	}
+
 
 	public function relations()
 	{
 		return array(
 			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'assessment' => array(self::BELONGS_TO, 'OphInVisualfields_Assessment', 'assessment_id'),
+			'assessment' => array(self::HAS_MANY, 'Element_OphInVisualfields_Result_Assessment_Assignment', 'element_id'),
 		);
 	}
 
@@ -49,8 +58,11 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 
 	public function afterValidate()
 	{
-		if ($this->assessment && $this->assessment->name == 'Other' && !$this->other) {
-			$this->addError('other', 'Please enter details');
+		if ($this->hasMultiSelectValue('assessment','Other'))
+		{
+			if(empty($this->other)) {
+				$this->addError('other', 'Please enter details');
+			}
 		}
 
 		parent::afterValidate();
@@ -58,7 +70,7 @@ class Element_OphInVisualfields_Result extends BaseEventTypeElement
 
 	public function beforeSave()
 	{
-		if ($this->assessment->name != 'Other') $this->other = null;
+		if (!$this->hasMultiSelectValue('assessment','Other')) $this->other = null;
 
 		return parent::beforeSave();
 	}
