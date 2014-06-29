@@ -9,11 +9,6 @@ class m140520_074221_pattern_details extends CDbMigration {
         $this->createTable('et_ophinvisualfields_hvf_post_ocr', array(
             'id' => 'int(10) unsigned NOT NULL AUTO_INCREMENT',
             // ********************************
-            'test_pattern' => 'VARCHAR(10)',
-            'sens_1' => 'INT(3) UNSIGNED',
-            'sens_1' => 'INT(3) UNSIGNED',
-            'sens_1' => 'INT(3) UNSIGNED',
-            'sens_1' => 'INT(3) UNSIGNED',
             'sens_1' => 'INT(3) UNSIGNED',
             'sens_2' => 'INT(3) UNSIGNED',
             'sens_3' => 'INT(3) UNSIGNED',
@@ -93,9 +88,6 @@ class m140520_074221_pattern_details extends CDbMigration {
             //now onto total deviation values which are signed
 			'td_1' => 'INT(3) SIGNED',
             'td_1' => 'INT(3) SIGNED',
-            'td_1' => 'INT(3) SIGNED',
-            'td_1' => 'INT(3) SIGNED',
-            'td_1' => 'INT(3) SIGNED',
             'td_2' => 'INT(3) SIGNED',
             'td_3' => 'INT(3) SIGNED',
             'td_4' => 'INT(3) SIGNED',
@@ -174,9 +166,6 @@ class m140520_074221_pattern_details extends CDbMigration {
             //pd values again signed
 			'pd_1' => 'INT(3) SIGNED',
             'pd_1' => 'INT(3) SIGNED',
-            'pd_1' => 'INT(3) SIGNED',
-            'pd_1' => 'INT(3) SIGNED',
-            'pd_1' => 'INT(3) SIGNED',
             'pd_2' => 'INT(3) SIGNED',
             'pd_3' => 'INT(3) SIGNED',
             'pd_4' => 'INT(3) SIGNED',
@@ -254,10 +243,6 @@ class m140520_074221_pattern_details extends CDbMigration {
             'pd_76' => 'INT(3) SIGNED',
             //total deviation probability values
             'td_prob.1' => 'INT(3) SIGNED',
-            'td_prob.1' => 'INT(3) SIGNED',
-            'td_prob.1' => 'INT(3) SIGNED',
-            'td_prob.1' => 'INT(3) SIGNED',
-            'td_prob.1' => 'INT(3) SIGNED',
             'td_prob.2' => 'INT(3) SIGNED',
             'td_prob.3' => 'INT(3) SIGNED',
             'td_prob.4' => 'INT(3) SIGNED',
@@ -334,10 +319,6 @@ class m140520_074221_pattern_details extends CDbMigration {
             'td_prob.75' => 'INT(3) SIGNED',
             'td_prob.76' => 'INT(3) SIGNED',
             //pd probability values
-            'pd_prob_1' => 'INT(3) SIGNED',
-            'pd_prob_1' => 'INT(3) SIGNED',
-            'pd_prob_1' => 'INT(3) SIGNED',
-            'pd_prob_1' => 'INT(3) SIGNED',
             'pd_prob_1' => 'INT(3) SIGNED',
             'pd_prob_2' => 'INT(3) SIGNED',
             'pd_prob_3' => 'INT(3) SIGNED',
