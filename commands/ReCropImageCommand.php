@@ -50,6 +50,10 @@ class ReCropImageCommand extends CConsoleCommand
 			$cropped_image_id = $field->cropped_image_id;
 			$original = ProtectedFile::model()->findByPk($field->image_id);
 			$file = ProtectedFile::model()->findByPk($field->cropped_image_id);
+			// if the value isnt set, move on
+			if (!$file || !$original) {
+				continue;
+			}
 			// test if the given file actually exists - if it does, delete it (from DB and FS):
 			if (file_exists($file->getPath())) {
 				echo "Removing " . $file->getPath() . PHP_EOL;
