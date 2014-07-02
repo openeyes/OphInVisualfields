@@ -20,15 +20,19 @@
 class AnonymiseFieldsCommand extends CConsoleCommand {
 
     public function getHelp() {
-        return "Usage(first form):\n\nanonymisefields transformFmes --fmesDir=[inputdir]  --outputDir=[outputDir] --realPidFile=[pidFile] --anonPidFile\n\n"
-                . "Take the specified directory of FMES humphrey measurements, unpack the image from it, anonymise\n"
-                . "the patient data, swap the recorded patient ID and swap it for the specified anonymous PID\n"
-                . "Two files must be specified, each giving a newline separated list of patient IDs to substitute.\n"
-                . "\n"
-                . "Usage: (second form):\n\n"
+        return "Usage:\n\n\tanonymisefields [command]\n\nwhere command can be any one of:\n"
+				. "\ntransformFmes --fmesDir=[inputdir]  --outputDir=[outputDir] --realPidFile=[pidFile] --anonPidFile=[anonPidFile]\n\n"
+                . "\tTake the specified directory of FMES humphrey measurements, unpack the image from it, anonymise\n"
+                . "\tthe patient data, swap the recorded patient ID and swap it for the specified anonymous PID\n"
+                . "\tTwo files must be specified, each giving a newline separated list of patient IDs to substitute.\n"
+                . "\n\n"
                 . "anonymisefields redact --pattern=[filePattern]\n\n"
-                . "For all files that match the specified pattern, perform image oerations to remove name, PID etc.\n"
-                . "Only images of the correct size (2400x3180) are transformed.\n";
+                . "\tFor all files that match the specified pattern in the database, perform image oerations to remove name, PID etc.\n"
+                . "\tOnly images of the correct size (2400x3180) are transformed.\n"
+                . "\n\n"
+                . "anonymisefields redactTif --inDir=[tifInDir] --outDir=[tifOutDir]\n\n"
+                . "\tFor all files that match the specified pattern, perform image oerations to remove name, PID etc.\n"
+                . "\tOnly images of the correct size (2400x3180) are transformed.\n";
 
     }
 
@@ -127,6 +131,22 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
             }
         }
     }
+	
+	/**
+	 * Take images from the in-directory, anonymise them and place the resulting
+	 * file in the sepcified out-directory.
+	 * 
+	 * @param type $inDir
+	 * @param type $outDir 
+	 */
+	public function actionRedactTif($inDir, $outDir) {
+		
+        if ($entries = glob($inDir . '/*.tif')) {
+			foreach($entries as $entry) {
+				$this->anonymiseTif($inDir . '/' . basename($entry), $outDir);
+			}
+		}
+	}
 
     /**
      * Trawl an existing OE database and find all files that match the given
@@ -151,15 +171,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         if ($files) {
             foreach ($files as $file) {
                 if (file_exists($file->getPath())) {
-                    $image = new Imagick($file->getPath());
-                    $geo = $image->getImageGeometry();
-                    // only modify the main image, not the thumbnails:
-                    if ($geo['width'] == 2400
-                            && $geo['height'] == 3180) {
-                        echo 'Modifying ' . $file->getPath() . PHP_EOL;
-                        $this->fillImage($image);
-                        $image->writeImage($file->getPath());
-                    }
+                    $this->anonymiseTif($file->getPath());
                 } else {
                     echo 'Could not transform file; ' . $file->getPathName()
                     . ' does not exist.' . PHP_EOL;
@@ -167,6 +179,27 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
             }
         }
     }
+	
+	/**
+	 * Create a new image based on the image passed in and anonymise.
+	 * 
+	 * @param type $file specified image file to anonymise; must be a valid path
+	 * and the image must be the correct size.
+	 * @param type $out the directory to place the anonymised file.
+	 */
+	private function anonymiseTif($file, $out) {
+		$image = new Imagick($file);
+		$geo = $image->getImageGeometry();
+		// only modify the main image, not the thumbnails:
+		if ($geo['width'] == 2400
+				&& $geo['height'] == 3180) {
+			echo 'Modifying ' . $file . PHP_EOL;
+			$this->fillImage($image);
+			echo $out.PHP_EOL;
+			$image->writeImage($file . '.tmp');
+			copy($file . '.tmp', $out . '/' . basename($file, '.tif') . '.gif');
+		}
+	}
 
     /**
      * Fills the image at the specified locations. Designed specifically to
@@ -185,6 +218,7 @@ class AnonymiseFieldsCommand extends CConsoleCommand {
         // bottom of image - serial number etc.:
         $draw->rectangle(190, 2960, 2160, 3099);
         $image->drawImage($draw);
+		$image->setImageFormat('gif');
     }
 
     /**
