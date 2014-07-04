@@ -47,42 +47,20 @@ class ReCropImageCommand extends CConsoleCommand
 		// find all cropped images in ophinvisualfields_field_measurement->cropped_image_id:
 		$fields = OphInVisualfields_Field_Measurement::model()->findAll();
 		foreach ($fields as $field) {
-			$cropped_image_id = $field->cropped_image_id;
-			$original = ProtectedFile::model()->findByPk($field->image_id);
-			$file = ProtectedFile::model()->findByPk($field->cropped_image_id);
+			$full = ProtectedFile::model()->findByPk($field->image_id);
+			$cropped = ProtectedFile::model()->findByPk($field->cropped_image_id);
 			// if the value isnt set, move on
-			if (!$file || !$original) {
+			if (!$full || !$cropped) {
 				continue;
 			}
-			// test if the given file actually exists - if it does, delete it (from DB and FS):
-			if (file_exists($file->getPath())) {
-				echo "Removing " . $file->getPath() . PHP_EOL;
-				unlink($file->getPath());
-			}
+
 			// next step, take image_id and open image:
-			if (file_exists($original->getPath())) {
-				// create new cropped image from it:
-				$image = new Imagick($original->getPath());
-				$geo = $image->getImageGeometry();
-				// only modify the main image, not the thumbnails:
-				if ($geo['width'] == 2400
-						&& $geo['height'] == 3180) {
-					$cropped_file = \ProtectedFile::createForWriting($file->name);
-					$cropped_file->mimetype = 'image/gif';
-					$cropped_file->name = $file->name;
-					$src = imagecreatefromgif($original->getPath());
-					$dest = imagecreatetruecolor($dest_w, $dest_h);
-					imagecopy($dest, $src, 0, 0, $src_x, $src_y, $dest_w, $dest_h);
-					imagegif($dest, $cropped_file->getPath());
-					$cropped_file->save();
-					
-					echo 'Created ' . $cropped_file->getPath() . PHP_EOL;
-					// relink:
-					$cropped_id = $field->cropped_image_id;
-					$field->cropped_image_id = $cropped_file->id;
-					$field->save();
-					echo 'Successfully unlinked file ' . $cropped_id . ' with new cropped image ID ' . $field->cropped_image_id . PHP_EOL;
-				}
+			if (file_exists($full->getPath())) {
+				$src = imagecreatefromgif($full->getPath());
+				$dest = imagecreatetruecolor($dest_w, $dest_h);
+				imagecopy($dest, $src, 0, 0, $src_x, $src_y, $dest_w, $dest_h);
+				imagegif($dest, $cropped->getPath());
+				echo 'patient: '.$field->getPatientMeasurement()->patient->hos_num.', path: ' . $cropped->getPath() . PHP_EOL;
 			}
 		}
 	}
