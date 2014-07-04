@@ -18,7 +18,8 @@ $field = $element->{"{$side}_field"};
 <div class="element-eye <?= $side ?>-eye column">
 	<?php if ($field): ?>
 		<div class="field-row row">
-			<div class="large-12 column"><a href="/file/view/<?= $field->image_id ?>/img.gif"><img src="/file/view/<?= $field->cropped_image_id ?>/img.gif"></a></div>
+			<div class="large-12 column"><a href="/file/view/<?= $field->image_id ?>/img.gif"><img
+						src="/file/view/<?= $field->cropped_image_id ?>/400/img.gif"></a></div>
 		</div>
 		<div class="field-row row">
 			<div class="large-6 column"><p>Date</p></div>
