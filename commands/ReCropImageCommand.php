@@ -22,7 +22,7 @@ class ReCropImageCommand extends CConsoleCommand
 
 	public function getHelp()
 	{
-		return "Usage: recropimage gif --dir=[dir] --dims=[x,y,w,h]"
+		return "Usage: recropimage crop --dims=[x,y,w,h]"
 				. "\n\nTrawl the database and remove all cropped images; replace the cropped image with the image specified by the given dimensions."
 				. "Only images of the correct size (2400x3180) are transformed.\n";
 	}
@@ -35,7 +35,7 @@ class ReCropImageCommand extends CConsoleCommand
 	 * @param type $realPidFile
 	 * @param type $anonPidFile 
 	 */
-	public function actionCrop($dir='/var/www/protected/files', $dims='1328x560,776x864')
+	public function actionCrop($dims='1328x560,776x864')
 	{
 		$dimensions = explode(',', $dims);
 		$xy = explode('x', $dimensions[0]);
