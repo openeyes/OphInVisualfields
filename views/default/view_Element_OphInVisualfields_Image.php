@@ -30,7 +30,7 @@
 				$right_test = $element->right_field;
 				$x = $element->right_field_id;
 				?>
-				<td width="50%"><a href="<?php echo "/file/view/" . $right_test->image_id . "/img.gif"; ?>"><img
+				<td width="50%"><a class="OphInVisualfields_field_image" data-image-id="<?= $right_test->image_id ?>" href="#"><img
 							src="<?php echo "/file/view/" . $right_test->cropped_image_id . "/400/img.gif"; ?>"></img></a></td>
 				<?php
 			} else {
@@ -42,7 +42,7 @@
 				$x = $element->left_field_id;
 				$left_test = $element->left_field;
 				?>
-				<td width="50%"><a href="<?php echo "/file/view/" . $left_test->image_id . "/img.gif"; ?>"><img
+				<td width="50%"><a class="OphInVisualfields_field_image" data-image-id="<?= $left_test->image_id ?>" href="#"><img
 							src="<?php echo "/file/view/" . $left_test->cropped_image_id . "/400/img.gif"; ?>"></img></a></td>
 				<?php
 			} else {

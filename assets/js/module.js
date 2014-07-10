@@ -11,5 +11,17 @@ $(document).ready(function() {
 	
 	$('#Element_OphInVisualfields_Image_right_field_id').change({side: "right"}, selectField);
 	$('#Element_OphInVisualfields_Image_left_field_id').change({side: "left"}, selectField);
-});
 
+	$('.OphInVisualfields_field_image').click(function (e) {
+		e.preventDefault();
+
+		var imgUrl = baseUrl + '/file/view/' + $(this).data('image-id') + '/img.gif';
+
+		var dialog = new OpenEyes.UI.Dialog({
+			content: '<img src="' + imgUrl + '">',
+			width: 1100,
+			position: {my: "center top", at: "center top+10"},
+			autoOpen: true,
+		});
+	});
+});

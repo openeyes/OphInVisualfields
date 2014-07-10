@@ -46,6 +46,8 @@ class OphInVisualfields_Episode_VisualFieldsHistory extends EpisodeSummaryWidget
 
 		Yii::app()->assetManager->registerScriptFile('jquery-mousewheel/jquery.mousewheel.js', 'application.assets.components');
 
+		Yii::app()->assetManager->registerScriptFile('js/module.js', 'application.modules.OphInVisualfields.assets');
+
 		Yii::app()->clientScript->registerScript(
 			"OphInVisualfields_Episode_VisualFieldsHistory_element_ids",
 			"var OphInVisualfields_Episode_VisualFieldsHistory_element_ids = " . CJSON::encode($element_ids),
