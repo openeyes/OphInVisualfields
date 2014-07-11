@@ -49,7 +49,7 @@ class LegacyFieldsCommandTest extends CDbTestCase {
     public function setUp() {
         parent::setUp();
         $this->cleanDirectories();
-        require_once(dirname(__FILE__) . '/../../../commands/LegacyFieldsCommand.php');
+        require_once(dirname(__FILE__) . '/../../../commands/ImportLegacyVFCommand.php');
         $this->archiveDir = sys_get_temp_dir() . '/openeyes_vis_fields_tmp_archive';
         $this->errorDir = sys_get_temp_dir() . '/openeyes_vis_fields_tmp_error';
         $this->dupDir = sys_get_temp_dir() . '/openeyes_vis_fields_tmp_dups';

@@ -17,25 +17,17 @@
  * @copyright Copyright (c) 2011-2012, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-class ReCropImageCommand extends CConsoleCommand
+class ReCropVFImagesCommand extends CConsoleCommand
 {
 
 	public function getHelp()
 	{
-		return "Usage: recropimage crop --dims=[x,y,w,h]"
-				. "\n\nTrawl the database and remove all cropped images; replace the cropped image with the image specified by the given dimensions."
-				. "Only images of the correct size (2400x3180) are transformed.\n";
+		return "Usage: recropvfimages crop --dims=[x,y,w,h]"
+		. "\n\nTrawl the database and remove all cropped images; replace the cropped image with the image specified by the given dimensions."
+		. "Only images of the correct size (2400x3180) are transformed.\n";
 	}
 
-	/**
-	 * Take a list of real patient identifiers that appear in a collection
-	 * of FMES files, and remove the 'real' PID in the FMES file in favour
-	 * of 
-	 * 
-	 * @param type $realPidFile
-	 * @param type $anonPidFile 
-	 */
-	public function actionCrop($dims='1328x560,776x864')
+	public function actionCrop($dims = '1328x560,776x864')
 	{
 		$dimensions = explode(',', $dims);
 		$xy = explode('x', $dimensions[0]);
@@ -60,7 +52,7 @@ class ReCropImageCommand extends CConsoleCommand
 				$dest = imagecreatetruecolor($dest_w, $dest_h);
 				imagecopy($dest, $src, 0, 0, $src_x, $src_y, $dest_w, $dest_h);
 				imagegif($dest, $cropped->getPath());
-				echo 'patient: '.$field->getPatientMeasurement()->patient->hos_num.', path: ' . $cropped->getPath() . PHP_EOL;
+				echo 'patient: ' . $field->getPatientMeasurement()->patient->hos_num . ', path: ' . $cropped->getPath() . PHP_EOL;
 			}
 		}
 	}
