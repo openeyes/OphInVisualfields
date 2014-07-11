@@ -22,6 +22,7 @@ $(document).ready(function() {
 			width: 1100,
 			position: {my: "center top", at: "center top+10"},
 			autoOpen: true,
+			modal: false
 		});
 	});
 });
