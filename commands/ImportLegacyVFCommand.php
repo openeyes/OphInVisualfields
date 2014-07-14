@@ -123,6 +123,7 @@ class ImportLegacyVFCommand extends CConsoleCommand
 
 					// As there are no previous legacy events, we can create a new event
 					$this->newEvent($episode, $eventType, $measurement);
+					$this->move($this->archiveDir, $file);
 				} else {
 					// There is a legacy episode, so there may be unmatched legacy field events
 
