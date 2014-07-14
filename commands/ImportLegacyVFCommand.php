@@ -58,101 +58,101 @@ class ImportLegacyVFCommand extends CConsoleCommand
 		}
 		echo "Processing FMES files...".PHP_EOL;
 		foreach (glob($this->importDir . '/*.fmes') as $file) {
-			$basename = basename($file);
-			echo $basename . PHP_EOL;
+			try {
+				$basename = basename($file);
+				echo $basename . PHP_EOL;
 
-			// First check the file has not already been imported:
-			$field = file_get_contents($file);
-			$fieldObject = $fhirMarshal->parseXml($field);
+				// First check the file has not already been imported:
+				$field = file_get_contents($file);
+				$fieldObject = $fhirMarshal->parseXml($field);
 
-			if ($protected_file = ProtectedFile::model()->find("name=:name", array(":name" => $fieldObject->file_reference))) {
-				echo "- ProtectedFile exists (".$protected_file->id.")" . PHP_EOL;
-				$this->move($this->dupDir, $file);
-				continue;
-			}
-
-			// Extract the patient number
-			$matches = array();
-			preg_match("/__OE_PATIENT_ID_([0-9]*)__/", $field, $matches);
-			if (count($matches) < 2) {
-				echo "- Failed to extract patient ID" . PHP_EOL;
-				$this->move($this->errorDir, $file);
-				continue;
-			}
-			$match = str_pad($matches[1], 7, '0', STR_PAD_LEFT);
-
-			// Fetch the patient
-			if ($pasImport) {
-				$model = new Patient(null);
-				$model->hos_num = $match;
-				$results = $model->search()->getData();
-				$patient = reset($results);
-			} else {
-				$patient = Patient::model()->find("hos_num=:hos_num", array(":hos_num" => $match));
-			}
-
-			if (!$patient) {
-				echo "- Failed to find patient ($match)" . PHP_EOL;
-				$this->move($this->errorDir, $file);
-				continue;
-			}
-			$pid = $patient->id;
-			$field = preg_replace("/__OE_PATIENT_ID_([0-9]*)__/", $pid, $field);
-
-			// Convert to measurement
-			$resource_type = 'MeasurementVisualFieldHumphrey';
-			$service = Yii::app()->service->getService($resource_type);
-			$fieldObject = $fhirMarshal->parseXml($field);
-			$tx = Yii::app()->db->beginTransaction();
-			$ref = $service->fhirCreate($fieldObject);
-			$tx->commit();
-			$refId = $ref->getId();
-			$measurement = OphInVisualfields_Field_Measurement::model()->findByPk($refId);
-			$study_datetime = $measurement->study_datetime;
-
-			// Check for existing legacy events
-			if (!$episode = Episode::model()->find("legacy = 1 AND patient_id = :patient_id", array(":patient_id" => $pid))) {
-				echo "- No legacy episode found, creating...";
-				$episode = new Episode;
-				$episode->legacy = 1;
-				$episode->start_date = date("y-mm-dd H:i:s");
-				$episode->patient_id = $pid;
-				$episode->save();
-				echo "done" . PHP_EOL;
-
-				// As there are no previous legacy events, we can create a new event
-				$this->newEvent($episode, $eventType, $measurement);
-			} else {
-				// There is a legacy episode, so there may be unmatched legacy field events
-
-				$criteria = new CdbCriteria;
-				$criteria->condition = 'event_type_id = :event_type_id and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = :patient_id';
-				$criteria->join = 'join episode ep on ep.id = t.episode_id';
-				$criteria->order = 't.event_date desc';
-				$criteria->params = array(':patient_id' => $pid, ':event_type_id' => $eventType->id);
-				if ($this->interval) {
-					// we're looking for all events that are bound to a legacy episode,
-					// for the given patient, looking for the last created test -
-					// this accounts for multiple tests per eye - the implication
-					// being that the newest test overrides the last test for the same eye
-					// (e.g. when a mistake is made and the test is re-ran):
-					// Base time on interval defined by user, a narrow time slot that the test falls within
-					$startCreatedTime = new DateTime($study_datetime);
-					$endCreatedTime = new DateTime($study_datetime);
-					$startCreatedTime->sub(new DateInterval($this->interval));
-					$endCreatedTime->add(new DateInterval($this->interval));
-					$criteria->condition .= ' AND t.event_date >= STR_TO_DATE("' . $startCreatedTime->format('Y-m-d H:i:s')
-						. '", "%Y-%m-%d %H:%i:%s") AND t.event_date <= STR_TO_DATE("' . $endCreatedTime->format('Y-m-d H:i:s')
-						. '", "%Y-%m-%d %H:%i:%s")';
+				if ($protected_file = ProtectedFile::model()->find("name=:name", array(":name" => $fieldObject->file_reference))) {
+					echo "- ProtectedFile exists (".$protected_file->id.")" . PHP_EOL;
+					$this->move($this->dupDir, $file);
+					continue;
 				}
-				// Of events, there can only be one or none:
-				// FIXME: This can return multiple events, so how do we choose?
-				$events = Event::model()->findAll($criteria);
-				if (count($events) == 1) {
-					echo '- Found existing event (' . $events[0]->id . ')' . PHP_EOL;
-					$element = Element_OphInVisualfields_Image::model()->find("event_id = :event_id", array(":event_id" => $events[0]->id));
 
-					try {
+				// Extract the patient number
+				$matches = array();
+				preg_match("/__OE_PATIENT_ID_([0-9]*)__/", $field, $matches);
+				if (count($matches) < 2) {
+					echo "- Failed to extract patient ID" . PHP_EOL;
+					$this->move($this->errorDir, $file);
+					continue;
+				}
+				$match = str_pad($matches[1], 7, '0', STR_PAD_LEFT);
+
+				// Fetch the patient
+				if ($pasImport) {
+					$model = new Patient(null);
+					$model->hos_num = $match;
+					$results = $model->search()->getData();
+					$patient = reset($results);
+				} else {
+					$patient = Patient::model()->find("hos_num=:hos_num", array(":hos_num" => $match));
+				}
+
+				if (!$patient) {
+					echo "- Failed to find patient ($match)" . PHP_EOL;
+					$this->move($this->errorDir, $file);
+					continue;
+				}
+				$pid = $patient->id;
+				$field = preg_replace("/__OE_PATIENT_ID_([0-9]*)__/", $pid, $field);
+
+				// Convert to measurement
+				$resource_type = 'MeasurementVisualFieldHumphrey';
+				$service = Yii::app()->service->getService($resource_type);
+				$fieldObject = $fhirMarshal->parseXml($field);
+				$tx = Yii::app()->db->beginTransaction();
+				$ref = $service->fhirCreate($fieldObject);
+				$tx->commit();
+				$refId = $ref->getId();
+				$measurement = OphInVisualfields_Field_Measurement::model()->findByPk($refId);
+				$study_datetime = $measurement->study_datetime;
+
+				// Check for existing legacy events
+				if (!$episode = Episode::model()->find("legacy = 1 AND patient_id = :patient_id", array(":patient_id" => $pid))) {
+					echo "- No legacy episode found, creating...";
+					$episode = new Episode;
+					$episode->legacy = 1;
+					$episode->start_date = date("y-mm-dd H:i:s");
+					$episode->patient_id = $pid;
+					$episode->save();
+					echo "done" . PHP_EOL;
+
+					// As there are no previous legacy events, we can create a new event
+					$this->newEvent($episode, $eventType, $measurement);
+				} else {
+					// There is a legacy episode, so there may be unmatched legacy field events
+
+					$criteria = new CdbCriteria;
+					$criteria->condition = 'event_type_id = :event_type_id and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = :patient_id';
+					$criteria->join = 'join episode ep on ep.id = t.episode_id';
+					$criteria->order = 't.event_date desc';
+					$criteria->params = array(':patient_id' => $pid, ':event_type_id' => $eventType->id);
+					if ($this->interval) {
+						// we're looking for all events that are bound to a legacy episode,
+						// for the given patient, looking for the last created test -
+						// this accounts for multiple tests per eye - the implication
+						// being that the newest test overrides the last test for the same eye
+						// (e.g. when a mistake is made and the test is re-ran):
+						// Base time on interval defined by user, a narrow time slot that the test falls within
+						$startCreatedTime = new DateTime($study_datetime);
+						$endCreatedTime = new DateTime($study_datetime);
+						$startCreatedTime->sub(new DateInterval($this->interval));
+						$endCreatedTime->add(new DateInterval($this->interval));
+						$criteria->condition .= ' AND t.event_date >= STR_TO_DATE("' . $startCreatedTime->format('Y-m-d H:i:s')
+							. '", "%Y-%m-%d %H:%i:%s") AND t.event_date <= STR_TO_DATE("' . $endCreatedTime->format('Y-m-d H:i:s')
+							. '", "%Y-%m-%d %H:%i:%s")';
+					}
+					// Of events, there can only be one or none:
+					// FIXME: This can return multiple events, so how do we choose?
+					$events = Event::model()->findAll($criteria);
+					if (count($events) == 1) {
+						echo '- Found existing event (' . $events[0]->id . ')' . PHP_EOL;
+						$element = Element_OphInVisualfields_Image::model()->find("event_id = :event_id", array(":event_id" => $events[0]->id));
+
 						$side = strtolower($measurement->eye->name);
 
 						if (($existing = $element->{"{$side}_field"})) {
@@ -169,18 +169,18 @@ class ImportLegacyVFCommand extends CConsoleCommand
 
 						$element->save();
 						$this->move($this->archiveDir, $file);
-					} catch (Exception $ex) {
-						echo $ex . PHP_EOL;
+					} else if (count($events) > 1) {
+						echo '- Found more than one matching event, cannot attach' . PHP_EOL;
 						$this->move($this->errorDir, $file);
+					} else {
+						// No events in match window, so we create a new one
+						$this->newEvent($episode, $eventType, $measurement);
+						$this->move($this->archiveDir, $file);
 					}
-				} else if (count($events) > 1) {
-					echo '- Found more than one matching event, cannot attach' . PHP_EOL;
-					$this->move($this->errorDir, $file);
-				} else {
-					// No events in match window, so we create a new one
-					$this->newEvent($episode, $eventType, $measurement);
-					$this->move($this->archiveDir, $file);
 				}
+			} catch (Exception $ex) {
+				echo $ex . PHP_EOL;
+				$this->move($this->errorDir, $file);
 			}
 		}
 	}
