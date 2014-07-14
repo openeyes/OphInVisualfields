@@ -43,7 +43,7 @@ class ImportLegacyVFCommand extends CConsoleCommand
 		. "\n";
 	}
 
-	public function actionImport($importDir, $archiveDir, $errorDir, $dupDir, $interval = 'PT45M')
+	public function actionImport($importDir, $archiveDir, $errorDir, $dupDir, $interval = 'PT45M', $pasImport = false)
 	{
 		$this->importDir = $this->checkSeparator($importDir);
 		$this->archiveDir = $this->checkSeparator($archiveDir);
@@ -82,8 +82,16 @@ class ImportLegacyVFCommand extends CConsoleCommand
 			$match = str_pad($matches[1], 7, '0', STR_PAD_LEFT);
 
 			// Fetch the patient
-			// FIXME: Needs to handle PAS (as an option)
-			if (!$patient = Patient::model()->find("hos_num=:hos_num", array(":hos_num" => $match))) {
+			if ($pasImport) {
+				$model = new Patient(null);
+				$model->hos_num = $match;
+				$results = $model->search()->getData();
+				$patient = reset($results);
+			} else {
+				$patient = Patient::model()->find("hos_num=:hos_num", array(":hos_num" => $match));
+			}
+
+			if (!$patient) {
 				echo "- Failed to find patient ($match)" . PHP_EOL;
 				$this->move($this->errorDir, $file);
 				continue;
