@@ -124,12 +124,6 @@ class ImportLegacyVFCommand extends CConsoleCommand
 				$this->newEvent($episode, $eventType, $measurement);
 			} else {
 				// There is a legacy episode, so there may be unmatched legacy field events
-				// FIXME: This is unused
-				if ($fieldObject->eye == 'L') {
-					$eye = Eye::RIGHT;
-				} else {
-					$eye = Eye::LEFT;
-				}
 
 				$criteria = new CdbCriteria;
 				$criteria->condition = 'event_type_id = :event_type_id and t.deleted = 0 and ep.deleted = 0 and ep.legacy = 1 and ep.patient_id = :patient_id';
@@ -156,25 +150,32 @@ class ImportLegacyVFCommand extends CConsoleCommand
 				$events = Event::model()->findAll($criteria);
 				if (count($events) == 1) {
 					echo '- Found existing event (' . $events[0]->id . ')' . PHP_EOL;
-					$image = Element_OphInVisualfields_Image::model()->find("event_id = :event_id", array(":event_id" => $events[0]->id));
+					$element = Element_OphInVisualfields_Image::model()->find("event_id = :event_id", array(":event_id" => $events[0]->id));
 
 					try {
-						// FIXME: We don't seem to be checking laterality of existing image
-						if ($measurement->eye->name == 'Left') {
-							$image->left_field_id = $measurement->id;
+						$side = strtolower($measurement->eye->name);
+
+						if (($existing = $element->{"{$side}_field"})) {
+							if ($measurement->study_datetime > $existing->study_datetime) {
+								echo "Newer than existing measurement on {$side}, overwriting\n";
+								$element->{"{$side}_field_id"} = $measurement->id;
+							} else {
+								echo "Older than existing measurement on {$side}, ignoring\n";
+							}
 						} else {
-							$image->right_field_id = $measurement->id;
+							echo "No existing measurement on {$side}, adding\n";
+							$element->{"{$side}_field_id"} = $measurement->id;
 						}
-						$image->save();
+
+						$element->save();
 						$this->move($this->archiveDir, $file);
-						echo "Successfully bound " . basename($file) . " to existing event.\n";
 					} catch (Exception $ex) {
-						echo $ex->getMessage() . PHP_EOL;
+						echo $ex . PHP_EOL;
 						$this->move($this->errorDir, $file);
 					}
 				} else if (count($events) > 1) {
-					// FIXME: What should we do here?
 					echo '- Found more than one matching event, cannot attach' . PHP_EOL;
+					$this->move($this->errorDir, $file);
 				} else {
 					// No events in match window, so we create a new one
 					$this->newEvent($episode, $eventType, $measurement);
