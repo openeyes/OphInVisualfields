@@ -46,6 +46,11 @@ class MeasurementVisualFieldHumphrey extends \services\Resource
 	}
 
 	$title = $report->file_reference;
+
+	if (\ProtectedFile::model()->find("name = ?", array($title))) {
+		throw new EverythingsFine;
+	}
+
 	$protected_file = \ProtectedFile::createForWriting($title);
 	$protected_file->name = $title;
 	file_put_contents($protected_file->getPath(), base64_decode($report->image_scan_data));
