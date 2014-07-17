@@ -17,7 +17,7 @@ namespace OEModule\OphInVisualfields\services;
 
 class EverythingsFine extends \services\ServiceException
 {
-	public $httpStatus = 201;
+	public $httpStatus = 200;
 
 	public function toFhirOutcome()
 	{
