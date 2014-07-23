@@ -21,11 +21,6 @@
 	<tbody>
 		<tr>
 			<?php
-			if (isset($this->episode->firm->serviceSubspecialtyAssignment->subspecialty->name)) {
-				$name = $this->episode->firm->serviceSubspecialtyAssignment->subspecialty->name;
-			} else {
-				$name = $this->firm->serviceSubspecialtyAssignment->subspecialty->name;
-			}
 			if ($element->right_field_id) {
 				$right_test = $element->right_field;
 				$x = $element->right_field_id;
