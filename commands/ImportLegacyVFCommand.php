@@ -160,9 +160,15 @@ class ImportLegacyVFCommand extends CConsoleCommand
 							if ($measurement->study_datetime > $existing->study_datetime) {
 								echo "Newer than existing measurement on {$side}, overwriting\n";
 								$element->{"{$side}_field_id"} = $measurement->id;
+								$unattached = $existing;
 							} else {
 								echo "Older than existing measurement on {$side}, ignoring\n";
+								$unattached = $measurement;
 							}
+							// Add dummy reference for the unattached measurement
+							$ref = new MeasurementReference;
+							$ref->patient_measurement_id = $unattached->getPatientMeasurement()->id;
+							$ref->save();
 						} else {
 							echo "No existing measurement on {$side}, adding\n";
 							$element->{"{$side}_field_id"} = $measurement->id;
