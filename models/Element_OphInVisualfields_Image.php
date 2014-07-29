@@ -19,17 +19,20 @@
  */
 class Element_OphInVisualfields_Image extends BaseEventTypeElement {
 
-    public function tableName() {
+    public function tableName()
+	{
         return 'et_ophinvisualfields_image';
     }
 
-    public function rules() {
+    public function rules()
+	{
         return array(
             array('left_field_id, right_field_id', 'safe'),
         );
     }
 
-    public function relations() {
+    public function relations()
+	{
         return array(
             'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
             'left_field' => array(self::BELONGS_TO, 'OphInVisualfields_Field_Measurement', 'left_field_id'),
@@ -37,28 +40,26 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
         );
     }
 
-    public function afterSave() {
+    public function afterSave()
+	{
         parent::afterSave();
-        if ($this->left_field)
-            $this->updateMeasurementReference($this->left_field, Eye::LEFT);
-        if ($this->right_field)
-            $this->updateMeasurementReference($this->right_field, Eye::RIGHT);
+        $this->updateMeasurementReference($this->left_field_id, Eye::LEFT);
+        $this->updateMeasurementReference($this->right_field_id, Eye::RIGHT);
     }
 
-    private function updateMeasurementReference(OphInVisualfields_Field_Measurement $measurement, $eye_id) {
-        $patient_measurement_id = $measurement->getPatientMeasurement()->id;
-
+    private function updateMeasurementReference($measurement_id, $eye_id)
+	{
         $existing = $this->dbConnection->createCommand()
-                ->select(array('pm.id pm_id', 'mr.id mr_id'))
+                ->select(array('fm.id fm_id', 'mr.id mr_id'))
                 ->from('ophinvisualfields_field_measurement fm')
                 ->join('patient_measurement pm', 'pm.id = fm.patient_measurement_id')
                 ->join('measurement_reference mr', 'mr.patient_measurement_id = pm.id and mr.event_id = :event_id')
-                ->join('event ev', 'ev.id = mr.event_id')->where('ev.deleted=0 and fm.eye_id = :eye_id and mr.event_id = :event_id',
+                ->join('event ev', 'ev.id = mr.event_id')->where('fm.eye_id = :eye_id and mr.event_id = :event_id',
                         array(':eye_id' => $eye_id, ':event_id' => $this->event_id))
                 ->queryRow();
 
         if ($existing) {
-            if ($existing['pm_id'] != $patient_measurement_id) {
+            if ($existing['fm_id'] != $measurement_id) {
                 MeasurementReference::model()->deleteByPk($existing['mr_id']);
             } else {
                 // Nothing to do
@@ -66,8 +67,6 @@ class Element_OphInVisualfields_Image extends BaseEventTypeElement {
             }
         }
 
-        $measurement->attach($this->event);
+        if ($measurement_id) OphInVisualfields_Field_Measurement::model()->findByPk($measurement_id)->attach($this->event);
     }
-
 }
-
