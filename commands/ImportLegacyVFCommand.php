@@ -57,7 +57,10 @@ class ImportLegacyVFCommand extends CConsoleCommand
 			die();
 		}
 		echo "Processing FMES files...".PHP_EOL;
-		foreach (glob($this->importDir . '/*.fmes') as $file) {
+		$filenames = glob($this->importDir . '/*.fmes');
+		echo count($filenames) . " files to process\n";
+
+		foreach ($filenames as $file) {
 			try {
 				$basename = basename($file);
 				echo $basename . PHP_EOL;
@@ -116,7 +119,6 @@ class ImportLegacyVFCommand extends CConsoleCommand
 					echo "- No legacy episode found, creating...";
 					$episode = new Episode;
 					$episode->legacy = 1;
-					$episode->start_date = date("y-mm-dd H:i:s");
 					$episode->patient_id = $pid;
 					$episode->save();
 					echo "done" . PHP_EOL;
@@ -187,6 +189,10 @@ class ImportLegacyVFCommand extends CConsoleCommand
 				}
 			} catch (Exception $ex) {
 				echo $ex . PHP_EOL;
+				if (@$tx && $tx->active) {
+					echo "- rolling back tx" . PHP_EOL;
+					$tx->rollback();
+				}
 				$this->move($this->errorDir, $file);
 			}
 		}
