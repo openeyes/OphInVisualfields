@@ -48,7 +48,7 @@ class MeasurementVisualFieldHumphrey extends \services\Resource
 	$title = $report->file_reference;
 
 	if (\ProtectedFile::model()->find("name = ?", array($title))) {
-		throw new EverythingsFine;
+		throw new EverythingsFine("Duplicate filename: {$title} (patient ID {$report->patient_id})");
 	}
 
 	$protected_file = \ProtectedFile::createForWriting($title);
