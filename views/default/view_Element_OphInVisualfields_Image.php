@@ -18,6 +18,12 @@
  */
 ?>
 <table class="subtleWhite normalText">
+	<thead>
+		<tr>
+			<td>Right Eye</td>
+			<td>Left Eye</td>
+		</tr>
+	</thead>
 	<tbody>
 		<tr>
 			<?php

@@ -23,8 +23,7 @@ class ReCropVFImagesCommand extends CConsoleCommand
 	public function getHelp()
 	{
 		return "Usage: recropvfimages crop --dims=[x,y,w,h]"
-		. "\n\nTrawl the database and remove all cropped images; replace the cropped image with the image specified by the given dimensions."
-		. "Only images of the correct size (2400x3180) are transformed.\n";
+		. "\n\nRecrops all VF images to required dimensions, and also ensures images sizes in db are correct\n";
 	}
 
 	public function actionCrop($dims = '1328x560,776x864')
@@ -53,6 +52,12 @@ class ReCropVFImagesCommand extends CConsoleCommand
 				imagecopy($dest, $src, 0, 0, $src_x, $src_y, $dest_w, $dest_h);
 				imagegif($dest, $cropped->getPath());
 				echo 'patient: ' . $field->getPatientMeasurement()->patient->hos_num . ', path: ' . $cropped->getPath() . PHP_EOL;
+
+				// Reset sizes
+				$full->size = filesize($full->getPath());
+				$full->save();
+				$cropped->size = filesize($cropped->getPath());
+				$cropped->save();
 			}
 		}
 	}
