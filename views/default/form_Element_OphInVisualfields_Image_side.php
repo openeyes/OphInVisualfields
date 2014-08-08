@@ -26,6 +26,7 @@ foreach ($fields as $field) {
 		'date' => date(Helper::NHS_DATE_FORMAT . ' H:i:s', strtotime($field->study_datetime)),
 		'strategy' => $field->strategy->name,
 		'pattern' => $field->pattern->name,
+		'image_id' => $field->image_id
 	);
 }
 $current_field = $element->{"{$side}_field_id"} ? $field_data[$element->{"{$side}_field_id"}] : null;
@@ -46,8 +47,11 @@ Yii::app()->clientScript->registerScript(
 			<div class="large-5 column">
 				<?= $form->dropDownList($element, "{$side}_field_id", CHtml::listData($field_data, 'id', 'date'), array('nowrapper' => true)) ?>
 			</div>
-			<div class="large-7 column">
-				<img id="Element_OphInVisualfields_Image_image_<?= $side ?>" src="<?= CHtml::encode($current_field['url']) ?>">
+			<div class="large-7 column OphInVisualfields_field_image_wrapper">
+				<a id="Element_OphInVisualfields_Image_image_<?= $side ?>" class="OphInVisualfields_field_image" data-image-id="<?= $current_field['image_id'] ?>" href="#">
+					<img src="<?= CHtml::encode($current_field['url']) ?>">
+					<span>View full image</span>
+				</a>
 			</div>
 		</div>
 		<div class="field-row row">

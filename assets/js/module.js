@@ -4,7 +4,8 @@ $(document).ready(function() {
 
 		var field = window["OphInVisualfields_available_fields_" + side][id];
 
-		$('#Element_OphInVisualfields_Image_image_' + side).attr('src', field.url);
+		$('#Element_OphInVisualfields_Image_image_' + side + ' img').attr('src', field.url);
+		$('#Element_OphInVisualfields_Image_image_' + side).data('image-id', field.image_id);
 		$('#Element_OphInVisualfields_Image_strategy_' + side).text(field.strategy);
 		$('#Element_OphInVisualfields_Image_pattern_' + side).text(field.pattern);
 	}

@@ -22,9 +22,20 @@
 }
 /* line 19, ../sass/components/_event.scss */
 .event .event-content {
-  background-image: url('../img/watermark.png?1400161568');
+  background-image: url('../img/watermark.png?1407322111');
 }
 /* line 22, ../sass/components/_event.scss */
 .event .event-title {
-  background-image: url('../img/medium.png?1400161568');
+  background-image: url('../img/medium.png?1407322111');
+}
+
+/* line 22, ../sass/module.scss */
+.OphInVisualfields_field_image_wrapper {
+  font-size: 14px;
+  text-align: center;
+}
+
+/* line 27, ../sass/module.scss */
+.OphInVisualfields_field_image img {
+  padding-bottom: 5px;
 }

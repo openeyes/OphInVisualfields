@@ -18,3 +18,12 @@
 
 @import "openeyes/module";
 @import "components/event";
+
+.OphInVisualfields_field_image_wrapper {
+  font-size: 14px;
+  text-align: center;
+}
+
+.OphInVisualfields_field_image img {
+  padding-bottom: 5px;
+}
