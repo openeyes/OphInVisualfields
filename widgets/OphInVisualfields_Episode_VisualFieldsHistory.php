@@ -39,9 +39,12 @@ class OphInVisualfields_Episode_VisualFieldsHistory extends EpisodeSummaryWidget
 		$data['elements'] = array();
 		$element_ids = array();
 		foreach ($events as $event) {
-			$element = $event->getElementByClass('Element_OphInVisualfields_Image');
-			$data['elements'][] = $element;
-			$element_ids[] = $element->id;
+			if($element = $event->getElementByClass('Element_OphInVisualfields_Image')) {
+				$data['elements'][] = $element;
+				$element_ids[] = $element->id;
+			} else {
+				Yii::log("Visual Field Event $event->id has no Image element"); 
+			}
 		}
 
 		Yii::app()->assetManager->registerScriptFile('jquery-mousewheel/jquery.mousewheel.js', 'application.assets.components');
