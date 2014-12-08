@@ -7,11 +7,11 @@ class DefaultController extends BaseEventTypeController
 		$abilities = array();
 
 		if (!empty($data['MultiSelect_ability'])) {
-			foreach ($data['MultiSelect_ability'] as $ability_id) {
+			foreach ($data['MultiSelect_ability'] as $ability) {
 				$assignment = new Element_OphInVisualfields_Condition_Ability_Assignment;
-				$assignment->id = $ability_id;
+				$assignment->id = $ability['id'];
 
-				$abilities[] = OphInVisualfields_Condition_Ability::model()->findByPk($ability_id);;
+				$abilities[] = OphInVisualfields_Condition_Ability::model()->findByPk($ability['id']);
 			}
 		}
 
@@ -37,11 +37,11 @@ class DefaultController extends BaseEventTypeController
 		$assessments = array();
 
 		if (!empty($data['MultiSelect_assessment'])) {
-			foreach ($data['MultiSelect_assessment'] as $assessment_id) {
-				$assignment = new Element_OphInVisualfields_Result_Assessment_Assignment;
-				$assignment->id = $assessment_id;
+			foreach ($data['MultiSelect_assessment'] as $assessment) {
+				$_assignment = new Element_OphInVisualfields_Result_Assessment_Assignment;
+				$_assignment->id = $assessment['id'];
 
-				$assessments[] = OphInVisualfields_Result_Assessment::model()->findByPk($assessment_id);;
+				$assessments[] = OphInVisualfields_Result_Assessment::model()->findByPk($assessment['id']);;
 			}
 		}
 
