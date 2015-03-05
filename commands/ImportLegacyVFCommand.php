@@ -28,7 +28,7 @@ class ImportLegacyVFCommand extends CConsoleCommand
 
 	public function getHelp()
 	{
-		return "Usage: legacyfields import --interval=<time> --importDir=<dir> --archiveDir=<dir> --errorDir=<dir> --dupDir=<dir>\n\n"
+		return "Usage: importlegacyvf import --interval=<time> --importDir=<dir> --archiveDir=<dir> --errorDir=<dir> --dupDir=<dir>\n\n"
 		. "Import Humphrey visual fields into OpenEyes from the given import directory.\n"
 		. "Successfully imported files are moved to the given archive directory;\n"
 		. "likewise, errored files and duplicate files (already within OE) are moved to\n"

@@ -15,7 +15,7 @@ Requirements:
 The legacy import script in the OphInVisualfields/commands directory is used to import .fmes files.
 For help on the command, simply run (from protected/):
 
-	./yiic legacyfields help
+	./yiic importlegacyvf help
 
 The arguments are very much similar to the import performed on the client, only with differently named options:
 
@@ -41,7 +41,7 @@ Create folders required by import process
 
 Run the command below to import the legacy events:
 
-        ./yiic legacyfields import --importDir=runtime/fields/legacy --archiveDir=runtime/fields/out --errorDir=runtime/fields/err --dupDir=runtime/fields/dups
+        ./yiic importlegacyvf import --importDir=runtime/fields/legacy --archiveDir=runtime/fields/out --errorDir=runtime/fields/err --dupDir=runtime/fields/dups
 
 Note that if import is successful a list of legacy events will appear under "Legacy events" on the patien's Episodes and events page.
 Also the command informs of the result for each attempted import
