@@ -2,6 +2,14 @@
 
 class OphInVisualfields_Field_Measurement extends Measurement
 {
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'ophinvisualfields_field_measurement';
+	}
+
     public function relations()
 	{
         return array(
