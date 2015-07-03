@@ -76,25 +76,27 @@ class LegacyFieldsCommandTest extends CDbTestCase {
             $this->prepareFile($file);
         }
         
-        $this->legacyFieldCommand = new LegacyFieldsCommand('LegacyFields', $CCRunner);
+        $this->legacyFieldCommand = new ImportLegacyVFCommand('LegacyFields', $CCRunner);
     }
 
     public function testImport() {
-        $field_measurements = count($this->getPatientFieldMeasurements('12345'));
-        $patient_measurements = count($this->getPatientMeasurements('12345'));
+		$patient_id = '0012345';
+        $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
+        $patient_measurements = count($this->getPatientMeasurements($patient_id));
         
         $this->assertEquals(0, count(glob($this->archiveDir . '/*.fmes')));
         $this->legacyFieldCommand->run(array('import', '--importDir=' . $this->importDir, '--archiveDir=' . $this->archiveDir,
             '--errorDir=' . $this->errorDir, '--dupDir=' . $this->dupDir, '--interval=PT10M'));
         // should be 8 files in the directory:
         $this->assertEquals(8, count(glob($this->archiveDir . '/*.fmes')));
-        $this->assertEquals($field_measurements + 8, count($this->getPatientFieldMeasurements('12345')));
-        $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements('12345')));
+        $this->assertEquals($field_measurements + 8, count($this->getPatientFieldMeasurements($patient_id)));
+        $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements($patient_id)));
     }
 
     public function testImportWithDuplicate() {
-        $field_measurements = count($this->getPatientFieldMeasurements('12345'));
-        $patient_measurements = count($this->getPatientMeasurements('12345'));
+		$patient_id = '0012345';
+        $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
+        $patient_measurements = count($this->getPatientMeasurements($patient_id));
         // a duplicate file name should be rejected:
         $this->assertEquals(0, count(glob($this->dupDir . '/*.fmes')));
         $this->legacyFieldCommand->run(array('import', '--importDir=' . $this->importDir, '--archiveDir=' . $this->archiveDir,
@@ -107,14 +109,14 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         // should be one file in the duplicates directory:
         $this->assertEquals(1, count(glob($this->dupDir . '/*.fmes')));
         // no measurements should have been recorded:
-        $this->assertEquals($field_measurements + 8, count($this->getPatientFieldMeasurements('12345')));
-        $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements('12345')));
+        $this->assertEquals($field_measurements + 8, count($this->getPatientFieldMeasurements($patient_id)));
+        $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements($patient_id)));
     }
 
     public function testWithNoSuchPatient() {
-        
-        $field_measurements = count($this->getPatientFieldMeasurements('12345'));
-        $patient_measurements = count($this->getPatientMeasurements('12345'));
+		$patient_id = '0012345';
+        $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
+        $patient_measurements = count($this->getPatientMeasurements($patient_id));
         $this->assertEquals(0, count(glob($this->errorDir . '/*.fmes')));
         $files = glob($this->importDir . '/*.fmes');
         foreach($files as $file) {
@@ -127,8 +129,8 @@ class LegacyFieldsCommandTest extends CDbTestCase {
             '--errorDir=' . $this->errorDir, '--dupDir=' . $this->dupDir, '--interval=PT10M'));
         $this->assertEquals(8, count(glob($this->errorDir . '/*.fmes')));
         // should be no extra measurements:
-        $this->assertEquals($field_measurements, count($this->getPatientFieldMeasurements('12345')));
-        $this->assertEquals($patient_measurements, count($this->getPatientMeasurements('12345')));
+        $this->assertEquals($field_measurements, count($this->getPatientFieldMeasurements($patient_id)));
+		$this->assertEquals($patient_measurements, count($this->getPatientMeasurements($patient_id)));
     }
     
     public function testWithBadHosNum() {
@@ -194,9 +196,9 @@ class LegacyFieldsCommandTest extends CDbTestCase {
      * @return type 
      */
     private function getPatientMeasurements($patient_id) {
-        $patient = Patient::model()->find('hos_num=:hos_num', 
+        $patient = Patient::model()->find('hos_num=:hos_num',
                 array(':hos_num' => $patient_id));
-        return PatientMeasurement::model()->findAll('patient_id=:patient_id', 
+        return PatientMeasurement::model()->findAll('patient_id=:patient_id',
                 array(':patient_id' => $patient->id));
     }
 
