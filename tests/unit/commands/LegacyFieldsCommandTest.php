@@ -83,7 +83,7 @@ class LegacyFieldsCommandTest extends CDbTestCase {
 		$patient_id = '0012345';
         $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
         $patient_measurements = count($this->getPatientMeasurements($patient_id));
-        
+
         $this->assertEquals(0, count(glob($this->archiveDir . '/*.fmes')));
         $this->legacyFieldCommand->run(array('import', '--importDir=' . $this->importDir, '--archiveDir=' . $this->archiveDir,
             '--errorDir=' . $this->errorDir, '--dupDir=' . $this->dupDir, '--interval=PT10M'));
