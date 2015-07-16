@@ -19,60 +19,61 @@
 
 class Element_OphInVisualfields_Result extends BaseEventTypeElement
 {
-	public function tableName()
-	{
-		return 'et_ophinvisualfields_result';
-	}
+    public function tableName()
+    {
+        return 'et_ophinvisualfields_result';
+    }
 
-	public function rules()
-	{
-		return array(
-			array(' other', 'safe'),
-		);
-	}
-
-
-	public function getophinvisualfields_result_assessment_defaults() {
-		$ids = array();
-		foreach (OphInVisualfields_Result_Assessment::model()->findAll('`default` = ?',array(1)) as $item) {
-			$ids[] = $item->id;
-		}
-		return $ids;
-	}
+    public function rules()
+    {
+        return array(
+            array(' other', 'safe'),
+        );
+    }
 
 
-	public function relations()
-	{
-		return array(
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'assessment' => array(self::HAS_MANY, 'Element_OphInVisualfields_Result_Assessment_Assignment', 'element_id'),
-		);
-	}
+    public function getophinvisualfields_result_assessment_defaults()
+    {
+        $ids = array();
+        foreach (OphInVisualfields_Result_Assessment::model()->findAll('`default` = ?', array(1)) as $item) {
+            $ids[] = $item->id;
+        }
+        return $ids;
+    }
 
-	public function attributeLabels()
-	{
-		return array(
-			'assessment_id' => 'Assessment Result',
-		);
-	}
 
-	public function afterValidate()
-	{
-		if ($this->hasMultiSelectValue('assessment','Other'))
-		{
-			if(empty($this->other)) {
-				$this->addError('other', 'Please enter details');
-			}
-		}
+    public function relations()
+    {
+        return array(
+            'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+            'assessment' => array(self::HAS_MANY, 'Element_OphInVisualfields_Result_Assessment_Assignment', 'element_id'),
+        );
+    }
 
-		parent::afterValidate();
-	}
+    public function attributeLabels()
+    {
+        return array(
+            'assessment_id' => 'Assessment Result',
+        );
+    }
 
-	public function beforeSave()
-	{
-		if (!$this->hasMultiSelectValue('assessment','Other')) $this->other = null;
+    public function afterValidate()
+    {
+        if ($this->hasMultiSelectValue('assessment', 'Other')) {
+            if (empty($this->other)) {
+                $this->addError('other', 'Please enter details');
+            }
+        }
 
-		return parent::beforeSave();
-	}
+        parent::afterValidate();
+    }
 
+    public function beforeSave()
+    {
+        if (!$this->hasMultiSelectValue('assessment', 'Other')) {
+            $this->other = null;
+        }
+
+        return parent::beforeSave();
+    }
 }

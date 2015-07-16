@@ -22,14 +22,16 @@ $this->beginContent('//patient/event_container');
 // Event actions
 /* - disable printing button for the time being - see OE-4489
  * if ($this->checkPrintAccess()) {
-	$this->event_actions[] = EventAction::button('Print', 'print',null,array('class'=>'button small'));
+    $this->event_actions[] = EventAction::button('Print', 'print',null,array('class'=>'button small'));
 }*/
 
- if ($this->event->delete_pending) {?>
+ if ($this->event->delete_pending) {
+     ?>
 		<div class="alert-box alert with-icon">
 			This event is pending deletion and has been locked.
 		</div>
-<?php }?>
+<?php 
+ }?>
 
 	<?php $this->renderOpenElements($this->action->id)?>
 

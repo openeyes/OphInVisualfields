@@ -17,10 +17,10 @@ namespace OEModule\OphInVisualfields\services;
 
 class EverythingsFine extends \services\ServiceException
 {
-	public $httpStatus = 200;
+    public $httpStatus = 200;
 
-	public function toFhirOutcome()
-	{
-		return \services\FhirOutcome::singleIssue(\FhirValueSet::ISSUESEVERITY_INFORMATION, null, "Everything's fine, honestly.  Nothing to see here.");
-	}
+    public function toFhirOutcome()
+    {
+        return \services\FhirOutcome::singleIssue(\FhirValueSet::ISSUESEVERITY_INFORMATION, null, "Everything's fine, honestly.  Nothing to see here.");
+    }
 }

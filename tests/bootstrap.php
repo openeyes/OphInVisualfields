@@ -8,4 +8,4 @@ echo 'APP PATH: ' . $appPath .  '/yii/framework/yiit.php' . PHP_EOL;
 require_once($appPath . '/yii/framework/test/CTestCase.php');
 //require_once(dirname(__FILE__).'/WebTestCase.php');
 //Yii::createWebApplication($config);
-?>
+;

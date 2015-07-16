@@ -19,22 +19,22 @@
 
 class Element_OphInVisualfields_Comments extends BaseEventTypeElement
 {
-	public function tableName()
-	{
-		return 'et_ophinvisualfields_comments';
-	}
+    public function tableName()
+    {
+        return 'et_ophinvisualfields_comments';
+    }
 
-	public function rules()
-	{
-		return array(
-			array('comments', 'safe'),
-		);
-	}
+    public function rules()
+    {
+        return array(
+            array('comments', 'safe'),
+        );
+    }
 
-	public function relations()
-	{
-		return array(
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-		);
-	}
+    public function relations()
+    {
+        return array(
+            'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+        );
+    }
 }

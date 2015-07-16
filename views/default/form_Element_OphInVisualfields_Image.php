@@ -24,9 +24,9 @@
 		 data-element-display-order="<?php echo $element->elementType->display_order ?>">
 	<div class="element-fields element-eyes row">
 	<?php
-		$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'right'));
-		$this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'left'));
-	?>
+        $this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'right'));
+        $this->renderPartial("{$element->form_view}_side", array('form' => $form, 'element' => $element, 'side' => 'left'));
+    ?>
 	</div>
 </section>
 

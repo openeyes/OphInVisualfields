@@ -19,48 +19,48 @@
  */
 return array(
     'components' => array(
-		'fhirMarshal' => array(
-			'schemas' => array(
-				'MeasurementVisualFieldHumphrey' => array(
-					'patient_id' => array(
-						'type' => 'integer',
-						'plural' => false,
-					),
-					'file_reference' => array(
-						'type' => 'string',
-						'plural' => false,
-					),
-					'image_scan_data' => array(
-						'type' => 'base64Binary',
-						'plural' => false,
-					),
-					'image_scan_crop_data' => array(
-						'type' => 'base64Binary',
-						'plural' => false,
-					),
-					'xml_file_data' => array(
-						'type' => 'base64Binary',
-						'plural' => false,
-					),
-					'study_datetime' => array(
-						'type' => 'string',
-						'plural' => false,
-					),
-					'eye' => array(
-						'type' => 'string',
-						'plural' => false,
-					),
-					'pattern' => array(
-						'type' => 'string',
-						'plural' => false,
-					),
-					'strategy' => array(
-						'type' => 'string',
-						'plural' => false,
-					),
-				),
-			),
-		),
+        'fhirMarshal' => array(
+            'schemas' => array(
+                'MeasurementVisualFieldHumphrey' => array(
+                    'patient_id' => array(
+                        'type' => 'integer',
+                        'plural' => false,
+                    ),
+                    'file_reference' => array(
+                        'type' => 'string',
+                        'plural' => false,
+                    ),
+                    'image_scan_data' => array(
+                        'type' => 'base64Binary',
+                        'plural' => false,
+                    ),
+                    'image_scan_crop_data' => array(
+                        'type' => 'base64Binary',
+                        'plural' => false,
+                    ),
+                    'xml_file_data' => array(
+                        'type' => 'base64Binary',
+                        'plural' => false,
+                    ),
+                    'study_datetime' => array(
+                        'type' => 'string',
+                        'plural' => false,
+                    ),
+                    'eye' => array(
+                        'type' => 'string',
+                        'plural' => false,
+                    ),
+                    'pattern' => array(
+                        'type' => 'string',
+                        'plural' => false,
+                    ),
+                    'strategy' => array(
+                        'type' => 'string',
+                        'plural' => false,
+                    ),
+                ),
+            ),
+        ),
         'service' => array(
             'internal_services' => array(
                 'OEModule\OphInVisualfields\services\MeasurementVisualFieldHumphreyService',

@@ -19,29 +19,29 @@
  */
 class UnlinkLegacyVFCommand extends CConsoleCommand
 {
-	public function run($args)
-	{
-		$event_type_id = EventType::model()->find('class_name = :classname', array(':classname' => 'OphInVisualfields'))->id;
-		$patient_ids = Yii::app()->db->createCommand()
-			->selectDistinct('patient_id')
-			->from('measurement_reference mr')
-			->join('patient_measurement pm', 'pm.id = mr.patient_measurement_id')
-			->queryColumn();
-		foreach ($patient_ids as $patient_id) {
-			$criteria = new CDbCriteria();
-			$criteria->condition = 'event_type_id = :event_type_id AND patient_id = :patient_id';
-			$criteria->join = 'join episode ep on ep.id = t.episode_id';
-			$criteria->order = 'event_date desc';
-			$criteria->limit = '3';
-			$criteria->params = array(':patient_id' => $patient_id, ':event_type_id' => $event_type_id);
-			$events = Event::model()->findAll($criteria);
-			foreach ($events as $event) {
-				echo " - " . $event->id . "\n";
-				MeasurementReference::model()->deleteAll('event_id = ?', array($event->id));
-				$event->deleted = 1;
-				$event->save();
-			}
-			echo "$patient_id\n";
-		}
-	}
+    public function run($args)
+    {
+        $event_type_id = EventType::model()->find('class_name = :classname', array(':classname' => 'OphInVisualfields'))->id;
+        $patient_ids = Yii::app()->db->createCommand()
+            ->selectDistinct('patient_id')
+            ->from('measurement_reference mr')
+            ->join('patient_measurement pm', 'pm.id = mr.patient_measurement_id')
+            ->queryColumn();
+        foreach ($patient_ids as $patient_id) {
+            $criteria = new CDbCriteria();
+            $criteria->condition = 'event_type_id = :event_type_id AND patient_id = :patient_id';
+            $criteria->join = 'join episode ep on ep.id = t.episode_id';
+            $criteria->order = 'event_date desc';
+            $criteria->limit = '3';
+            $criteria->params = array(':patient_id' => $patient_id, ':event_type_id' => $event_type_id);
+            $events = Event::model()->findAll($criteria);
+            foreach ($events as $event) {
+                echo " - " . $event->id . "\n";
+                MeasurementReference::model()->deleteAll('event_id = ?', array($event->id));
+                $event->deleted = 1;
+                $event->save();
+            }
+            echo "$patient_id\n";
+        }
+    }
 }

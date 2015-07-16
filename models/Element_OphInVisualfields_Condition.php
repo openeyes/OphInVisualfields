@@ -19,64 +19,66 @@
 
 class Element_OphInVisualfields_Condition extends BaseEventTypeElement
 {
-	public function tableName()
-	{
-		return 'et_ophinvisualfields_condition';
-	}
+    public function tableName()
+    {
+        return 'et_ophinvisualfields_condition';
+    }
 
-	public function rules()
-	{
-		return array(
-			array('other, glasses', 'safe'),
-			array('glasses', 'required'),
-		);
-	}
+    public function rules()
+    {
+        return array(
+            array('other, glasses', 'safe'),
+            array('glasses', 'required'),
+        );
+    }
 
-	protected function afterSave()
-	{
-		return parent::afterSave();
-	}
+    protected function afterSave()
+    {
+        return parent::afterSave();
+    }
 
 
-	public function getophinvisualfields_condition_ability_defaults() {
-		$ids = array();
-		foreach (OphInVisualfields_Condition_Ability::model()->findAll('`default` = ?',array(1)) as $item) {
-			$ids[] = $item->id;
-		}
-		return $ids;
-	}
+    public function getophinvisualfields_condition_ability_defaults()
+    {
+        $ids = array();
+        foreach (OphInVisualfields_Condition_Ability::model()->findAll('`default` = ?', array(1)) as $item) {
+            $ids[] = $item->id;
+        }
+        return $ids;
+    }
 
-	public function relations()
-	{
-		return array(
-			'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
-			'abilitys' => array(self::HAS_MANY, 'Element_OphInVisualfields_Condition_Ability_Assignment', 'element_id'),
-		);
-	}
+    public function relations()
+    {
+        return array(
+            'event' => array(self::BELONGS_TO, 'Event', 'event_id'),
+            'abilitys' => array(self::HAS_MANY, 'Element_OphInVisualfields_Condition_Ability_Assignment', 'element_id'),
+        );
+    }
 
-	public function attributeLabels()
-	{
-		return array(
-			'ability_id' => 'Ability',
-		);
-	}
+    public function attributeLabels()
+    {
+        return array(
+            'ability_id' => 'Ability',
+        );
+    }
 
-	public function afterValidate()
-	{
-		if ($this->hasMultiSelectValue('abilitys','Other'))
-		{
-			if(empty($this->other)) {
-			$this->addError('other', 'Please enter details');
-			}
-		}
+    public function afterValidate()
+    {
+        if ($this->hasMultiSelectValue('abilitys', 'Other')) {
+            if (empty($this->other)) {
+                $this->addError('other', 'Please enter details');
+            }
+        }
 
-		parent::afterValidate();
-	}
+        parent::afterValidate();
+    }
 
-	public function beforeSave()
-	{
-		if (!$this->hasMultiSelectValue('abilitys','Other')) $this->other = null;
+    public function beforeSave()
+    {
+        if (!$this->hasMultiSelectValue('abilitys', 'Other')) {
+            $this->other = null;
+        }
 
-		return parent::beforeSave();
-	}
+        return parent::beforeSave();
+    }
 }

@@ -17,8 +17,8 @@
  * @copyright Copyright (c) 2011-2013, OpenEyes Foundation
  * @license http://www.gnu.org/licenses/gpl-3.0.html The GNU General Public License V3.0
  */
-class LegacyFieldsCommandTest extends CDbTestCase {
-
+class LegacyFieldsCommandTest extends CDbTestCase
+{
     protected $legacyFieldCommand;
     protected $importDir;
     protected $originalImportDir;
@@ -38,7 +38,8 @@ class LegacyFieldsCommandTest extends CDbTestCase {
      * 
      * @param type $file 
      */
-    private function prepareFile($file) {
+    private function prepareFile($file)
+    {
         $newname = str_replace(' ', '_', microtime());
         $contents = file_get_contents($file);
         $name = basename($file, '.fmes');
@@ -46,7 +47,8 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         file_put_contents($this->importDir . "/" . $newname . '.fmes', $contents);
     }
 
-    public function setUp() {
+    public function setUp()
+    {
         parent::setUp();
         $this->cleanDirectories();
         require_once(dirname(__FILE__) . '/../../../commands/ImportLegacyVFCommand.php');
@@ -79,8 +81,9 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         $this->legacyFieldCommand = new ImportLegacyVFCommand('LegacyFields', $CCRunner);
     }
 
-    public function testImport() {
-		$patient_id = '0012345';
+    public function testImport()
+    {
+        $patient_id = '0012345';
         $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
         $patient_measurements = count($this->getPatientMeasurements($patient_id));
 
@@ -93,8 +96,9 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements($patient_id)));
     }
 
-    public function testImportWithDuplicate() {
-		$patient_id = '0012345';
+    public function testImportWithDuplicate()
+    {
+        $patient_id = '0012345';
         $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
         $patient_measurements = count($this->getPatientMeasurements($patient_id));
         // a duplicate file name should be rejected:
@@ -113,13 +117,14 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         $this->assertEquals($patient_measurements + 8, count($this->getPatientMeasurements($patient_id)));
     }
 
-    public function testWithNoSuchPatient() {
-		$patient_id = '0012345';
+    public function testWithNoSuchPatient()
+    {
+        $patient_id = '0012345';
         $field_measurements = count($this->getPatientFieldMeasurements($patient_id));
         $patient_measurements = count($this->getPatientMeasurements($patient_id));
         $this->assertEquals(0, count(glob($this->errorDir . '/*.fmes')));
         $files = glob($this->importDir . '/*.fmes');
-        foreach($files as $file) {
+        foreach ($files as $file) {
             $contents = file_get_contents($file);
             $contents = str_replace('_12345__', '_99876__', $contents);
             file_put_contents($file, $contents);
@@ -130,11 +135,11 @@ class LegacyFieldsCommandTest extends CDbTestCase {
         $this->assertEquals(8, count(glob($this->errorDir . '/*.fmes')));
         // should be no extra measurements:
         $this->assertEquals($field_measurements, count($this->getPatientFieldMeasurements($patient_id)));
-		$this->assertEquals($patient_measurements, count($this->getPatientMeasurements($patient_id)));
+        $this->assertEquals($patient_measurements, count($this->getPatientMeasurements($patient_id)));
     }
     
-    public function testWithBadHosNum() {
-        
+    public function testWithBadHosNum()
+    {
         $this->assertEquals(0, count(glob($this->errorDir . '/*.fmes')));
         $files = scandir($this->importDir);
         $contents = file_get_contents($this->importDir . '/' . $files[2]);
@@ -149,11 +154,13 @@ class LegacyFieldsCommandTest extends CDbTestCase {
     /**
      * Delete temporary files and directories.
      */
-    protected function tearDown() {
+    protected function tearDown()
+    {
         $this->cleanDirectories();
     }
     
-    protected function cleanDirectories() {
+    protected function cleanDirectories()
+    {
         foreach (glob($this->archiveDir . '/*.fmes') as $file) {
             unlink($file);
         }
@@ -178,8 +185,9 @@ class LegacyFieldsCommandTest extends CDbTestCase {
      * @param type $patient_id
      * @return type 
      */
-    private function getPatientFieldMeasurements($patient_id) {
-        $patient = Patient::model()->find('hos_num=:hos_num', 
+    private function getPatientFieldMeasurements($patient_id)
+    {
+        $patient = Patient::model()->find('hos_num=:hos_num',
                 array(':hos_num' => $patient_id));
         if ($patient) {
             $criteria = new CDbCriteria;
@@ -195,12 +203,11 @@ class LegacyFieldsCommandTest extends CDbTestCase {
      * @param type $patient_id
      * @return type 
      */
-    private function getPatientMeasurements($patient_id) {
+    private function getPatientMeasurements($patient_id)
+    {
         $patient = Patient::model()->find('hos_num=:hos_num',
                 array(':hos_num' => $patient_id));
         return PatientMeasurement::model()->findAll('patient_id=:patient_id',
                 array(':patient_id' => $patient->id));
     }
-
 }
-

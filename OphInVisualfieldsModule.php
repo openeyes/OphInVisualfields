@@ -19,13 +19,14 @@
 
 class OphInVisualfieldsModule extends BaseEventTypeModule
 {
-	public function init() {
-		$this->setImport(array(
-			'OphInVisualfields.models.*',
-			'OphInVisualfields.components.*',
-			'OphInVisualfields.commands.*',
-		));
+    public function init()
+    {
+        $this->setImport(array(
+            'OphInVisualfields.models.*',
+            'OphInVisualfields.components.*',
+            'OphInVisualfields.commands.*',
+        ));
 
-		parent::init();
-	}
+        parent::init();
+    }
 }

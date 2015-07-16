@@ -19,49 +19,47 @@
  */
 class FixFMESCommand extends CConsoleCommand
 {
+    public function actionIndex($path, $subfolder)
+    {
+        $count = 0;
+        mkdir("$path/archive/$subfolder", 0777, true);
+        mkdir("$path/finished/$subfolder", 0777, true);
+        mkdir("$path/xml-missing/$subfolder", 0777, true);
+        mkdir("$path/error/$subfolder", 0777, true);
+        foreach (glob($path.'/incoming/'.$subfolder.'/*.fmes') as $file) {
+            $basename = basename($file);
+            $xml = simplexml_load_file($file);
+            $image_data = base64_decode($xml->image_scan_data['value']);
+            if (!$image_data) {
+                echo "Bad image data in $basename, moving to error\n";
+                rename($file, "$path/error/$subfolder/$basename");
+                continue;
+            }
+            $image = imagecreatefromstring($image_data);
+            $thumb = imagecreatetruecolor(776, 864);
+            imagecopy($thumb, $image, 0, 0, 1328, 560, 776, 864);
+            ob_start();
+            imagegif($thumb);
+            $thumb_data = base64_encode(ob_get_contents());
+            ob_end_clean();
+            imagedestroy($thumb);
+            imagedestroy($image);
 
-	public function actionIndex($path, $subfolder)
-	{
-		$count = 0;
-		mkdir("$path/archive/$subfolder",0777,true);
-		mkdir("$path/finished/$subfolder",0777,true);
-		mkdir("$path/xml-missing/$subfolder",0777,true);
-		mkdir("$path/error/$subfolder",0777,true);
-		foreach(glob($path.'/incoming/'.$subfolder.'/*.fmes') as $file) {
-			$basename = basename($file);
-			$xml = simplexml_load_file($file);
-			$image_data = base64_decode($xml->image_scan_data['value']);
-			if(!$image_data) {
-				echo "Bad image data in $basename, moving to error\n";
-				rename($file,"$path/error/$subfolder/$basename");
-				continue;
-			}
-			$image = imagecreatefromstring($image_data);
-			$thumb = imagecreatetruecolor(776, 864);
-			imagecopy($thumb,$image,0,0,1328,560,776,864);
-			ob_start();
-                        imagegif($thumb);
-			$thumb_data = base64_encode(ob_get_contents()); 
-			ob_end_clean(); 
-			imagedestroy($thumb);
-			imagedestroy($image);
+            // Check XML
+            $target = 'finished';
+            if (!$xml->xml_file_data || !$xml->xml_file_data['value']) {
+                echo "$basename is missing XML\n";
+                $target = 'xml-missing';
+            }
 
-			// Check XML
-			$target = 'finished';
-			if(!$xml->xml_file_data || !$xml->xml_file_data['value']) {
-				echo "$basename is missing XML\n";
-				$target = 'xml-missing';
-			}
-
-			// Write updated file
-			$xml->image_scan_crop_data['value'] = $thumb_data;
-			$xml->asXml("$path/$target/$subfolder/$basename");
-			rename($file,"$path/archive/$subfolder/$basename");
-			if($count % 20 == 0) {
-				echo $count."\n";
-			}
-			$count++;
-		}
-	}
-
+            // Write updated file
+            $xml->image_scan_crop_data['value'] = $thumb_data;
+            $xml->asXml("$path/$target/$subfolder/$basename");
+            rename($file, "$path/archive/$subfolder/$basename");
+            if ($count % 20 == 0) {
+                echo $count."\n";
+            }
+            $count++;
+        }
+    }
 }

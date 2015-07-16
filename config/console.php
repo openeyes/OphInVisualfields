@@ -23,7 +23,6 @@ $dh = opendir(dirname(__FILE__) . "/../commands");
 
 while ($file = readdir($dh)) {
     if (preg_match('/^(.*?)Command\.php$/', $file, $m)) {
-
         $config['commandMap'][strtolower($m[1])] = array(
             'class' => "application.modules.OphInVisualfields.commands.{$m[1]}Command",
         );
@@ -31,4 +30,3 @@ while ($file = readdir($dh)) {
 }
 
 return $config;
-

@@ -18,9 +18,9 @@
 	<?php foreach ($elements as $element): ?>
 		<div id="OphInVisualfields_Episode_VisualFieldsHistory_element_<?= $element->id ?>" class="OphInVisualfields_Episode_VisualFieldsHistory_element element-fields element-eyes hidden">
 			<?php
-				$this->render(get_class($this) . '_side', array('element' => $element, 'side' => 'right'));
-				$this->render(get_class($this) . '_side', array('element' => $element, 'side' => 'left'));
-			?>
+                $this->render(get_class($this) . '_side', array('element' => $element, 'side' => 'right'));
+                $this->render(get_class($this) . '_side', array('element' => $element, 'side' => 'left'));
+            ?>
 		</div>
 	<?php endforeach ?>
 	</div>

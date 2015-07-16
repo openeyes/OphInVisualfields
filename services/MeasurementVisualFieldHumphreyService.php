@@ -16,31 +16,35 @@
 
 namespace OEModule\OphInVisualfields\services;
 
-class MeasurementVisualFieldHumphreyService extends \services\ModelService {
+class MeasurementVisualFieldHumphreyService extends \services\ModelService
+{
+    protected static $operations = array(self::OP_CREATE);
 
-  static protected $operations = array(self::OP_CREATE);
+    protected static $primary_model = 'OphInVisualfields_Field_Measurement';
 
-  static protected $primary_model = 'OphInVisualfields_Field_Measurement';
+    public function resourceToModel($res, $measurement)
+    {
+        $measurement->eye_id = $res->eye_id;
 
-  public function resourceToModel($res, $measurement)
-  {
-	  $measurement->eye_id = $res->eye_id;
+        $pattern = \OphInVisualfields_Pattern::model()->find("name=:name", array(":name" => $res->pattern));
+        if (!$pattern) {
+            throw new \Exception("Unrecognised test pattern: '{$res->pattern}'");
+        }
+        $measurement->pattern_id = $pattern->id;
 
-	  $pattern = \OphInVisualfields_Pattern::model()->find("name=:name", array(":name" => $res->pattern));
-	  if (!$pattern) throw new \Exception("Unrecognised test pattern: '{$res->pattern}'");
-	  $measurement->pattern_id = $pattern->id;
+        $strategy = \OphInVisualfields_Strategy::model()->find("name=:name", array(":name" => $res->strategy));
+        if (!$strategy) {
+            throw new \Exception("Unrecognised test strategy: '{$res->strategy}'");
+        }
+        $measurement->strategy_id = $strategy->id;
 
-	  $strategy = \OphInVisualfields_Strategy::model()->find("name=:name", array(":name" => $res->strategy));
-	  if (!$strategy) throw new \Exception("Unrecognised test strategy: '{$res->strategy}'");
-	  $measurement->strategy_id = $strategy->id;
-
-	  $measurement->study_datetime = $res->study_datetime;
-	  $measurement->cropped_image_id = $res->scanned_field_crop_id;
-	  $measurement->image_id = $res->scanned_field_id;
-	  if (isset($res->xml_file_data)) {
-		  $measurement->source = base64_decode($res->xml_file_data);
-	  }
-	  $measurement->patient_id = $res->patient_id;
-	  $this->saveModel($measurement);
-  }
+        $measurement->study_datetime = $res->study_datetime;
+        $measurement->cropped_image_id = $res->scanned_field_crop_id;
+        $measurement->image_id = $res->scanned_field_id;
+        if (isset($res->xml_file_data)) {
+            $measurement->source = base64_decode($res->xml_file_data);
+        }
+        $measurement->patient_id = $res->patient_id;
+        $this->saveModel($measurement);
+    }
 }
