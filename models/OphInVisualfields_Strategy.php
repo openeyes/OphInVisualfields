@@ -19,4 +19,11 @@
 
 class OphInVisualfields_Strategy extends BaseActiveRecordVersioned
 {
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'ophinvisualfields_strategy';
+	}
 }

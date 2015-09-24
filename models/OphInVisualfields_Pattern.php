@@ -19,4 +19,12 @@
 
 class OphInVisualfields_Pattern extends BaseActiveRecordVersioned
 {
+
+	/**
+	 * @return string the associated database table name
+	 */
+	public function tableName()
+	{
+		return 'ophinvisualfields_pattern';
+	}
 }
